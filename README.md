@@ -70,16 +70,31 @@ npm run preview      # 預覽建置結果
 
 > **排程提醒：** 公開 repo 若連續 60 天沒有活動，GitHub 會自動停用 scheduled workflow。請定期確認 Actions 排程仍啟用；「方法與狀態」頁也會顯示提醒。
 
-## Google Search Console 設定（Phase 5，尚未串接）
+## Google Search Console 設定
 
-SEO 頁目前顯示範例資料。實際串接步驟：
+網站網址：`https://chunyu8866.github.io/MediaMonitoringDB/`
 
-1. 部署後，於 Search Console 以 **URL-prefix property** 驗證你的 GitHub Pages 網址，並提交 `sitemap.xml`。
+已內建：`web/public/robots.txt`、`web/public/sitemap.xml`（部署後可於 `/robots.txt`、`/sitemap.xml` 取得）。
+
+### 步驟 A — 驗證網站並讓 Google 收錄（現在就能做，只有你能做）
+
+1. 到 [Google Search Console](https://search.google.com/search-console) → 新增資源 → 選 **網址前置字元（URL prefix）**，輸入
+   `https://chunyu8866.github.io/MediaMonitoringDB/`。
+2. 驗證方式選 **HTML 檔案**：下載 Google 給的 `google<一串碼>.html`，放到 `web/public/`，commit 後 push（GitHub Actions 會自動部署），確認 `https://chunyu8866.github.io/MediaMonitoringDB/google<一串碼>.html` 打得開，再回 Search Console 按「驗證」。
+   （或用 **HTML 標記** 方式：把 Google 給的 `<meta name="google-site-verification" ...>` 貼進 `web/index.html` 的 `<head>`。）
+3. 驗證通過後，在 Search Console 的 **Sitemap** 提交：`sitemap.xml`。
+4. 收錄與數據需要數天，之後就能在 Search Console 網站上直接看到本站的曝光、點擊、CTR 與排名。
+
+> 到這一步，你已能在 **Search Console 官網**看到本站 SEO 成效。若還想把這些數字**拉進本儀表板的 SEO 頁**，才需要下面的 API 串接（屬 Phase 5，需先有 Python 資料管線）。
+
+### 步驟 B — 把 SEO 數據拉進本儀表板（Phase 5，需後端管線，尚未實作）
+
+1. 在 Google Cloud Console 建立 OAuth 用戶端，授權範圍只用 `webmasters.readonly`，取得 refresh token。
 2. 在 **repo Settings → Secrets and variables → Actions** 設定：
    `GSC_CLIENT_ID`、`GSC_CLIENT_SECRET`、`GSC_REFRESH_TOKEN`、`GSC_SITE_URL`。
-3. OAuth 只使用 `webmasters.readonly` scope；每日同步一次，遇 429 或 401 時只停用 SEO 區塊，不影響輿情管線與部署。
+3. 之後由每日 SEO 管線查詢並寫入 `web/public/data/seo.json`；每日一次、遇 429／401 只停用 SEO 區塊，不影響其他資料與部署。
 
-> Search Console 是**本站自己的**搜尋成效，不是全網熱搜或輿情來源；資料有延遲，不併入即時熱度公式。憑證只存在 Actions Secrets，絕不寫入 repo、log 或 Pages。
+> Search Console 是**本站自己的**搜尋成效，不是全網熱搜或輿情來源；資料有延遲，不併入即時熱度公式。憑證只存在 Actions Secrets，**絕不**寫入 repo、log 或 Pages。目前 SEO 頁顯示的是範例資料。
 
 ## 資料來源與使用邊界
 
