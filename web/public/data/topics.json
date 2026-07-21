@@ -1,0 +1,256 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-07-21T15:18:52.024Z",
+  "data": {
+    "stale": false,
+    "experimental": true,
+    "topics": [
+      {
+        "id": "t1",
+        "label": "半導體與台積電動向",
+        "terms": [
+          "台積電",
+          "半導體",
+          "晶圓",
+          "海外設廠",
+          "護國神山"
+        ],
+        "size": 28,
+        "sentiment": {
+          "positive": 0.52,
+          "neutral": 0.33,
+          "negative": 0.15
+        },
+        "summarySentences": [
+          {
+            "text": "台積電法說會釋出對先進製程需求的最新展望。",
+            "source": "cna",
+            "url": "https://www.cna.com.tw/news/afe/2026072100001.aspx"
+          },
+          {
+            "text": "分析師關注海外設廠進度與資本支出規劃。",
+            "source": "ettoday",
+            "url": "https://www.ettoday.net/news/20260721/sample-1.htm"
+          }
+        ],
+        "articles": [
+          {
+            "title": "台積電釋出先進製程需求展望",
+            "source": "cna",
+            "url": "https://www.cna.com.tw/news/afe/2026072100001.aspx",
+            "publishedAt": "2026-07-21T14:55:52.024Z"
+          },
+          {
+            "title": "半導體族群帶動盤面焦點",
+            "source": "tvbs",
+            "url": "https://news.tvbs.com.tw/money/2400010",
+            "publishedAt": "2026-07-21T14:50:52.024Z"
+          },
+          {
+            "title": "半導體供應鏈聚焦資本支出",
+            "source": "ettoday",
+            "url": "https://www.ettoday.net/news/20260721/sample-1.htm",
+            "publishedAt": "2026-07-21T14:38:52.024Z"
+          },
+          {
+            "title": "網友熱議護國神山海外布局",
+            "source": "bluesky",
+            "url": "https://bsky.app/profile/example.bsky.social/post/abc123",
+            "publishedAt": "2026-07-21T15:12:52.024Z"
+          }
+        ]
+      },
+      {
+        "id": "t2",
+        "label": "颱風動態與防災準備",
+        "terms": [
+          "颱風",
+          "氣象署",
+          "海警",
+          "停班停課",
+          "豪雨"
+        ],
+        "size": 34,
+        "sentiment": {
+          "positive": 0.12,
+          "neutral": 0.51,
+          "negative": 0.37
+        },
+        "summarySentences": [
+          {
+            "text": "中央氣象署針對外海熱帶系統發布最新路徑預報。",
+            "source": "cna",
+            "url": "https://www.cna.com.tw/news/aloc/2026072100010.aspx"
+          },
+          {
+            "text": "地方政府評估是否宣布停班停課並提醒民眾防範豪雨。",
+            "source": "ettoday",
+            "url": "https://www.ettoday.net/news/20260721/sample-2.htm"
+          }
+        ],
+        "articles": [
+          {
+            "title": "氣象署更新颱風路徑預報",
+            "source": "cna",
+            "url": "https://www.cna.com.tw/news/aloc/2026072100010.aspx",
+            "publishedAt": "2026-07-21T15:18:52.024Z"
+          },
+          {
+            "title": "停班停課標準懶人包",
+            "source": "set",
+            "url": "https://www.setn.com/News.aspx?NewsID=1500010",
+            "publishedAt": "2026-07-21T15:10:52.024Z"
+          },
+          {
+            "title": "颱風動向牽動連假交通",
+            "source": "ltn",
+            "url": "https://news.ltn.com.tw/news/life/breakingnews/4700010",
+            "publishedAt": "2026-07-21T15:06:52.024Z"
+          },
+          {
+            "title": "各縣市討論停班停課標準",
+            "source": "ettoday",
+            "url": "https://www.ettoday.net/news/20260721/sample-2.htm",
+            "publishedAt": "2026-07-21T15:04:52.024Z"
+          },
+          {
+            "title": "民眾分享颱風假期待與防颱準備",
+            "source": "bluesky",
+            "url": "https://bsky.app/profile/example.bsky.social/post/def456",
+            "publishedAt": "2026-07-21T15:22:52.024Z"
+          }
+        ]
+      },
+      {
+        "id": "t3",
+        "label": "電價調整與能源討論",
+        "terms": [
+          "電價",
+          "台電",
+          "能源",
+          "調漲",
+          "民生"
+        ],
+        "size": 21,
+        "sentiment": {
+          "positive": 0.14,
+          "neutral": 0.34,
+          "negative": 0.52
+        },
+        "summarySentences": [
+          {
+            "text": "電價審議相關討論聚焦民生與產業用電負擔。",
+            "source": "cna",
+            "url": "https://www.cna.com.tw/news/afe/2026072100020.aspx"
+          },
+          {
+            "text": "外界關注調整幅度與台電財務狀況。",
+            "source": "ettoday",
+            "url": "https://www.ettoday.net/news/20260721/sample-3.htm"
+          }
+        ],
+        "articles": [
+          {
+            "title": "電價審議聚焦民生用電負擔",
+            "source": "cna",
+            "url": "https://www.cna.com.tw/news/afe/2026072100020.aspx",
+            "publishedAt": "2026-07-21T14:22:52.024Z"
+          },
+          {
+            "title": "電價調整方向引發討論",
+            "source": "ltn",
+            "url": "https://news.ltn.com.tw/news/politics/breakingnews/4700020",
+            "publishedAt": "2026-07-21T14:10:52.024Z"
+          },
+          {
+            "title": "能源政策專題報導",
+            "source": "mirror",
+            "url": "https://www.mnews.tw/story/20260721eco001",
+            "publishedAt": "2026-07-21T14:02:52.024Z"
+          },
+          {
+            "title": "產業界關注電價調整幅度",
+            "source": "ettoday",
+            "url": "https://www.ettoday.net/news/20260721/sample-3.htm",
+            "publishedAt": "2026-07-21T13:55:52.024Z"
+          }
+        ]
+      },
+      {
+        "id": "t4",
+        "label": "立法院議程與預算審查",
+        "terms": [
+          "立法院",
+          "預算",
+          "朝野",
+          "委員會",
+          "議程"
+        ],
+        "size": 19,
+        "sentiment": {
+          "positive": 0.2,
+          "neutral": 0.55,
+          "negative": 0.25
+        },
+        "summarySentences": [
+          {
+            "text": "立法院委員會排定本會期重點預算審查議程。",
+            "source": "cna",
+            "url": "https://www.cna.com.tw/news/aipl/2026072100030.aspx"
+          }
+        ],
+        "articles": [
+          {
+            "title": "委員會排定重點預算審查",
+            "source": "cna",
+            "url": "https://www.cna.com.tw/news/aipl/2026072100030.aspx",
+            "publishedAt": "2026-07-21T13:30:52.024Z"
+          },
+          {
+            "title": "朝野協商聚焦議事效率",
+            "source": "ettoday",
+            "url": "https://www.ettoday.net/news/20260721/sample-4.htm",
+            "publishedAt": "2026-07-21T13:10:52.024Z"
+          }
+        ]
+      },
+      {
+        "id": "t5",
+        "label": "運動賽事話題",
+        "terms": [
+          "大谷翔平",
+          "棒球",
+          "賽事",
+          "球迷"
+        ],
+        "size": 24,
+        "sentiment": {
+          "positive": 0.71,
+          "neutral": 0.22,
+          "negative": 0.07
+        },
+        "summarySentences": [
+          {
+            "text": "球迷熱烈討論本週重點賽事表現。",
+            "source": "bluesky",
+            "url": "https://bsky.app/profile/example.bsky.social/post/ghi789"
+          }
+        ],
+        "articles": [
+          {
+            "title": "球迷社群熱議本週賽事",
+            "source": "bluesky",
+            "url": "https://bsky.app/profile/example.bsky.social/post/ghi789",
+            "publishedAt": "2026-07-21T15:15:52.024Z"
+          },
+          {
+            "title": "運動焦點：本週賽事回顧",
+            "source": "ettoday",
+            "url": "https://www.ettoday.net/news/20260721/sample-5.htm",
+            "publishedAt": "2026-07-21T14:46:52.024Z"
+          }
+        ]
+      }
+    ]
+  }
+}

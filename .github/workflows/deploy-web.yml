@@ -1,0 +1,73 @@
+# 前端（Phase 3）GitHub Pages 部署工作流程
+#
+# 目前只建置 web/ 前端並使用範例資料部署。之後的 Python 快／深／SEO 管線
+# 會取代 `gen:data` 步驟，改為擷取真實公開來源後寫入 web/public/data/。
+#
+# 注意（與設計規格一致）：
+# - 部署採 best effort，不宣稱固定間隔 SLA。
+# - 公開 repo 若連續 60 天無活動，GitHub 會自動停用 schedule；請定期確認。
+name: Deploy web to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'web/**'
+      - '.github/workflows/deploy-web.yml'
+  workflow_dispatch:
+  # 未來由資料管線 orchestrator 啟用（frontend-only 階段先不每 5 分鐘重建範例資料）：
+  # schedule:
+  #   - cron: '*/5 * * * *'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 只允許一個執行中與最新一個等待中的部署，且不取消進行中的工作，避免互相覆寫
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: 安裝相依套件
+        run: npm ci
+
+      - name: 產生資料（目前為範例資料）
+        run: npm run gen:data
+
+      - name: 型別檢查
+        run: npm run typecheck
+
+      - name: 建置
+        run: npm run build
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

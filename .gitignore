@@ -1,0 +1,35 @@
+# Superpowers 工作區暫存
+.superpowers/
+
+# Node / Vite
+node_modules/
+web/node_modules/
+web/dist/
+*.tsbuildinfo
+.vite/
+
+# 日誌與環境
+*.log
+.env
+.env.local
+.env.*.local
+
+# 編輯器 / 系統
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Python（未來資料管線）
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+
+# 模型權重不得提交
+*.bin
+*.onnx
+*.safetensors
+models/

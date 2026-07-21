@@ -1,0 +1,101 @@
+import { NavLink, Outlet } from 'react-router-dom';
+import { useData } from '../api/useData';
+import type { Meta } from '../types/contracts';
+import { GLOBAL_STATUS_LABEL } from '../lib/sources';
+import { fmtRelative } from '../lib/format';
+import { useTheme } from '../lib/theme';
+import { Badge } from './ui';
+
+interface NavItem {
+  to: string;
+  label: string;
+  icon: string;
+  end?: boolean;
+}
+
+const NAV: NavItem[] = [
+  { to: '/', label: '總覽', icon: '📊', end: true },
+  { to: '/keywords', label: '關鍵字熱度', icon: '🔥' },
+  { to: '/topics', label: '事件與主題', icon: '🗂️' },
+  { to: '/entities', label: '人物關係', icon: '🕸️' },
+  { to: '/seo', label: '網站 SEO', icon: '🔍' },
+  { to: '/method', label: '方法與狀態', icon: '🧭' },
+];
+
+function ThemeToggle() {
+  const { pref, cycle } = useTheme();
+  const icon = pref === 'system' ? '🌗' : pref === 'light' ? '☀️' : '🌙';
+  const label = pref === 'system' ? '跟隨系統' : pref === 'light' ? '淺色' : '深色';
+  return (
+    <button className="iconbtn" onClick={cycle} title={`主題：${label}（點擊切換）`} aria-label="切換主題">
+      {icon}
+    </button>
+  );
+}
+
+function GlobalStatus() {
+  const { data } = useData<Meta>('meta');
+  if (!data) return null;
+  const s = GLOBAL_STATUS_LABEL[data.status];
+  return (
+    <div className="appbar__status">
+      <Badge variant={s.variant as never} dot>
+        {s.label}
+      </Badge>
+      <span className="hide-sm">更新 {fmtRelative(data.lastFastAt)}</span>
+    </div>
+  );
+}
+
+export function Layout() {
+  return (
+    <div className="app">
+      <header className="appbar">
+        <div className="appbar__brand">
+          <span className="appbar__logo">輿</span>
+          <span>台灣輿情熱度儀表板</span>
+        </div>
+        <div className="appbar__spacer" />
+        <GlobalStatus />
+        <ThemeToggle />
+      </header>
+
+      {/* 手機版：可橫向捲動的分頁列 */}
+      <nav className="mobile-nav" aria-label="主導覽（行動版）">
+        {NAV.map((item) => (
+          <NavLink
+            key={item.to}
+            to={item.to}
+            end={item.end}
+            className={({ isActive }) => `mobile-nav__link${isActive ? ' active' : ''}`}
+          >
+            {item.icon} {item.label}
+          </NavLink>
+        ))}
+      </nav>
+
+      <div className="layout">
+        <aside className="sidebar">
+          <nav className="nav" aria-label="主導覽">
+            <div className="nav__group-label">分析面板</div>
+            {NAV.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.end}
+                className={({ isActive }) => `nav__link${isActive ? ' active' : ''}`}
+              >
+                <span className="nav__ico">{item.icon}</span>
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
+        </aside>
+
+        <main className="content">
+          <Outlet />
+        </main>
+      </div>
+    </div>
+  );
+}
