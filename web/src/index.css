@@ -433,6 +433,61 @@ h4 {
   color: var(--text-secondary);
 }
 
+/* 工具列 */
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.search {
+  padding: 8px 12px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: var(--surface-1);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-family: inherit;
+  min-width: 200px;
+  outline: none;
+}
+.search:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+.search::placeholder {
+  color: var(--text-muted);
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 分段/藥丸按鈕（篩選、時間範圍切換），桌機與手機皆適用 */
+.segbtn {
+  white-space: nowrap;
+  padding: 7px 13px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--page);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  line-height: 1.3;
+}
+.segbtn:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+.segbtn.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
 .kind-tag {
   font-size: 11px;
   font-weight: 700;
@@ -600,6 +655,45 @@ table.data th.num {
   font-size: 16px;
   font-weight: 650;
   margin: 26px 0 12px;
+}
+
+/* ── Footer ─────────────────────────────────────────────────────────────── */
+
+.footer {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.footer__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.footer__brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 14px;
+}
+.footer__desc {
+  margin: 8px 0 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+  max-width: 62ch;
+}
+.footer__links {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13.5px;
+  white-space: nowrap;
+}
+.footer__note {
+  margin: 16px 0 0;
+  color: var(--text-muted);
+  font-size: 12px;
 }
 
 .muted {

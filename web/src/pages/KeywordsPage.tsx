@@ -3,13 +3,50 @@ import type { EChartsOption } from 'echarts';
 import { useData } from '../api/useData';
 import type { Keyword, KeywordsData, KeywordKind } from '../types/contracts';
 import { Chart } from '../components/Chart';
-import { Card, ErrorState, HeatBar, LoadingState } from '../components/ui';
+import { Card, EmptyState, ErrorState, HeatBar, LoadingState } from '../components/ui';
 import { useChartTokens } from '../lib/theme';
 import { GRID, catAxis, tooltip, valAxis } from '../lib/charts';
 import { fmtNum, fmtPct, fmtTime } from '../lib/format';
 import { sourceShort } from '../lib/sources';
 
 type Filter = 'all' | KeywordKind;
+
+function csvCell(v: string): string {
+  return /[",\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v;
+}
+
+/** 將目前篩選後的關鍵字匯出成 CSV（含 BOM，Excel 可正確顯示中文）。 */
+function downloadKeywordsCsv(rows: Keyword[]) {
+  const header = ['關鍵字', '類型', '熱度', '60分鐘聲量', 'V_聲量', 'A_加速度', 'D_多樣性', 'E_互動', '來源占比'];
+  const lines = rows.map((k) => {
+    const c = k.components;
+    const shares = Object.entries(k.sourceShare)
+      .sort((a, b) => (b[1] ?? 0) - (a[1] ?? 0))
+      .map(([s, v]) => `${sourceShort(s as never)}:${Math.round((v ?? 0) * 100)}%`)
+      .join(' ');
+    return [
+      k.term,
+      k.kind === 'manual' ? '監測' : '自動',
+      k.heat.toFixed(1),
+      String(k.mentions60m),
+      c.volume.toFixed(3),
+      c.acceleration.toFixed(3),
+      c.diversity.toFixed(3),
+      c.engagement == null ? '' : c.engagement.toFixed(3),
+      shares,
+    ]
+      .map(csvCell)
+      .join(',');
+  });
+  const csv = '﻿' + [header.join(','), ...lines].join('\r\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `keywords-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
 
 const COMPONENT_META = [
   { key: 'volume', label: 'V 聲量', desc: '近 60 分鐘提及數（log1p）在當期關鍵字中的百分位' },
@@ -22,13 +59,19 @@ export function KeywordsPage() {
   const kw = useData<KeywordsData>('keywords');
   const tokens = useChartTokens();
   const [filter, setFilter] = useState<Filter>('all');
+  const [query, setQuery] = useState('');
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const keywords = kw.data?.keywords ?? [];
-  const filtered = useMemo(
-    () => keywords.filter((k) => filter === 'all' || k.kind === filter),
-    [keywords, filter],
-  );
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return keywords.filter((k) => {
+      if (filter !== 'all' && k.kind !== filter) return false;
+      if (!q) return true;
+      const hay = [k.term, ...(k.aliases ?? [])].join(' ').toLowerCase();
+      return hay.includes(q);
+    });
+  }, [keywords, filter, query]);
   const selected: Keyword | null =
     filtered.find((k) => k.id === selectedId) ?? filtered[0] ?? null;
 
@@ -73,32 +116,53 @@ export function KeywordsPage() {
         </p>
       </div>
 
-      {/* 篩選 */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
-        {([
-          ['all', '全部'],
-          ['manual', '人工監測詞'],
-          ['auto', '自動熱詞'],
-        ] as [Filter, string][]).map(([f, label]) => (
+      {/* 工具列：篩選 + 搜尋 + 匯出 */}
+      <div className="toolbar">
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          {([
+            ['all', '全部'],
+            ['manual', '人工監測詞'],
+            ['auto', '自動熱詞'],
+          ] as [Filter, string][]).map(([f, label]) => (
+            <button
+              key={f}
+              className={`segbtn${filter === f ? ' active' : ''}`}
+              onClick={() => setFilter(f)}
+            >
+              {label}
+              {f !== 'all' && (
+                <span className="num" style={{ opacity: 0.7 }}>
+                  {' '}
+                  {keywords.filter((k) => k.kind === f).length}
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <input
+            className="search"
+            type="search"
+            placeholder="搜尋關鍵字或別名…"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            aria-label="搜尋關鍵字"
+          />
           <button
-            key={f}
-            className={`mobile-nav__link${filter === f ? ' active' : ''}`}
-            style={{ display: 'inline-block' }}
-            onClick={() => setFilter(f)}
+            className="btn"
+            onClick={() => downloadKeywordsCsv(filtered)}
+            disabled={filtered.length === 0}
+            title="匯出目前篩選結果為 CSV"
           >
-            {label}
-            {f !== 'all' && (
-              <span className="num" style={{ opacity: 0.7 }}>
-                {' '}
-                {keywords.filter((k) => k.kind === f).length}
-              </span>
-            )}
+            ⬇ 匯出 CSV
           </button>
-        ))}
+        </div>
       </div>
 
       {kw.loading ? (
         <LoadingState />
+      ) : filtered.length === 0 ? (
+        <EmptyState title="找不到符合的關鍵字" desc="試著調整搜尋文字或篩選條件。" icon="🔍" />
       ) : (
         <div className="grid cols-2">
           <Card title="熱度排行" hint={`共 ${filtered.length} 個關鍵字`}>
@@ -126,7 +190,7 @@ export function KeywordsPage() {
       )}
 
       {/* 完整表格 */}
-      {!kw.loading && (
+      {!kw.loading && filtered.length > 0 && (
         <Card title="關鍵字明細" hint="點選任一列查看公式分解" >
           <div className="table-wrap">
             <table className="data">

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { EChartsOption } from 'echarts';
 import { useData } from '../api/useData';
@@ -26,6 +27,8 @@ export function OverviewPage() {
   const sources = useData<SourcesData>('sources');
   const recent = useData<RecentData>('recent');
   const tokens = useChartTokens();
+  // 趨勢時間範圍（點數；每點 5 分鐘）：12=1h、24=2h、48=4h
+  const [rangePoints, setRangePoints] = useState(48);
 
   const err = kw.error || meta.error;
   if (err) return <ErrorState error={err} onRetry={() => { kw.reload(); meta.reload(); }} />;
@@ -37,7 +40,9 @@ export function OverviewPage() {
   const totalMentions = keywords.reduce((a, k) => a + k.mentions60m, 0);
   const hottest = keywords[0];
 
-  // 熱度趨勢（前 5 詞多線）
+  // 熱度趨勢（前 5 詞多線）；依所選時間範圍取尾段
+  const sliceTail = <T,>(arr: T[]) => arr.slice(-rangePoints);
+  const labelInterval = rangePoints <= 12 ? 1 : rangePoints <= 24 ? 3 : 7;
   const trendOption: EChartsOption = {
     color: tokens.series,
     tooltip: tooltip(tokens, { trigger: 'axis' }),
@@ -51,9 +56,9 @@ export function OverviewPage() {
     grid: { ...GRID, top: 40 },
     xAxis: {
       type: 'category',
-      data: topN[0]?.trend.map((p) => fmtTime(p.t)) ?? [],
+      data: sliceTail(topN[0]?.trend ?? []).map((p) => fmtTime(p.t)),
       ...catAxis(tokens),
-      axisLabel: { color: tokens.muted, fontSize: 11, interval: 7 },
+      axisLabel: { color: tokens.muted, fontSize: 11, interval: labelInterval },
     },
     yAxis: { type: 'value', min: 0, max: 100, ...valAxis(tokens) },
     series: topN.map((k) => ({
@@ -62,9 +67,15 @@ export function OverviewPage() {
       smooth: true,
       showSymbol: false,
       lineStyle: { width: 2 },
-      data: k.trend.map((p) => p.heat),
+      data: sliceTail(k.trend).map((p) => p.heat),
     })),
   };
+
+  const RANGES: [number, string][] = [
+    [12, '1 小時'],
+    [24, '2 小時'],
+    [48, '4 小時'],
+  ];
 
   // 來源聲量占比（近 60 分鐘，跨所有關鍵字加總）
   const srcAgg: Record<string, number> = {};
@@ -152,7 +163,24 @@ export function OverviewPage() {
 
       {/* Trend + sources */}
       <div className="grid wide-left" style={{ marginTop: 16 }}>
-        <Card title="熱度趨勢（前 5 名）" hint="近 4 小時 · 每 5 分鐘一點 · 0–100">
+        <Card
+          title="熱度趨勢（前 5 名）"
+          hint="每 5 分鐘一點 · 0–100"
+          right={
+            <div style={{ display: 'flex', gap: 4 }}>
+              {RANGES.map(([pts, label]) => (
+                <button
+                  key={pts}
+                  className={`segbtn${rangePoints === pts ? ' active' : ''}`}
+                  style={{ padding: '3px 10px', fontSize: 12.5 }}
+                  onClick={() => setRangePoints(pts)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          }
+        >
           {kw.loading ? <LoadingState /> : <Chart option={trendOption} height={300} />}
         </Card>
         <Card title="來源聲量占比" hint="近 60 分鐘估計">
@@ -238,9 +266,6 @@ export function OverviewPage() {
         </Card>
       </div>
 
-      <p className="small muted" style={{ marginTop: 20, textAlign: 'center' }}>
-        本系統為個人／研究型 MVP，指標僅供研究參考，不代表台灣整體民意；「共現」不代表支持、反對或因果。
-      </p>
     </>
   );
 }

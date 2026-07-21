@@ -6,6 +6,11 @@ import { fmtRelative } from '../lib/format';
 import { useTheme } from '../lib/theme';
 import { Badge } from './ui';
 
+export const BRAND = '媒體輿情監測';
+export const BRAND_FULL = '台灣媒體輿情監測';
+export const REPO_URL = 'https://github.com/ChunYu8866/MediaMonitoringDB';
+export const SITE_URL = 'https://chunyu8866.github.io/MediaMonitoringDB/';
+
 interface NavItem {
   to: string;
   label: string;
@@ -47,16 +52,55 @@ function GlobalStatus() {
   );
 }
 
+function Footer() {
+  return (
+    <footer className="footer">
+      <div className="footer__row">
+        <div>
+          <div className="footer__brand">
+            <span className="appbar__logo" style={{ width: 24, height: 24, fontSize: 13 }}>
+              監
+            </span>
+            {BRAND_FULL}
+          </div>
+          <p className="footer__desc">
+            個人／研究型 MVP。整合中央社、ETtoday、三立、鏡新聞、TVBS、自由時報等主流媒體與 Bluesky 公開資料，
+            計算關鍵字熱度、情緒、主題與人物共現。
+          </p>
+        </div>
+        <nav className="footer__links" aria-label="外部連結">
+          <a href={REPO_URL} target="_blank" rel="noreferrer noopener">GitHub 原始碼 ↗</a>
+          <a href={SITE_URL} target="_blank" rel="noreferrer noopener">網站首頁 ↗</a>
+        </nav>
+      </div>
+      <p className="footer__note">
+        指標僅供研究參考，不代表台灣整體民意；「共現」不代表支持、反對或因果。更新採 best effort，不宣稱固定間隔 SLA。
+        目前顯示為示範資料。
+      </p>
+    </footer>
+  );
+}
+
 export function Layout() {
   return (
     <div className="app">
       <header className="appbar">
         <div className="appbar__brand">
-          <span className="appbar__logo">輿</span>
-          <span>台灣輿情熱度儀表板</span>
+          <span className="appbar__logo">監</span>
+          <span>{BRAND}</span>
         </div>
         <div className="appbar__spacer" />
         <GlobalStatus />
+        <a
+          className="iconbtn"
+          href={REPO_URL}
+          target="_blank"
+          rel="noreferrer noopener"
+          title="在 GitHub 開啟原始碼"
+          aria-label="GitHub 原始碼"
+        >
+          {'\u{1F4C1}'}
+        </a>
         <ThemeToggle />
       </header>
 
@@ -94,6 +138,7 @@ export function Layout() {
 
         <main className="content">
           <Outlet />
+          <Footer />
         </main>
       </div>
     </div>
