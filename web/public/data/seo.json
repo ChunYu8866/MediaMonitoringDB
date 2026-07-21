@@ -1,11 +1,11 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-07-21T07:30:52.024Z",
+  "generatedAt": "2026-07-21T07:37:23.435Z",
   "data": {
     "connected": true,
-    "lastSyncAt": "2026-07-21T07:30:52.024Z",
+    "lastSyncAt": "2026-07-21T07:37:23.435Z",
     "preliminary": true,
-    "siteUrl": "https://<your-account>.github.io/<repo>/",
+    "siteUrl": "https://chunyu8866.github.io/MediaMonitoringDB/",
     "daily": [
       {
         "date": "2026-06-24",

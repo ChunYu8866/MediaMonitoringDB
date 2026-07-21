@@ -470,7 +470,7 @@ write(
     connected: true,
     lastSyncAt: iso(NOW - 8 * HOUR),
     preliminary: true,
-    siteUrl: 'https://<your-account>.github.io/<repo>/',
+    siteUrl: 'https://chunyu8866.github.io/MediaMonitoringDB/',
     daily,
     topQueries,
     totals: {
