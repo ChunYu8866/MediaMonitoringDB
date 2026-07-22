@@ -5,13 +5,17 @@ import argparse
 import json
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from urllib.parse import urlparse
 
 import requests
 import yaml
 
 from .archive import dedupe_items, item_to_public, public_to_item
+from .connectors.html_listing import crawl_due, fetch_listing_source
 from .connectors.rss import _fetch_bytes, fetch_source
 from .connectors.trends import parse_trends_feed
+from .models import SourceResult
+from .sources import load_sources
 
 
 TRENDS_URL = "https://trends.google.com/trending/rss?geo=TW&hl=zh-TW"
@@ -26,6 +30,24 @@ def write_json(path: Path, value: dict) -> None:
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
+def keep_allowed_sources(items: list, source_ids: set[str]) -> list:
+    """Avoid restoring publishers that are no longer in the configured allowlist."""
+    return [item for item in items if item.source in source_ids]
+
+
+def filter_trends_news(items: list[dict], sources: list[dict]) -> list[dict]:
+    """Keep only requested publishers inside Google Trends related-news metadata."""
+    domains = {domain.lower() for source in sources for domain in source.get("domains", [])}
+    for item in items:
+        item["news"] = [
+            news
+            for news in item.get("news", [])
+            if (hostname := urlparse(news.get("url", "")).hostname)
+            and any(hostname.lower() == domain or hostname.lower().endswith(f".{domain}") for domain in domains)
+        ]
+    return items
+
+
 def restore_items(base_url: str) -> list:
     if not base_url:
         return []
@@ -38,17 +60,61 @@ def restore_items(base_url: str) -> list:
         return []
 
 
+def restore_source_states(base_url: str) -> dict[str, dict]:
+    if not base_url:
+        return {}
+    try:
+        response = requests.get(f"{base_url.rstrip('/')}/data/sources.json", timeout=10)
+        response.raise_for_status()
+        values = response.json().get("data", {}).get("sources", [])
+        return {value["id"]: value for value in values if isinstance(value, dict) and value.get("id")}
+    except (requests.RequestException, ValueError, TypeError):
+        return {}
+
+
+def _previous_result(source: dict, state: dict | None) -> SourceResult:
+    if not state:
+        return SourceResult(id=source["id"], name=source["name"], enabled=True, ok=True)
+    ok = state.get("status") in {"ok", "stale", "degraded"}
+    return SourceResult(
+        id=source["id"],
+        name=source["name"],
+        enabled=True,
+        ok=ok,
+        error_code=None if ok else state.get("errorCode"),
+    )
+
+
 def run(config_path: Path, output_dir: Path, restore_base_url: str = "") -> int:
     now = datetime.now(timezone.utc)
     generated_at = now.isoformat().replace("+00:00", "Z")
     config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
+    sources = load_sources(config_path)
+    sources_by_id = {source["id"]: source for source in sources}
     fetch_cfg = config.get("fetch", {})
     timeout = int(fetch_cfg.get("timeout_seconds", 10))
     max_items = int(fetch_cfg.get("max_items_per_source", 20))
 
-    results = [fetch_source(source, timeout, max_items) for source in config.get("sources", [])]
+    restored_states = restore_source_states(restore_base_url)
+    results: list[SourceResult] = []
+    crawl_attempted: set[str] = set()
+    for source in sources:
+        state = restored_states.get(source["id"])
+        rss_result = fetch_source(source, timeout, max_items) if source.get("rss_url") else None
+        result = rss_result
+        crawl = source.get("crawl") or {}
+        last_crawl_at = state.get("lastCrawlAt") if state else None
+        should_try_crawl = bool(crawl.get("enabled")) and (rss_result is None or not rss_result.ok)
+        if should_try_crawl and crawl_due(last_crawl_at, now):
+            crawl_attempted.add(source["id"])
+            listing_result = fetch_listing_source(source, timeout, max_items)
+            if listing_result.ok or result is None:
+                result = listing_result
+        elif result is None:
+            result = _previous_result(source, state)
+        results.append(result or _previous_result(source, state))
     current_items = [entry for result in results for entry in result.items]
-    restored_items = restore_items(restore_base_url)
+    restored_items = keep_allowed_sources(restore_items(restore_base_url), set(sources_by_id))
     cutoff = now - timedelta(days=7)
     items = [entry for entry in dedupe_items(current_items + restored_items) if entry.published_at >= cutoff]
     enabled_results = [result for result in results if result.enabled]
@@ -72,13 +138,29 @@ def run(config_path: Path, output_dir: Path, restore_base_url: str = "") -> int:
                     {
                         "id": result.id,
                         "displayName": result.name,
-                        "status": "ok" if result.ok else ("disabled" if not result.enabled else "error"),
-                        "lastAttemptAt": generated_at,
-                        "lastSuccessAt": generated_at if result.ok else None,
+                        "status": (
+                            "ok"
+                            if result.ok
+                            else "disabled"
+                            if not result.enabled
+                            else "degraded"
+                            if not sources_by_id[result.id].get("rss_url")
+                            else "error"
+                        ),
+                        "lastAttemptAt": generated_at if result.enabled else None,
+                        "lastSuccessAt": generated_at if result.ok else restored_states.get(result.id, {}).get("lastSuccessAt"),
+                        "lastCrawlAt": generated_at if result.id in crawl_attempted else restored_states.get(result.id, {}).get("lastCrawlAt"),
                         "errorCode": result.error_code,
                         "stale": not result.ok,
-                        "itemCount": result.item_count,
-                        "usageNote": "官方 RSS；僅顯示標題、短摘要、時間與原文連結。",
+                        "itemCount": sum(1 for item in items if item.source == result.id),
+                        "accessMode": (
+                            "site-listing"
+                            if result.id in crawl_attempted and result.ok
+                            else "official-rss"
+                            if sources_by_id[result.id].get("rss_url")
+                            else restored_states.get(result.id, {}).get("accessMode", "google-news")
+                        ),
+                        "usageNote": "僅顯示標題、短摘要、時間與原文連結；不抓取全文或圖片。",
                     }
                     for result in results
                 ]
@@ -89,7 +171,7 @@ def run(config_path: Path, output_dir: Path, restore_base_url: str = "") -> int:
 
     trends_stale = False
     try:
-        trends_items = parse_trends_feed(_fetch_bytes(TRENDS_URL, timeout))[:20]
+        trends_items = filter_trends_news(parse_trends_feed(_fetch_bytes(TRENDS_URL, timeout))[:20], sources)
     except Exception:  # noqa: BLE001 - 趨勢失敗不阻擋新聞部署
         trends_items = []
         previous = output_dir / "trends.json"
@@ -121,7 +203,7 @@ def run(config_path: Path, output_dir: Path, restore_base_url: str = "") -> int:
                 "lastFastAt": generated_at if current_items else None,
                 "lastDeepAt": None,
                 "lastSeoAt": None,
-                "methodVersion": "news-heat-v1",
+                "methodVersion": "news-heat-v2-22-sources",
                 "scheduleDaysUntilPause": None,
                 "coverage": {"fastBucketHours": 24, "hourlyDays": 7, "dailyDays": 7},
                 "stateRestoreFailed": not bool(restored_items) and bool(restore_base_url),

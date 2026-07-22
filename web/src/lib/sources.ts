@@ -13,14 +13,29 @@ export interface SourceMeta {
 
 // 顏色依「來源身分」固定指定（非依排名），維持全站一致。
 export const SOURCE_META: Record<SourceId, SourceMeta> = {
-  cna: { id: 'cna', name: '中央通訊社', short: '中央社', series: 0, news: true },
-  ltn: { id: 'ltn', name: '自由時報', short: '自由時報', series: 1, news: true },
-  mirror: { id: 'mirror', name: '鏡新聞', short: '鏡新聞', series: 2, news: true },
-  tvbs: { id: 'tvbs', name: 'TVBS 新聞網', short: 'TVBS', series: 3, news: true },
-  ettoday: { id: 'ettoday', name: 'ETtoday 新聞雲', short: 'ETtoday', series: 5, news: true },
-  currents: { id: 'currents', name: 'Currents API（選配）', short: 'Currents', series: 4, news: true },
+  tvbs: { id: 'tvbs', name: 'TVBS', short: 'TVBS', series: 0, news: true },
+  ebc: { id: 'ebc', name: '東森新聞', short: '東森', series: 1, news: true },
+  setn: { id: 'setn', name: '三立新聞', short: '三立', series: 2, news: true },
+  ftv: { id: 'ftv', name: '民視新聞', short: '民視', series: 3, news: true },
+  cti: { id: 'cti', name: '中天新聞', short: '中天', series: 4, news: true },
+  era: { id: 'era', name: '年代新聞', short: '年代', series: 5, news: true },
+  nexttv: { id: 'nexttv', name: '壹電視', short: '壹電視', series: 6, news: true },
+  pts: { id: 'pts', name: '公視新聞', short: '公視', series: 7, news: true },
+  udn: { id: 'udn', name: 'UDN', short: 'UDN', series: 0, news: true },
+  ltn: { id: 'ltn', name: '自由時報', short: '自由', series: 1, news: true },
+  cna: { id: 'cna', name: '中央社', short: '中央社', series: 2, news: true },
+  moneyudn: { id: 'moneyudn', name: '經濟日報', short: '經濟日報', series: 3, news: true },
+  ctee: { id: 'ctee', name: '工商時報', short: '工商', series: 4, news: true },
+  anue: { id: 'anue', name: '鉅亨網', short: '鉅亨', series: 5, news: true },
+  wealth: { id: 'wealth', name: '財訊', short: '財訊', series: 6, news: true },
+  businessweekly: { id: 'businessweekly', name: '商業週刊', short: '商周', series: 7, news: true },
+  thenewslens: { id: 'thenewslens', name: '關鍵評論網', short: '關鍵評論', series: 0, news: true },
+  reporter: { id: 'reporter', name: '報導者', short: '報導者', series: 1, news: true },
+  newtalk: { id: 'newtalk', name: '新頭殼', short: '新頭殼', series: 2, news: true },
+  nownews: { id: 'nownews', name: 'NOWNEWS', short: 'NOWNEWS', series: 3, news: true },
+  nextapple: { id: 'nextapple', name: '壹蘋新聞網', short: '壹蘋', series: 4, news: true },
+  ettoday: { id: 'ettoday', name: 'ETtoday', short: 'ETtoday', series: 5, news: true },
   gsc: { id: 'gsc', name: 'Google Search Console', short: 'Search Console', series: 6, news: false },
-  set: { id: 'set', name: '三立新聞網', short: '三立', series: 7, news: true },
 };
 
 /** 依顯示順序排列的新聞來源。 */
@@ -34,6 +49,12 @@ export function sourceName(id: SourceId): string {
 
 export function sourceShort(id: SourceId): string {
   return SOURCE_META[id]?.short ?? id;
+}
+
+export function sourceModeLabel(mode?: 'official-rss' | 'google-news' | 'site-listing'): string {
+  if (mode === 'official-rss') return '官方 RSS';
+  if (mode === 'site-listing') return '官網低頻';
+  return 'Google News 補充';
 }
 
 /** 回傳 CSS 變數字串（供一般 UI 使用）。 */

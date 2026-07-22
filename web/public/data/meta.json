@@ -1,18 +1,18 @@
 {
   "schemaVersion": "2.0.0",
-  "generatedAt": "2026-07-22T11:49:38.916783Z",
+  "generatedAt": "2026-07-22T13:50:21.504749Z",
   "data": {
     "status": "partial",
-    "lastFastAt": "2026-07-22T11:49:38.916783Z",
+    "lastFastAt": "2026-07-22T13:50:21.504749Z",
     "lastDeepAt": null,
     "lastSeoAt": null,
-    "methodVersion": "news-heat-v1",
+    "methodVersion": "news-heat-v2-22-sources",
     "scheduleDaysUntilPause": null,
     "coverage": {
       "fastBucketHours": 24,
       "hourlyDays": 7,
       "dailyDays": 7
     },
-    "stateRestoreFailed": true
+    "stateRestoreFailed": false
   }
 }

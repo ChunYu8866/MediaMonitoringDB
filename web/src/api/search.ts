@@ -80,13 +80,28 @@ const RANGE_MS: Record<SearchRange, number> = {
 };
 
 const SOURCE_NAMES: Record<string, string> = {
-  cna: '中央通訊社',
+  tvbs: 'TVBS',
+  ebc: '東森新聞',
+  setn: '三立新聞',
+  ftv: '民視新聞',
+  cti: '中天新聞',
+  era: '年代新聞',
+  nexttv: '壹電視',
+  pts: '公視新聞',
+  udn: 'UDN',
   ltn: '自由時報',
-  ettoday: 'ETtoday 新聞雲',
-  mirror: '鏡傳媒',
-  tvbs: 'TVBS 新聞網',
-  set: '三立新聞網',
-  currents: 'Currents API（選配）',
+  cna: '中央社',
+  moneyudn: '經濟日報',
+  ctee: '工商時報',
+  anue: '鉅亨網',
+  wealth: '財訊',
+  businessweekly: '商業週刊',
+  thenewslens: '關鍵評論網',
+  reporter: '報導者',
+  newtalk: '新頭殼',
+  nownews: 'NOWNEWS',
+  nextapple: '壹蘋新聞網',
+  ettoday: 'ETtoday',
 };
 
 export function buildStaticSearchData(
@@ -113,11 +128,11 @@ export function buildStaticSearchData(
   const recent = items.filter((item) => Date.parse(item.publishedAt) >= midpoint).length;
   const previous = items.length - recent;
   const input = {
-    volume: clamp01(items.length / 6),
+    volume: clamp01(items.length / 22),
     acceleration: items.length === 0
       ? 0
       : clamp01(0.5 + (recent - previous) / (2 * Math.max(1, recent, previous))),
-    diversity: clamp01(sourceCount / 6),
+    diversity: clamp01(sourceCount / 22),
   };
   const bucketCount = range === '1h' ? 6 : range === '6h' ? 12 : range === '24h' ? 24 : 28;
   const bucketMs = RANGE_MS[range] / bucketCount;

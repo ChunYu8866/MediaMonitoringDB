@@ -1,6 +1,6 @@
 {
   "schemaVersion": "2.0.0",
-  "generatedAt": "2026-07-22T11:37:38.353Z",
+  "generatedAt": "2026-07-22T13:35:18.858Z",
   "data": {
     "stale": false,
     "experimental": true,
@@ -38,25 +38,25 @@
             "title": "台積電釋出先進製程需求展望",
             "source": "cna",
             "url": "https://www.cna.com.tw/news/afe/2026072100001.aspx",
-            "publishedAt": "2026-07-22T11:14:38.353Z"
+            "publishedAt": "2026-07-22T13:12:18.858Z"
           },
           {
             "title": "半導體族群帶動盤面焦點",
             "source": "tvbs",
             "url": "https://news.tvbs.com.tw/money/2400010",
-            "publishedAt": "2026-07-22T11:09:38.353Z"
+            "publishedAt": "2026-07-22T13:07:18.858Z"
           },
           {
             "title": "半導體供應鏈聚焦資本支出",
             "source": "ettoday",
             "url": "https://www.ettoday.net/news/20260721/sample-1.htm",
-            "publishedAt": "2026-07-22T10:57:38.353Z"
+            "publishedAt": "2026-07-22T12:55:18.858Z"
           },
           {
             "title": "海外布局成為產業報導焦點",
-            "source": "mirror",
-            "url": "https://www.mnews.tw/story/20260721tech002",
-            "publishedAt": "2026-07-22T11:31:38.353Z"
+            "source": "ebc",
+            "url": "https://news.ebc.net.tw/news/business/1",
+            "publishedAt": "2026-07-22T13:29:18.858Z"
           }
         ]
       },
@@ -93,31 +93,31 @@
             "title": "氣象署更新颱風路徑預報",
             "source": "cna",
             "url": "https://www.cna.com.tw/news/aloc/2026072100010.aspx",
-            "publishedAt": "2026-07-22T11:37:38.353Z"
+            "publishedAt": "2026-07-22T13:35:18.858Z"
           },
           {
             "title": "停班停課標準懶人包",
-            "source": "set",
+            "source": "setn",
             "url": "https://www.setn.com/News.aspx?NewsID=1500010",
-            "publishedAt": "2026-07-22T11:29:38.353Z"
+            "publishedAt": "2026-07-22T13:27:18.858Z"
           },
           {
             "title": "颱風動向牽動連假交通",
             "source": "ltn",
             "url": "https://news.ltn.com.tw/news/life/breakingnews/4700010",
-            "publishedAt": "2026-07-22T11:25:38.353Z"
+            "publishedAt": "2026-07-22T13:23:18.858Z"
           },
           {
             "title": "各縣市討論停班停課標準",
             "source": "ettoday",
             "url": "https://www.ettoday.net/news/20260721/sample-2.htm",
-            "publishedAt": "2026-07-22T11:23:38.353Z"
+            "publishedAt": "2026-07-22T13:21:18.858Z"
           },
           {
             "title": "防颱準備與停班停課資訊整理",
-            "source": "mirror",
-            "url": "https://www.mnews.tw/story/20260721life002",
-            "publishedAt": "2026-07-22T11:41:38.353Z"
+            "source": "ebc",
+            "url": "https://news.ebc.net.tw/news/living/2",
+            "publishedAt": "2026-07-22T13:39:18.858Z"
           }
         ]
       },
@@ -154,25 +154,25 @@
             "title": "電價審議聚焦民生用電負擔",
             "source": "cna",
             "url": "https://www.cna.com.tw/news/afe/2026072100020.aspx",
-            "publishedAt": "2026-07-22T10:41:38.353Z"
+            "publishedAt": "2026-07-22T12:39:18.858Z"
           },
           {
             "title": "電價調整方向引發討論",
             "source": "ltn",
             "url": "https://news.ltn.com.tw/news/politics/breakingnews/4700020",
-            "publishedAt": "2026-07-22T10:29:38.353Z"
+            "publishedAt": "2026-07-22T12:27:18.858Z"
           },
           {
             "title": "能源政策專題報導",
-            "source": "mirror",
-            "url": "https://www.mnews.tw/story/20260721eco001",
-            "publishedAt": "2026-07-22T10:21:38.353Z"
+            "source": "ebc",
+            "url": "https://news.ebc.net.tw/news/business/3",
+            "publishedAt": "2026-07-22T12:19:18.858Z"
           },
           {
             "title": "產業界關注電價調整幅度",
             "source": "ettoday",
             "url": "https://www.ettoday.net/news/20260721/sample-3.htm",
-            "publishedAt": "2026-07-22T10:14:38.353Z"
+            "publishedAt": "2026-07-22T12:12:18.858Z"
           }
         ]
       },
@@ -204,13 +204,13 @@
             "title": "委員會排定重點預算審查",
             "source": "cna",
             "url": "https://www.cna.com.tw/news/aipl/2026072100030.aspx",
-            "publishedAt": "2026-07-22T09:49:38.353Z"
+            "publishedAt": "2026-07-22T11:47:18.858Z"
           },
           {
             "title": "朝野協商聚焦議事效率",
             "source": "ettoday",
             "url": "https://www.ettoday.net/news/20260721/sample-4.htm",
-            "publishedAt": "2026-07-22T09:29:38.353Z"
+            "publishedAt": "2026-07-22T11:27:18.858Z"
           }
         ]
       },
@@ -241,13 +241,13 @@
             "title": "本週賽事焦點整理",
             "source": "tvbs",
             "url": "https://news.tvbs.com.tw/sports/2400020",
-            "publishedAt": "2026-07-22T11:34:38.353Z"
+            "publishedAt": "2026-07-22T13:32:18.858Z"
           },
           {
             "title": "運動焦點：本週賽事回顧",
             "source": "ettoday",
             "url": "https://www.ettoday.net/news/20260721/sample-5.htm",
-            "publishedAt": "2026-07-22T11:05:38.353Z"
+            "publishedAt": "2026-07-22T13:03:18.858Z"
           }
         ]
       }

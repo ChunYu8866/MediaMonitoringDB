@@ -50,8 +50,14 @@ function computeHeat({ volume, acceleration, diversity }) {
 }
 
 // ── 關鍵字 ───────────────────────────────────────────────────────────────
-// 新聞來源：中央社、ETtoday、三立、鏡新聞、TVBS、自由時報
-const NEWS_SOURCES = ['cna', 'ettoday', 'set', 'mirror', 'tvbs', 'ltn'];
+const SOURCE_META = [
+  ['tvbs', 'TVBS'], ['ebc', '東森'], ['setn', '三立'], ['ftv', '民視'], ['cti', '中天'], ['era', '年代'],
+  ['nexttv', '壹電視'], ['pts', '公視新聞'], ['udn', 'UDN'], ['ltn', '自由時報'], ['cna', '中央社'],
+  ['moneyudn', '經濟日報'], ['ctee', '工商時報'], ['anue', '鉜亨網'], ['wealth', '財訊'],
+  ['businessweekly', '商業週刊'], ['thenewslens', '關鍵評論網'], ['reporter', '報導者'],
+  ['newtalk', '新頭殼'], ['nownews', 'NOWNEWS'], ['nextapple', '壹蘋新聞網'], ['ettoday', 'ETtoday'],
+];
+const NEWS_SOURCES = SOURCE_META.map(([id]) => id);
 
 function shuffle(arr) {
   const a = [...arr];
@@ -165,97 +171,20 @@ const keywords = KW_DEFS.map((def, idx) => {
 
 write('keywords', { keywords });
 
-// ── 來源健康（示範：ETtoday 因 429 標為 stale，展示韌性）────────────────────
-const sources = [
-  {
-    id: 'cna',
-    displayName: '中央通訊社',
-    status: 'ok',
-    lastAttemptAt: iso(NOW - 2 * MIN),
-    lastSuccessAt: iso(NOW - 2 * MIN),
-    errorCode: null,
-    stale: false,
-    itemCount: 42,
-    usageNote: '僅取官方 RSS 的標題、前言、發稿時間與原文連結；保留「中央通訊社」來源標示，不抓取正文全文。',
-  },
-  {
-    id: 'ettoday',
-    displayName: 'ETtoday 新聞雲',
-    status: 'stale',
-    lastAttemptAt: iso(NOW - 2 * MIN),
-    lastSuccessAt: iso(NOW - 41 * MIN),
-    errorCode: 'HTTP_429',
-    stale: true,
-    itemCount: 0,
-    usageNote: '使用官方 RSS；公開畫面只顯示標題、短前言、時間與原文連結，不重製全文或圖片。目前遭速率限制（429），沿用上次成功資料並標示過期。',
-  },
-  {
-    id: 'set',
-    displayName: '三立新聞網',
-    status: 'ok',
-    lastAttemptAt: iso(NOW - 2 * MIN),
-    lastSuccessAt: iso(NOW - 2 * MIN),
-    errorCode: null,
-    stale: false,
-    itemCount: 38,
-    usageNote: '使用官方 RSS；公開畫面只顯示標題、短前言、時間與原文連結，不重製全文或圖片。實際上線前需再確認 setn.com RSS 網址與著作權條款。',
-  },
-  {
-    id: 'mirror',
-    displayName: '鏡新聞',
-    status: 'ok',
-    lastAttemptAt: iso(NOW - 2 * MIN),
-    lastSuccessAt: iso(NOW - 2 * MIN),
-    errorCode: null,
-    stale: false,
-    itemCount: 24,
-    usageNote: '使用官方 RSS／feed；只呈現標題、短前言、時間與原文連結。實際上線前需確認 mnews.tw feed 與授權範圍。',
-  },
-  {
-    id: 'tvbs',
-    displayName: 'TVBS 新聞網',
-    status: 'ok',
-    lastAttemptAt: iso(NOW - 2 * MIN),
-    lastSuccessAt: iso(NOW - 3 * MIN),
-    errorCode: null,
-    stale: false,
-    itemCount: 31,
-    usageNote: '使用官方 RSS；只呈現標題、短前言、時間與原文連結，不重製全文。實際上線前需確認 news.tvbs.com.tw RSS 與著作權條款。',
-  },
-  {
-    id: 'ltn',
-    displayName: '自由時報',
-    status: 'ok',
-    lastAttemptAt: iso(NOW - 2 * MIN),
-    lastSuccessAt: iso(NOW - 2 * MIN),
-    errorCode: null,
-    stale: false,
-    itemCount: 45,
-    usageNote: '使用官方 RSS（news.ltn.com.tw）；只呈現標題、短前言、時間與原文連結，不抓正文全文或圖片。實際上線前需確認各分類 feed 與合理使用條件。',
-  },
-  {
-    id: 'currents',
-    displayName: 'Currents API（選配）',
-    status: 'disabled',
-    lastAttemptAt: null,
-    lastSuccessAt: null,
-    errorCode: null,
-    stale: false,
-    itemCount: 0,
-    usageNote: '未設定 API secret 時停用；不影響官方 RSS 搜尋。',
-  },
-  {
-    id: 'gsc',
-    displayName: 'Google Search Console',
-    status: 'ok',
-    lastAttemptAt: iso(NOW - 8 * HOUR),
-    lastSuccessAt: iso(NOW - 8 * HOUR),
-    errorCode: null,
-    stale: false,
-    itemCount: 20,
-    usageNote: '只分析本站已驗證的 GitHub Pages property，每日同步一次。這是本站 SEO 成效，非全網熱搜；資料有延遲，不併入即時熱度。',
-  },
-];
+// ── 22 家新聞來源的公開契約範例 ──────────────────────────────────
+const sources = SOURCE_META.map(([id, displayName]) => ({
+  id,
+  displayName,
+  status: 'ok',
+  lastAttemptAt: iso(NOW - 2 * MIN),
+  lastSuccessAt: iso(NOW - 2 * MIN),
+  lastCrawlAt: null,
+  accessMode: 'google-news',
+  errorCode: null,
+  stale: false,
+  itemCount: 0,
+  usageNote: '只顯示標題、短摘要、時間與原文連結；不抓取新聞全文或圖片。',
+}));
 write('sources', { sources });
 
 // ── meta（因 ETtoday stale → 全域 partial）──────────────────────────────────
@@ -286,7 +215,7 @@ const topics = [
       { title: '台積電釋出先進製程需求展望', source: 'cna', url: 'https://www.cna.com.tw/news/afe/2026072100001.aspx', publishedAt: iso(NOW - 35 * MIN) },
       { title: '半導體族群帶動盤面焦點', source: 'tvbs', url: 'https://news.tvbs.com.tw/money/2400010', publishedAt: iso(NOW - 40 * MIN) },
       { title: '半導體供應鏈聚焦資本支出', source: 'ettoday', url: 'https://www.ettoday.net/news/20260721/sample-1.htm', publishedAt: iso(NOW - 52 * MIN) },
-      { title: '海外布局成為產業報導焦點', source: 'mirror', url: 'https://www.mnews.tw/story/20260721tech002', publishedAt: iso(NOW - 18 * MIN) },
+      { title: '海外布局成為產業報導焦點', source: 'ebc', url: 'https://news.ebc.net.tw/news/business/1', publishedAt: iso(NOW - 18 * MIN) },
     ],
   },
   {
@@ -301,10 +230,10 @@ const topics = [
     ],
     articles: [
       { title: '氣象署更新颱風路徑預報', source: 'cna', url: 'https://www.cna.com.tw/news/aloc/2026072100010.aspx', publishedAt: iso(NOW - 12 * MIN) },
-      { title: '停班停課標準懶人包', source: 'set', url: 'https://www.setn.com/News.aspx?NewsID=1500010', publishedAt: iso(NOW - 20 * MIN) },
+      { title: '停班停課標準懶人包', source: 'setn', url: 'https://www.setn.com/News.aspx?NewsID=1500010', publishedAt: iso(NOW - 20 * MIN) },
       { title: '颱風動向牽動連假交通', source: 'ltn', url: 'https://news.ltn.com.tw/news/life/breakingnews/4700010', publishedAt: iso(NOW - 24 * MIN) },
       { title: '各縣市討論停班停課標準', source: 'ettoday', url: 'https://www.ettoday.net/news/20260721/sample-2.htm', publishedAt: iso(NOW - 26 * MIN) },
-      { title: '防颱準備與停班停課資訊整理', source: 'mirror', url: 'https://www.mnews.tw/story/20260721life002', publishedAt: iso(NOW - 8 * MIN) },
+      { title: '防颱準備與停班停課資訊整理', source: 'ebc', url: 'https://news.ebc.net.tw/news/living/2', publishedAt: iso(NOW - 8 * MIN) },
     ],
   },
   {
@@ -320,7 +249,7 @@ const topics = [
     articles: [
       { title: '電價審議聚焦民生用電負擔', source: 'cna', url: 'https://www.cna.com.tw/news/afe/2026072100020.aspx', publishedAt: iso(NOW - 68 * MIN) },
       { title: '電價調整方向引發討論', source: 'ltn', url: 'https://news.ltn.com.tw/news/politics/breakingnews/4700020', publishedAt: iso(NOW - 80 * MIN) },
-      { title: '能源政策專題報導', source: 'mirror', url: 'https://www.mnews.tw/story/20260721eco001', publishedAt: iso(NOW - 88 * MIN) },
+      { title: '能源政策專題報導', source: 'ebc', url: 'https://news.ebc.net.tw/news/business/3', publishedAt: iso(NOW - 88 * MIN) },
       { title: '產業界關注電價調整幅度', source: 'ettoday', url: 'https://www.ettoday.net/news/20260721/sample-3.htm', publishedAt: iso(NOW - 95 * MIN) },
     ],
   },
@@ -457,10 +386,10 @@ function srcUrl(source, path) {
       return `https://www.cna.com.tw/${path}`;
     case 'ettoday':
       return `https://www.ettoday.net/${path}`;
-    case 'set':
+    case 'setn':
       return `https://www.setn.com/${path}`;
-    case 'mirror':
-      return `https://www.mnews.tw/${path}`;
+    case 'ebc':
+      return `https://news.ebc.net.tw/${path}`;
     case 'tvbs':
       return `https://news.tvbs.com.tw/${path}`;
     case 'ltn':
@@ -476,23 +405,23 @@ const recentTemplates = [
   { source: 'cna', title: '台積電釋出先進製程需求展望', excerpt: '公司於法說會說明先進製程接單與資本支出方向，市場關注海外布局。', path: 'news/afe/2026072100001.aspx' },
   { source: 'tvbs', title: '半導體族群帶動盤面焦點', excerpt: '節目與報導聚焦先進製程需求與供應鏈動態。', path: 'money/2400010' },
   { source: 'ettoday', title: '各縣市研議停班停課標準', excerpt: '地方政府依風雨預測評估是否放颱風假，呼籲民眾提前準備。', path: 'news/20260721/sample-2.htm' },
-  { source: 'set', title: '停班停課標準懶人包', excerpt: '整理各地放假認定原則與查詢管道，方便民眾對照。', path: 'News.aspx?NewsID=1500010' },
-  { source: 'mirror', title: '颱風假與防颱準備資訊', excerpt: '新聞整理本週天氣、交通影響與防颱準備清單。', path: 'story/20260721life002' },
+  { source: 'setn', title: '停班停課標準懶人包', excerpt: '整理各地放假認定原則與查詢管道，方便民眾對照。', path: 'News.aspx?NewsID=1500010' },
+  { source: 'ebc', title: '颱風假與防颱準備資訊', excerpt: '新聞整理本週天氣、交通影響與防颱準備清單。', path: 'news/living/2' },
   { source: 'cna', title: '電價審議聚焦民生用電', excerpt: '相關討論關注調整幅度對家庭與中小企業的影響。', path: 'news/afe/2026072100020.aspx' },
   { source: 'ltn', title: '電價調整方向引發討論', excerpt: '報導彙整各界對民生與產業用電負擔的看法。', path: 'news/politics/breakingnews/4700020' },
-  { source: 'mirror', title: '能源政策專題報導', excerpt: '深度整理供電結構與電價機制的背景脈絡。', path: 'story/20260721eco001' },
+  { source: 'ebc', title: '能源政策專題報導', excerpt: '深度整理供電結構與電價機制的背景脈絡。', path: 'news/business/3' },
   { source: 'ettoday', title: '產業界關注電價調整方向', excerpt: '製造業者評估用電成本變化，呼籲兼顧產業競爭力。', path: 'news/20260721/sample-3.htm' },
   { source: 'tvbs', title: '運動賽事焦點回顧', excerpt: '整理本週熱門賽事與球員表現。', path: 'sports/2400020' },
   { source: 'ettoday', title: '本週賽事精彩片段整理', excerpt: '運動新聞整理賽事表現與球員狀態。', path: 'news/20260721/sample-5.htm' },
   { source: 'cna', title: '立法院委員會排定預算審查議程', excerpt: '本會期重點預算進入委員會審查，朝野聚焦議事效率。', path: 'news/aipl/2026072100030.aspx' },
-  { source: 'set', title: '國道連假交通疏導上路', excerpt: '整理高乘載與匝道管制時段，提醒用路人提早規劃。', path: 'News.aspx?NewsID=1500020' },
+  { source: 'setn', title: '國道連假交通疏導上路', excerpt: '整理高乘載與匝道管制時段，提醒用路人提早規劃。', path: 'News.aspx?NewsID=1500020' },
   { source: 'cna', title: '流感疫苗接種時程公布', excerpt: '報導整理疫苗接種時程與院所資訊。', path: 'news/ahel/2026072100051.aspx' },
   { source: 'ltn', title: '央行關注匯率與資金動向', excerpt: '報導聚焦匯率波動與國際資金流向。', path: 'news/business/breakingnews/4700030' },
   { source: 'tvbs', title: '觀光補助方案細節公布', excerpt: '說明適用範圍與申請方式，業者反應不一。', path: 'life/2400030' },
-  { source: 'mirror', title: '生成式 AI 應用觀察', excerpt: '整理 AI 工具在工作與學習場景的實際案例。', path: 'story/20260721tech001' },
-  { source: 'mirror', title: '生成式 AI 應用案例整理', excerpt: '新聞整理 AI 工具在工作與學習上的實際案例。', path: 'story/20260721tech002' },
+  { source: 'ebc', title: '生成式 AI 應用觀察', excerpt: '整理 AI 工具在工作與學習場景的實際案例。', path: 'news/technology/4' },
+  { source: 'ebc', title: '生成式 AI 應用案例整理', excerpt: '新聞整理 AI 工具在工作與學習上的實際案例。', path: 'news/technology/5' },
   { source: 'cna', title: '衛福部提醒季節性流感防護', excerpt: '呼籲高風險族群留意症狀並儘早就醫。', path: 'news/ahel/2026072100050.aspx' },
-  { source: 'set', title: '房市交易量最新統計', excerpt: '整理近期成交概況並分析區域差異。', path: 'News.aspx?NewsID=1500030' },
+  { source: 'setn', title: '房市交易量最新統計', excerpt: '整理近期成交概況並分析區域差異。', path: 'News.aspx?NewsID=1500030' },
 ];
 const items = recentTemplates.map((t, i) => {
   const url = srcUrl(t.source, t.path);

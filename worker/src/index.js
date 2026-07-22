@@ -1,21 +1,23 @@
 import {
   calculateMetrics,
   filterAndDedupe,
-  normalizeCurrents,
+  parseGoogleNewsRss,
   parseRss,
   parseTrendsRss,
   timelineFor,
   validateQuery,
 } from './core.js';
+import { NEWS_SOURCES } from './sources.js';
 
-const SOURCES = [
-  ['cna', '中央通訊社', 'https://feeds.feedburner.com/cnaFirstNews'],
-  ['ltn', '自由時報', 'https://news.ltn.com.tw/rss/all.xml'],
-  ['ettoday', 'ETtoday 新聞雲', 'https://feeds.feedburner.com/ettoday/realtime'],
-  ['mirror', '鏡傳媒', 'https://www.mirrormedia.mg/rss/rss.xml'],
-  ['tvbs', 'TVBS 新聞網', 'https://cc.tvbs.com.tw/rss/text/realtime'],
-];
 const TRENDS_URL = 'https://trends.google.com/trending/rss?geo=TW&hl=zh-TW';
+const googleNewsUrl = (query) => {
+  const url = new URL('https://news.google.com/rss/search');
+  url.searchParams.set('q', query);
+  url.searchParams.set('hl', 'zh-TW');
+  url.searchParams.set('gl', 'TW');
+  url.searchParams.set('ceid', 'TW:zh-Hant');
+  return url.toString();
+};
 
 const envelope = (data) => ({ schemaVersion: '2.0.0', generatedAt: new Date().toISOString(), data });
 
@@ -63,22 +65,6 @@ async function fetchText(url, attempts = 2) {
   throw lastError;
 }
 
-async function fetchCurrents(query, apiKey) {
-  const url = new URL('https://api.currentsapi.services/v1/search');
-  url.searchParams.set('keywords', query);
-  url.searchParams.set('language', 'zh');
-  url.searchParams.set('apiKey', apiKey);
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 5_000);
-  try {
-    const response = await fetch(url, { signal: controller.signal });
-    if (!response.ok) throw new Error(`HTTP_${response.status}`);
-    return normalizeCurrents(await response.json());
-  } finally {
-    clearTimeout(timer);
-  }
-}
-
 async function archiveItems(env) {
   const base = env.ARCHIVE_BASE_URL || 'https://chunyu8866.github.io/MediaMonitoringDB';
   try {
@@ -99,32 +85,48 @@ async function handleSearch(request, env, url) {
     return json(request, env, { error: error.message }, 400);
   }
 
-  const runs = await Promise.all(
-    SOURCES.map(async ([id, displayName, feedUrl]) => {
+  const officialRuns = await Promise.all(
+    NEWS_SOURCES.filter((source) => source.rssUrl).map(async (source) => {
       try {
-        const items = parseRss(await fetchText(feedUrl), id);
-        return { id, displayName, status: 'ok', itemCount: items.length, errorCode: null, items };
+        const items = parseRss(await fetchText(source.rssUrl), source.id);
+        return { id: source.id, displayName: source.displayName, status: 'ok', itemCount: items.length, errorCode: null, items };
       } catch (error) {
-        return { id, displayName, status: 'error', itemCount: 0, errorCode: error.message || 'FETCH_ERROR', items: [] };
+        return { id: source.id, displayName: source.displayName, status: 'error', itemCount: 0, errorCode: error.message || 'FETCH_ERROR', items: [] };
       }
     }),
   );
-  if (env.CURRENTS_API_KEY) {
-    try {
-      const items = await fetchCurrents(input.query, env.CURRENTS_API_KEY);
-      runs.push({ id: 'currents', displayName: 'Currents API（選配）', status: 'ok', itemCount: items.length, errorCode: null, items });
-    } catch (error) {
-      runs.push({ id: 'currents', displayName: 'Currents API（選配）', status: 'error', itemCount: 0, errorCode: error.message || 'FETCH_ERROR', items: [] });
-    }
-  } else {
-    runs.push({ id: 'currents', displayName: 'Currents API（選配）', status: 'disabled', itemCount: 0, errorCode: null, items: [] });
+  let googleItems = [];
+  let googleError = null;
+  try {
+    googleItems = parseGoogleNewsRss(await fetchText(googleNewsUrl(input.query)), NEWS_SOURCES);
+  } catch (error) {
+    googleError = error.message || 'GOOGLE_NEWS_FETCH_ERROR';
   }
+  const officialById = new Map(officialRuns.map((run) => [run.id, run]));
+  const runs = NEWS_SOURCES.map((source) => {
+    const official = officialById.get(source.id);
+    const supplemental = googleItems.filter((item) => item.source === source.id);
+    if (!official) {
+      return {
+        id: source.id,
+        displayName: source.displayName,
+        status: googleError ? 'error' : 'ok',
+        itemCount: supplemental.length,
+        errorCode: googleError,
+        items: supplemental,
+      };
+    }
+    if (official.status === 'error' && supplemental.length) {
+      return { ...official, status: 'degraded', itemCount: supplemental.length, errorCode: official.errorCode, items: supplemental };
+    }
+    return { ...official, items: [...official.items, ...supplemental], itemCount: official.items.length + supplemental.length };
+  });
 
   const liveItems = runs.flatMap((run) => run.items);
-  const archived = input.range === '7d' || liveItems.length === 0 ? await archiveItems(env) : [];
+  const archived = await archiveItems(env);
   const items = filterAndDedupe([...liveItems, ...archived], input.query, input.range).slice(0, 100);
-  const enabledCount = runs.filter((run) => run.status !== 'disabled').length;
-  const failures = runs.filter((run) => run.status === 'error').length;
+  const enabledCount = NEWS_SOURCES.length;
+  const failures = runs.filter((run) => ['error', 'degraded'].includes(run.status)).length;
   const stale = liveItems.length === 0 && archived.length > 0;
   const status = stale ? 'stale' : failures ? 'partial' : 'ok';
   const sourceCounts = Object.fromEntries(
@@ -146,7 +148,7 @@ async function handleSearch(request, env, url) {
 
 async function handleTrends(request, env) {
   try {
-    const items = parseTrendsRss(await fetchText(TRENDS_URL));
+    const items = parseTrendsRss(await fetchText(TRENDS_URL), NEWS_SOURCES);
     return json(
       request,
       env,

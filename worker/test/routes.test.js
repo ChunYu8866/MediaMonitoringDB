@@ -26,3 +26,37 @@ test('non-read methods are rejected', async () => {
   const response = await worker.fetch(new Request('https://worker.example/api/health', { method: 'POST' }), {});
   assert.equal(response.status, 405);
 });
+
+test('24h search merges Google News results with the low-frequency Pages snapshot', async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (input) => {
+    const url = String(input);
+    if (url.includes('news.google.com/rss/search')) {
+      return new Response(`<rss><channel><item><guid>g1</guid><title>台積電三立快訊</title>
+        <link>https://news.google.com/rss/articles/g1</link>
+        <pubDate>Wed, 22 Jul 2026 12:00:00 GMT</pubDate>
+        <source url="https://www.setn.com">三立新聞網</source></item></channel></rss>`);
+    }
+    if (url.endsWith('/data/news-archive.json')) {
+      return Response.json({ data: { items: [{
+        id: 'archive-ebc-1', source: 'ebc', title: '台積電東森追蹤', excerpt: '',
+        publishedAt: '2026-07-22T11:00:00.000Z', url: 'https://news.ebc.net.tw/news/1', sentiment: null,
+      }] } });
+    }
+    return new Response('<rss><channel></channel></rss>');
+  };
+
+  try {
+    const response = await worker.fetch(
+      new Request('https://worker.example/api/search?q=台積電&range=24h'),
+      { ARCHIVE_BASE_URL: 'https://pages.example' },
+    );
+    const body = await response.json();
+
+    assert.equal(response.status, 200);
+    assert.equal(body.data.sources.length, 22);
+    assert.deepEqual(new Set(body.data.items.map((item) => item.source)), new Set(['setn', 'ebc']));
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});

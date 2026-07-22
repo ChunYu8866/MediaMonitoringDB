@@ -2,6 +2,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from opinion_pipeline.archive import dedupe_items, filter_items, item_to_public
+from opinion_pipeline import cli
 from opinion_pipeline.connectors.trends import parse_trends_feed
 from opinion_pipeline.connectors import rss
 from opinion_pipeline.models import NormalizedItem
@@ -59,6 +60,17 @@ def test_parse_google_trends_tw_rss():
     assert items[0]["news"][0]["url"] == "https://example.com/news/1"
 
 
+def test_trends_related_news_is_restricted_to_requested_publishers():
+    items = [{"title": "熱門", "news": [
+        {"title": "保留", "url": "https://news.tvbs.com.tw/politics/1"},
+        {"title": "移除", "url": "https://example.com/news/2"},
+    ]}]
+
+    filtered = cli.filter_trends_news(items, [{"domains": ["news.tvbs.com.tw"]}])
+
+    assert [entry["title"] for entry in filtered[0]["news"]] == ["保留"]
+
+
 def test_one_rss_failure_is_returned_as_source_error(monkeypatch):
     def fail(*_args, **_kwargs):
         raise rss.requests.Timeout("timeout")
@@ -73,3 +85,35 @@ def test_one_rss_failure_is_returned_as_source_error(monkeypatch):
     assert result.ok is False
     assert result.error_code == "TIMEOUT"
     assert result.items == []
+
+
+def test_rss_source_accepts_the_shared_registry_rss_url(monkeypatch):
+    raw = """<?xml version="1.0"?><rss><channel><item>
+      <guid>story-1</guid><title>台積電新聞</title>
+      <link>https://example.com/story-1</link>
+      <pubDate>Wed, 22 Jul 2026 08:00:00 GMT</pubDate>
+    </item></channel></rss>""".encode("utf-8")
+    monkeypatch.setattr(rss, "_fetch_bytes", lambda *_args, **_kwargs: raw)
+
+    result = rss.fetch_source(
+        {"id": "cna", "name": "中央社", "rss_url": "https://example.com/rss"},
+        timeout=1,
+        max_items=20,
+    )
+
+    assert result.enabled is True
+    assert result.ok is True
+    assert result.items[0].title == "台積電新聞"
+
+
+def test_restore_items_returns_empty_list_when_snapshot_is_unavailable(monkeypatch):
+    monkeypatch.setattr(cli.requests, "get", lambda *_args, **_kwargs: (_ for _ in ()).throw(cli.requests.ConnectionError()))
+
+    assert cli.restore_items("https://pages.example") == []
+
+
+def test_restored_items_are_restricted_to_current_source_allowlist():
+    allowed = item("tvbs", "1", "保留", 1)
+    removed = item("mirror", "2", "移除", 1)
+
+    assert cli.keep_allowed_sources([allowed, removed], {"tvbs"}) == [allowed]

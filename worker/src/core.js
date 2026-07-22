@@ -18,6 +18,12 @@ const extract = (block, tag) => {
   return decodeXml(match?.[1] || '');
 };
 
+const tagAttribute = (block, tag, attribute) => {
+  const escaped = tag.replace(':', '\\:');
+  const match = block.match(new RegExp(`<${escaped}[^>]*\\s${attribute}=["']([^"']+)["'][^>]*>`, 'i'));
+  return decodeXml(match?.[1] || '');
+};
+
 const canonicalUrl = (raw) => {
   try {
     const url = new URL(raw);
@@ -76,26 +82,42 @@ export function parseRss(xml, source) {
     .filter(Boolean);
 }
 
-export function normalizeCurrents(payload) {
-  if (!Array.isArray(payload?.news)) return [];
-  return payload.news.slice(0, 20).map((entry, index) => {
-    const url = canonicalUrl(String(entry.url || ''));
-    const title = decodeXml(String(entry.title || '')).slice(0, 200);
-    if (!url || !title) return null;
-    const timestamp = Date.parse(entry.published || '');
-    return {
-      id: `currents-${entry.id || index}`,
-      source: 'currents',
-      title,
-      excerpt: decodeXml(String(entry.description || '')).slice(0, 140),
-      publishedAt: Number.isNaN(timestamp) ? new Date().toISOString() : new Date(timestamp).toISOString(),
-      url,
-      sentiment: null,
-    };
-  }).filter(Boolean);
+export function parseGoogleNewsRss(xml, sources) {
+  return entryBlocks(xml)
+    .slice(0, 100)
+    .map((block, index) => {
+      const sourceName = extract(block, 'source');
+      const sourceUrl = tagAttribute(block, 'source', 'url');
+      const normalizedName = sourceName.replace(/\s+/g, '').toLocaleLowerCase('zh-TW');
+      let hostname = '';
+      try {
+        hostname = new URL(sourceUrl).hostname.toLowerCase();
+      } catch {
+        hostname = '';
+      }
+      const source = sources.find((candidate) =>
+        candidate.domains.some((domain) => hostname === domain || hostname.endsWith(`.${domain}`))
+          || candidate.aliases.some((alias) => alias.replace(/\s+/g, '').toLocaleLowerCase('zh-TW') === normalizedName),
+      );
+      const title = extract(block, 'title');
+      const url = canonicalUrl(linkOf(block));
+      const rawDate = extract(block, 'pubDate') || extract(block, 'published') || extract(block, 'updated');
+      const timestamp = Date.parse(rawDate);
+      if (!source || !title || !url) return null;
+      return {
+        id: `google-news-${source.id}-${extract(block, 'guid') || index}`,
+        source: source.id,
+        title: title.slice(0, 200),
+        excerpt: extract(block, 'description').slice(0, 140),
+        publishedAt: Number.isNaN(timestamp) ? new Date().toISOString() : new Date(timestamp).toISOString(),
+        url,
+        sentiment: null,
+      };
+    })
+    .filter(Boolean);
 }
 
-export function parseTrendsRss(xml) {
+export function parseTrendsRss(xml, sources = []) {
   return entryBlocks(xml)
     .slice(0, 20)
     .map((block) => {
@@ -105,7 +127,16 @@ export function parseTrendsRss(xml) {
           source: extract(newsBlock, 'ht:news_item_source'),
           url: canonicalUrl(extract(newsBlock, 'ht:news_item_url')),
         }))
-        .filter((item) => item.title && item.url);
+        .filter((item) => {
+          if (!item.title || !item.url) return false;
+          if (sources.length === 0) return true;
+          try {
+            const hostname = new URL(item.url).hostname.toLowerCase();
+            return sources.some((source) => source.domains.some((domain) => hostname === domain || hostname.endsWith(`.${domain}`)));
+          } catch {
+            return false;
+          }
+        });
       const timestamp = Date.parse(extract(block, 'pubDate'));
       return {
         title: extract(block, 'title'),

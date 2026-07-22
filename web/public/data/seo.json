@@ -1,335 +1,335 @@
 {
   "schemaVersion": "2.0.0",
-  "generatedAt": "2026-07-22T03:49:38.353Z",
+  "generatedAt": "2026-07-22T05:47:18.858Z",
   "data": {
     "connected": true,
-    "lastSyncAt": "2026-07-22T03:49:38.353Z",
+    "lastSyncAt": "2026-07-22T05:47:18.858Z",
     "preliminary": true,
     "siteUrl": "https://chunyu8866.github.io/MediaMonitoringDB/",
     "daily": [
       {
         "date": "2026-06-25",
-        "clicks": 4,
-        "impressions": 63,
-        "ctr": 0.0635,
-        "position": 10.4
+        "clicks": 3,
+        "impressions": 91,
+        "ctr": 0.033,
+        "position": 13.5
       },
       {
         "date": "2026-06-26",
         "clicks": 7,
-        "impressions": 122,
-        "ctr": 0.0574,
-        "position": 14.4
+        "impressions": 109,
+        "ctr": 0.0642,
+        "position": 9.7
       },
       {
         "date": "2026-06-27",
-        "clicks": 6,
-        "impressions": 100,
-        "ctr": 0.06,
-        "position": 10.2
+        "clicks": 4,
+        "impressions": 87,
+        "ctr": 0.046,
+        "position": 9.7
       },
       {
         "date": "2026-06-28",
-        "clicks": 6,
-        "impressions": 109,
-        "ctr": 0.055,
-        "position": 10.2
+        "clicks": 4,
+        "impressions": 129,
+        "ctr": 0.031,
+        "position": 13.6
       },
       {
         "date": "2026-06-29",
-        "clicks": 6,
-        "impressions": 110,
-        "ctr": 0.0545,
-        "position": 14
+        "clicks": 4,
+        "impressions": 94,
+        "ctr": 0.0426,
+        "position": 14.8
       },
       {
         "date": "2026-06-30",
-        "clicks": 7,
-        "impressions": 112,
-        "ctr": 0.0625,
-        "position": 11.5
+        "clicks": 8,
+        "impressions": 115,
+        "ctr": 0.0696,
+        "position": 11.1
       },
       {
         "date": "2026-07-01",
         "clicks": 4,
         "impressions": 104,
         "ctr": 0.0385,
-        "position": 14.9
+        "position": 10.4
       },
       {
         "date": "2026-07-02",
-        "clicks": 5,
-        "impressions": 91,
-        "ctr": 0.0549,
-        "position": 11.2
+        "clicks": 7,
+        "impressions": 118,
+        "ctr": 0.0593,
+        "position": 9.2
       },
       {
         "date": "2026-07-03",
-        "clicks": 7,
-        "impressions": 121,
-        "ctr": 0.0579,
-        "position": 11.1
+        "clicks": 8,
+        "impressions": 138,
+        "ctr": 0.058,
+        "position": 12
       },
       {
         "date": "2026-07-04",
-        "clicks": 7,
-        "impressions": 113,
-        "ctr": 0.0619,
-        "position": 11
+        "clicks": 5,
+        "impressions": 141,
+        "ctr": 0.0355,
+        "position": 14.6
       },
       {
         "date": "2026-07-05",
-        "clicks": 7,
-        "impressions": 111,
-        "ctr": 0.0631,
-        "position": 12.9
+        "clicks": 6,
+        "impressions": 132,
+        "ctr": 0.0455,
+        "position": 9.8
       },
       {
         "date": "2026-07-06",
-        "clicks": 4,
-        "impressions": 129,
-        "ctr": 0.031,
-        "position": 13.9
+        "clicks": 6,
+        "impressions": 111,
+        "ctr": 0.0541,
+        "position": 11.8
       },
       {
         "date": "2026-07-07",
-        "clicks": 6,
-        "impressions": 99,
-        "ctr": 0.0606,
-        "position": 11.3
+        "clicks": 7,
+        "impressions": 139,
+        "ctr": 0.0504,
+        "position": 14.3
       },
       {
         "date": "2026-07-08",
-        "clicks": 7,
-        "impressions": 125,
-        "ctr": 0.056,
-        "position": 14.7
+        "clicks": 8,
+        "impressions": 146,
+        "ctr": 0.0548,
+        "position": 11.7
       },
       {
         "date": "2026-07-09",
-        "clicks": 5,
-        "impressions": 110,
-        "ctr": 0.0455,
-        "position": 11.4
+        "clicks": 6,
+        "impressions": 126,
+        "ctr": 0.0476,
+        "position": 13.5
       },
       {
         "date": "2026-07-10",
-        "clicks": 8,
-        "impressions": 124,
-        "ctr": 0.0645,
-        "position": 9.5
+        "clicks": 4,
+        "impressions": 111,
+        "ctr": 0.036,
+        "position": 10.5
       },
       {
         "date": "2026-07-11",
         "clicks": 8,
-        "impressions": 153,
-        "ctr": 0.0523,
-        "position": 10.2
+        "impressions": 150,
+        "ctr": 0.0533,
+        "position": 10.8
       },
       {
         "date": "2026-07-12",
-        "clicks": 7,
-        "impressions": 139,
-        "ctr": 0.0504,
-        "position": 12.4
+        "clicks": 8,
+        "impressions": 140,
+        "ctr": 0.0571,
+        "position": 11.5
       },
       {
         "date": "2026-07-13",
-        "clicks": 6,
-        "impressions": 159,
-        "ctr": 0.0377,
+        "clicks": 4,
+        "impressions": 128,
+        "ctr": 0.0313,
         "position": 9.8
       },
       {
         "date": "2026-07-14",
         "clicks": 8,
-        "impressions": 132,
-        "ctr": 0.0606,
-        "position": 11.1
+        "impressions": 163,
+        "ctr": 0.0491,
+        "position": 13.1
       },
       {
         "date": "2026-07-15",
-        "clicks": 8,
-        "impressions": 150,
-        "ctr": 0.0533,
-        "position": 10.3
+        "clicks": 7,
+        "impressions": 148,
+        "ctr": 0.0473,
+        "position": 13.7
       },
       {
         "date": "2026-07-16",
         "clicks": 10,
-        "impressions": 139,
-        "ctr": 0.0719,
-        "position": 12.8
+        "impressions": 161,
+        "ctr": 0.0621,
+        "position": 9.5
       },
       {
         "date": "2026-07-17",
-        "clicks": 6,
-        "impressions": 130,
-        "ctr": 0.0462,
-        "position": 13.2
+        "clicks": 7,
+        "impressions": 125,
+        "ctr": 0.056,
+        "position": 10
       },
       {
         "date": "2026-07-18",
-        "clicks": 5,
-        "impressions": 129,
-        "ctr": 0.0388,
-        "position": 12.7
+        "clicks": 6,
+        "impressions": 125,
+        "ctr": 0.048,
+        "position": 12
       },
       {
         "date": "2026-07-19",
         "clicks": 5,
-        "impressions": 149,
-        "ctr": 0.0336,
-        "position": 12.6
+        "impressions": 144,
+        "ctr": 0.0347,
+        "position": 13.6
       },
       {
         "date": "2026-07-20",
-        "clicks": 9,
-        "impressions": 159,
-        "ctr": 0.0566,
-        "position": 14.6
+        "clicks": 6,
+        "impressions": 147,
+        "ctr": 0.0408,
+        "position": 9.5
       },
       {
         "date": "2026-07-21",
-        "clicks": 8,
-        "impressions": 168,
-        "ctr": 0.0476,
-        "position": 11.3
+        "clicks": 7,
+        "impressions": 119,
+        "ctr": 0.0588,
+        "position": 12.6
       },
       {
         "date": "2026-07-22",
-        "clicks": 10,
-        "impressions": 155,
-        "ctr": 0.0645,
-        "position": 11.4
+        "clicks": 7,
+        "impressions": 142,
+        "ctr": 0.0493,
+        "position": 11.9
       }
     ],
     "topQueries": [
       {
-        "query": "共現 網絡",
-        "clicks": 19,
-        "impressions": 197,
-        "ctr": 0.0964,
-        "position": 7.5
-      },
-      {
-        "query": "SEO 成效",
-        "clicks": 18,
-        "impressions": 192,
-        "ctr": 0.0938,
-        "position": 4.9
-      },
-      {
-        "query": "颱風 即時",
-        "clicks": 17,
-        "impressions": 158,
-        "ctr": 0.1076,
-        "position": 16
-      },
-      {
-        "query": "開源 輿情",
-        "clicks": 17,
-        "impressions": 181,
-        "ctr": 0.0939,
-        "position": 18.9
-      },
-      {
-        "query": "台灣 新聞 API",
-        "clicks": 16,
-        "impressions": 178,
-        "ctr": 0.0899,
-        "position": 6.2
-      },
-      {
-        "query": "GitHub Pages 資料",
-        "clicks": 9,
-        "impressions": 91,
-        "ctr": 0.0989,
-        "position": 4
-      },
-      {
-        "query": "輿情 儀表板",
-        "clicks": 8,
-        "impressions": 91,
-        "ctr": 0.0879,
-        "position": 4.9
-      },
-      {
-        "query": "關鍵字熱度",
-        "clicks": 6,
-        "impressions": 155,
-        "ctr": 0.0387,
-        "position": 19.8
-      },
-      {
-        "query": "台積電 新聞",
-        "clicks": 5,
-        "impressions": 59,
-        "ctr": 0.0847,
-        "position": 8.7
+        "query": "電價 查詢",
+        "clicks": 22,
+        "impressions": 237,
+        "ctr": 0.0928,
+        "position": 15.5
       },
       {
         "query": "台灣輿情分析",
-        "clicks": 4,
-        "impressions": 213,
-        "ctr": 0.0188,
-        "position": 4.2
-      },
-      {
-        "query": "中央社 RSS",
-        "clicks": 4,
-        "impressions": 156,
-        "ctr": 0.0256,
-        "position": 24.9
-      },
-      {
-        "query": "電價 查詢",
-        "clicks": 3,
-        "impressions": 33,
-        "ctr": 0.0909,
-        "position": 7.4
-      },
-      {
-        "query": "熱門主題 追蹤",
-        "clicks": 3,
-        "impressions": 53,
-        "ctr": 0.0566,
-        "position": 10.6
-      },
-      {
-        "query": "即時新聞熱詞",
-        "clicks": 2,
-        "impressions": 23,
-        "ctr": 0.087,
-        "position": 9
+        "clicks": 13,
+        "impressions": 237,
+        "ctr": 0.0549,
+        "position": 8.7
       },
       {
         "query": "Google Trends 台灣",
-        "clicks": 2,
-        "impressions": 73,
-        "ctr": 0.0274,
-        "position": 14.3
+        "clicks": 13,
+        "impressions": 180,
+        "ctr": 0.0722,
+        "position": 19.2
       },
       {
         "query": "新聞 情緒分析",
-        "clicks": 2,
-        "impressions": 23,
-        "ctr": 0.087,
-        "position": 14.9
+        "clicks": 13,
+        "impressions": 118,
+        "ctr": 0.1102,
+        "position": 10.5
+      },
+      {
+        "query": "中央社 RSS",
+        "clicks": 13,
+        "impressions": 128,
+        "ctr": 0.1016,
+        "position": 22.6
+      },
+      {
+        "query": "熱門主題 追蹤",
+        "clicks": 12,
+        "impressions": 165,
+        "ctr": 0.0727,
+        "position": 19.9
+      },
+      {
+        "query": "台積電 新聞",
+        "clicks": 11,
+        "impressions": 192,
+        "ctr": 0.0573,
+        "position": 12.5
+      },
+      {
+        "query": "開源 輿情",
+        "clicks": 11,
+        "impressions": 151,
+        "ctr": 0.0728,
+        "position": 8.1
+      },
+      {
+        "query": "關鍵字熱度",
+        "clicks": 9,
+        "impressions": 91,
+        "ctr": 0.0989,
+        "position": 9.6
+      },
+      {
+        "query": "颱風 即時",
+        "clicks": 9,
+        "impressions": 225,
+        "ctr": 0.04,
+        "position": 19.9
+      },
+      {
+        "query": "台灣 新聞 API",
+        "clicks": 9,
+        "impressions": 99,
+        "ctr": 0.0909,
+        "position": 5.2
+      },
+      {
+        "query": "共現 網絡",
+        "clicks": 8,
+        "impressions": 192,
+        "ctr": 0.0417,
+        "position": 23.2
+      },
+      {
+        "query": "即時新聞熱詞",
+        "clicks": 6,
+        "impressions": 83,
+        "ctr": 0.0723,
+        "position": 17.3
+      },
+      {
+        "query": "輿情 儀表板",
+        "clicks": 4,
+        "impressions": 66,
+        "ctr": 0.0606,
+        "position": 3.5
+      },
+      {
+        "query": "GitHub Pages 資料",
+        "clicks": 4,
+        "impressions": 89,
+        "ctr": 0.0449,
+        "position": 17
       },
       {
         "query": "新聞 熱度",
-        "clicks": 1,
-        "impressions": 17,
-        "ctr": 0.0588,
-        "position": 6.8
+        "clicks": 4,
+        "impressions": 87,
+        "ctr": 0.046,
+        "position": 16.3
+      },
+      {
+        "query": "SEO 成效",
+        "clicks": 3,
+        "impressions": 78,
+        "ctr": 0.0385,
+        "position": 9.6
       }
     ],
     "totals": {
-      "clicks": 186,
-      "impressions": 3505,
-      "ctr": 0.0531,
-      "position": 12
+      "clicks": 174,
+      "impressions": 3583,
+      "ctr": 0.0486,
+      "position": 11.7
     }
   }
 }

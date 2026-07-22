@@ -1,8 +1,8 @@
 # 台灣新聞搜尋與 Google Trends Demo：AI 交接文件
 
 > 更新日期：2026-07-22
-> 狀態：核心 Demo 已實作並通過本機測試；待部署 Worker 與合併至 `main`
-> 正式規格：`docs/superpowers/specs/2026-07-22-news-search-demo-design.md`
+> 狀態：核心 Demo 使用固定 22 家台灣新聞來源，並透過 GitHub Pages 與 Cloudflare Worker 提供服務
+> 正式規格：`docs/superpowers/specs/2026-07-22-taiwan-22-news-sources-design.md`
 
 ## 1. 交接目標
 
@@ -31,11 +31,12 @@ GitHub Pages（React + TypeScript + Vite）
    │
 Cloudflare Worker Free
    ├─ 官方新聞 RSS
-   ├─ Currents API（有 secret 才啟用）
+   ├─ Google News RSS（只接受 22 家白名單媒體）
    └─ Google Trends TW RSS
    │
 GitHub Actions
    ├─ 每 15 分鐘以 best effort 更新 7 天新聞 metadata archive
+   ├─ 官網公開列表每個來源最多每 6 小時擷取一次
    ├─ search／trends last-good 靜態 JSON
    ├─ 較重的離線 NLP
    └─ GitHub Pages build/deploy
@@ -45,26 +46,17 @@ GitHub Actions
 
 ## 4. 資料來源
 
-### 預設啟用
+### 固定白名單
 
-- 中央通訊社官方 RSS。
-- 自由時報官方 RSS。
-- ETtoday 官方 RSS／FeedBurner。
-- 鏡傳媒官方 RSS。
-- TVBS RSS；403 時只標示來源失敗。
+TVBS、東森、三立、民視、中天、年代、壹電視、公視新聞、UDN、自由時報、中央社、經濟日報、工商時報、鉅亨網、財訊、商業週刊、關鍵評論網、報導者、新頭殼、NOWNEWS、壹蘋新聞網與 ETtoday，共 22 家。
 
-三立維持停用，直到確認正式 feed。
+### 取得順序
 
-### 選用與實驗
+1. 官方 RSS 優先。
+2. Google News RSS 只保留上述媒體的官方網域或正式名稱。
+3. 無 RSS 或 RSS 失敗時，可對允許的官網公開列表進行每 6 小時一次的 metadata 擷取。
 
-- Currents API：`CURRENTS_API_KEY` 設於 Worker Secret 後才啟用。
-- GDELT：預設停用，只保留 feature-flag 實驗；不得作為唯一來源。
-
-### 不得部署
-
-- Google News 關鍵字 RSS：用途聲明不適合作為公開 demo 預設資料庫。
-- NewsAPI、GNews、NewsData.io 免費方案：因 production、CORS、延遲或授權限制，不作第一版依賴。
-- 所有社群與論壇來源。
+UDN 與經濟日報不得直接擷取官網；所有來源都不得繞過 robots.txt、登入、403、CAPTCHA 或付費牆。所有社群、論壇與不在白名單內的新聞來源不得部署。
 
 所有新聞只公開來源、標題、短摘要、時間與原文連結，不保存或重製全文與圖片。
 
@@ -162,7 +154,7 @@ NewsHeat = 100 × (0.50V + 0.33A + 0.17D)
 ## 9. 錯誤與降級
 
 - 單一來源失敗：其他來源照常回傳，`partial: true`。
-- Currents 未設定：只使用官方 RSS。
+- 個別官方 RSS 不可用：改用 22 家白名單內的 Google News RSS 結果；符合設定者每 6 小時補一次官網 metadata。
 - Trends 失敗：使用 last-good 並標 stale。
 - Worker 無法使用：前端讀取 Pages 靜態快照。
 - 全部失敗：顯示錯誤與最後成功時間，不生成假資料。
@@ -171,20 +163,19 @@ NewsHeat = 100 × (0.50V + 0.33A + 0.17D)
 
 ## 10. 目前程式狀態
 
-- `feature/news-search-demo` 已有 React 搜尋首頁、Worker 三個 endpoints、Python RSS 快照管線與 Google Trends TW adapter。
+- `main` 已有 React 搜尋首頁、Worker 三個 endpoints、Python RSS／官網 metadata 快照管線與 Google Trends TW adapter。
 - 公開資料契約已升至 schema `2.0.0`；前端只接受主版本 2。
-- 本機真實擷取可取得至少 4 個新聞來源；TVBS 目前回傳 `HTTP_403`，三立維持停用。
+- 來源白名單固定 22 家；官方 RSS 優先、Google News RSS 補足，低頻官網擷取只取標題、短摘要、時間與原文連結。
 - 前端在未設定 Worker URL 時會讀取 `news-archive.json`／`trends.json` 並標示 stale。
 - GitHub Actions 已改為每 15 分鐘 best-effort 更新、測試、建置與部署。
-- 尚未完成：Cloudflare 帳號登入與實際 Worker 部署、GitHub repository variable `VITE_API_BASE_URL`、公開站 HTTP 驗證。
+- Cloudflare Worker 與 GitHub Pages 已部署；後續修改必須同時驗證 Worker API、Pages 建置與公開 JSON。
 
 ## 11. 實作順序
 
-1. 執行所有測試、build、residue/secret 掃描與桌面／360px 瀏覽器驗收。
-2. 使用擁有者的 Cloudflare 帳號執行 `worker/npm run deploy`。
-3. 在 GitHub repository variable 設定 `VITE_API_BASE_URL`。
-4. 合併或推送至 `main`，等待 Pages workflow 完成。
-5. 對公開 `/api/health`、首頁搜尋、Trends 與原文連結做 HTTP／UI 驗證。
+1. 執行所有測試、build、residue/secret 掃描。
+2. 推送至 `main`，等待 Pages workflow 完成。
+3. 在 `worker/` 執行 `npm run deploy`。
+4. 對公開 `/api/health`、`/api/search`、`/api/trends`、Pages 首頁與 22 家來源 JSON 做實際驗證。
 
 ## 12. 完成定義
 
@@ -203,20 +194,18 @@ NewsHeat = 100 × (0.50V + 0.33A + 0.17D)
 
 1. 讀完本文件與新版正式規格。
 2. 執行 `git status --short --branch`，辨認並保留既有未提交工作。
-3. 依 `writing-plans` 建立：
-   `docs/superpowers/plans/2026-07-22-news-search-demo.md`
-4. 計畫必須採 TDD、精確檔案路徑、明確 API 型別與逐階段驗證。
-5. 使用者選擇執行方式後才開始改程式。
+3. 以 [22 家來源規格](docs/superpowers/specs/2026-07-22-taiwan-22-news-sources-design.md) 為現行準則；舊新聞搜尋規格僅供歷史參考。
+4. 修改必須採 TDD，完成前要做本機與公開站雙重驗證。
 
 可直接貼給下一個 AI：
 
 ```text
-請先閱讀根目錄 AI_HANDOFF.md 與 docs/superpowers/specs/2026-07-22-news-search-demo-design.md。新版新聞搜尋規格已取代舊社群規格。先檢查 git status 並保留所有既有未提交內容，再依 writing-plans 產生逐步實作計畫；不要直接開始重寫。實作必須採 TDD，任何完成宣告前都要執行測試、secret 掃描與已取消社群來源的 residue 掃描。
+請先閱讀根目錄 AI_HANDOFF.md 與 docs/superpowers/specs/2026-07-22-taiwan-22-news-sources-design.md。先檢查 git status 並保留所有既有未提交內容。系統的新聞來源固定為 22 家，不得還原鏡傳媒、Bluesky 或 Currents；實作採 TDD，完成前執行測試、build、secret/residue 掃描、Worker 與 Pages 公開站驗證。
 ```
 
 ## 14. 官方參考
 
-- [新版正式規格](docs/superpowers/specs/2026-07-22-news-search-demo-design.md)
+- [22 家來源正式規格](docs/superpowers/specs/2026-07-22-taiwan-22-news-sources-design.md)
 - [OpView 指標參考](https://www.opview.com.tw/2024-mpr-rporting)
 - [Cloudflare Workers Pricing](https://developers.cloudflare.com/workers/platform/pricing/)
 - [Cloudflare Workers Limits](https://developers.cloudflare.com/workers/platform/limits/)

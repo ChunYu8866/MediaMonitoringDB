@@ -84,11 +84,13 @@ def _error_code(exc: Exception) -> str:
 def fetch_source(source: dict, timeout: int, max_items: int) -> SourceResult:
     """擷取單一 RSS 來源並回傳正規化結果。任何例外都被隔離為該來源的錯誤。"""
     sid, name = source["id"], source["name"]
-    if not source.get("enabled") or not source.get("url"):
-        return SourceResult(id=sid, name=name, enabled=bool(source.get("enabled")), ok=False, error_code="DISABLED")
+    url = source.get("rss_url") or source.get("url") or ""
+    enabled = bool(source.get("enabled", bool(url)))
+    if not enabled or not url:
+        return SourceResult(id=sid, name=name, enabled=enabled, ok=False, error_code="DISABLED")
 
     try:
-        raw = _fetch_bytes(source["url"], timeout)
+        raw = _fetch_bytes(url, timeout)
     except Exception as exc:  # noqa: BLE001
         return SourceResult(id=sid, name=name, enabled=True, ok=False, error_code=_error_code(exc))
 

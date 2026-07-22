@@ -20,17 +20,32 @@ export interface Envelope<T> {
 
 /**
  * 來源代碼。
- * 新聞：中央社、ETtoday、三立、鏡新聞、TVBS、自由時報、Currents（選配）。
+ * 新聞：使用者指定的 22 家台灣新聞媒體。
  * SEO：Google Search Console，僅供獨立 SEO 頁使用。
  */
 export type SourceId =
-  | 'cna'
-  | 'ettoday'
-  | 'set'
-  | 'mirror'
   | 'tvbs'
+  | 'ebc'
+  | 'setn'
+  | 'ftv'
+  | 'cti'
+  | 'era'
+  | 'nexttv'
+  | 'pts'
+  | 'udn'
   | 'ltn'
-  | 'currents'
+  | 'cna'
+  | 'moneyudn'
+  | 'ctee'
+  | 'anue'
+  | 'wealth'
+  | 'businessweekly'
+  | 'thenewslens'
+  | 'reporter'
+  | 'newtalk'
+  | 'nownews'
+  | 'nextapple'
+  | 'ettoday'
   | 'gsc';
 
 export type SourceStatus = 'ok' | 'stale' | 'degraded' | 'disabled' | 'error';
@@ -78,6 +93,10 @@ export interface SourceHealth {
   status: SourceStatus;
   lastAttemptAt: string | null;
   lastSuccessAt: string | null;
+  /** 官網低頻擷取最後執行時間。 */
+  lastCrawlAt?: string | null;
+  /** 此快照實際使用的取得方式。 */
+  accessMode?: 'official-rss' | 'google-news' | 'site-listing';
   /** 標準化錯誤代碼，例如 "HTTP_429"、"TIMEOUT"；正常時為 null。 */
   errorCode: string | null;
   /** 是否已超過新鮮度門檻。 */

@@ -2,6 +2,7 @@ import { useData } from '../api/useData';
 import type { Meta, SourcesData } from '../types/contracts';
 import { Banner, Card, ErrorState, LoadingState, StatusBadge } from '../components/ui';
 import { fmtDateTime, fmtRelative } from '../lib/format';
+import { sourceModeLabel } from '../lib/sources';
 
 export function MethodPage() {
   const meta = useData<Meta>('meta');
@@ -60,6 +61,7 @@ export function MethodPage() {
                   <tr>
                     <th>來源</th>
                     <th>狀態</th>
+                    <th>取得方式</th>
                     <th>最後嘗試</th>
                     <th>最後成功</th>
                     <th className="num">項目數</th>
@@ -71,6 +73,7 @@ export function MethodPage() {
                     <tr key={s.id}>
                       <td style={{ fontWeight: 600, whiteSpace: 'nowrap' }}>{s.displayName}</td>
                       <td><StatusBadge status={s.status} /></td>
+                      <td className="small" style={{ whiteSpace: 'nowrap' }}>{sourceModeLabel(s.accessMode)}</td>
                       <td className="small muted" style={{ whiteSpace: 'nowrap' }}>{s.lastAttemptAt ? fmtRelative(s.lastAttemptAt) : '—'}</td>
                       <td className="small muted" style={{ whiteSpace: 'nowrap' }}>{s.lastSuccessAt ? fmtRelative(s.lastSuccessAt) : '—'}</td>
                       <td className="num">{s.itemCount}</td>
