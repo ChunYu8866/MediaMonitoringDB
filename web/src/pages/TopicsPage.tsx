@@ -50,7 +50,7 @@ function TopicCard({ topic }: { topic: Topic }) {
       </div>
 
       <div style={{ marginTop: 14 }}>
-        <div className="card__hint" style={{ marginBottom: 6 }}>抽取式摘要（每句均為來源原文，可點擊追溯）</div>
+        <div className="card__hint" style={{ marginBottom: 6 }}>來源標題或 RSS 短摘要片段（可點擊追溯）</div>
         <ul style={{ margin: 0, paddingLeft: 18, display: 'flex', flexDirection: 'column', gap: 6 }}>
           {topic.summarySentences.map((s, i) => (
             <li key={i} style={{ fontSize: 13.5 }}>
@@ -99,15 +99,14 @@ export function TopicsPage() {
       <div className="page-head">
         <h1>事件與主題</h1>
         <p>
-          以多語句向量與時間窗聚類產生的主題群。摘要採抽取式（直接取自來源原文），避免生成式幻覺；
-          每一句都可回到原始連結。
+          以可檢查的關鍵詞規則將真實新聞快照分組。文字只取自來源標題或 RSS 短摘要，
+          連結直接對應該筆新聞。
         </p>
       </div>
 
       {t.data?.experimental && (
         <Banner variant="warning" icon="🧪">
-          <strong>實驗性模型：</strong>情緒與主題分類尚未通過台灣繁中人工標註集門檻（macro-F1 ≥ 0.70），
-          結果僅供研究參考，不代表客觀真值。
+          <strong>實驗性分組：</strong>主題為關鍵詞規則結果；尚未執行可驗證的情緒分類，因此情緒欄統一保守標示為中立。
         </Banner>
       )}
       {t.data?.stale && (

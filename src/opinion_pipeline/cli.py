@@ -20,6 +20,14 @@ from .sources import load_sources
 
 TRENDS_URL = "https://trends.google.com/trending/rss?geo=TW&hl=zh-TW"
 
+TOPIC_DEFINITIONS = (
+    ("finance", "財經與產業", ("台積電", "半導體", "股市", "經濟", "產業")),
+    ("weather", "天氣與防災", ("颱風", "豪雨", "氣象", "地震", "防災")),
+    ("politics", "政治與公共政策", ("立法院", "立委", "行政院", "總統", "預算", "政黨")),
+    ("society", "社會與生活", ("社會", "交通", "醫療", "健康", "教育", "食安")),
+    ("world", "國際與兩岸", ("美國", "中國", "國際", "兩岸", "日本", "歐洲")),
+)
+
 
 def envelope(data: dict, generated_at: str) -> dict:
     return {"schemaVersion": "2.0.0", "generatedAt": generated_at, "data": data}
@@ -46,6 +54,42 @@ def filter_trends_news(items: list[dict], sources: list[dict]) -> list[dict]:
             and any(hostname.lower() == domain or hostname.lower().endswith(f".{domain}") for domain in domains)
         ]
     return items
+
+
+def build_topics(items: list) -> list[dict]:
+    """Build transparent keyword groups from real archive metadata only."""
+    topics = []
+    for topic_id, label, terms in TOPIC_DEFINITIONS:
+        matched = [item for item in items if any(term.casefold() in item.search_text.casefold() for term in terms)]
+        if not matched:
+            continue
+        summaries = []
+        for item in matched:
+            text = item.excerpt.strip() or item.title.strip()
+            if text:
+                summaries.append({"text": text, "source": item.source, "url": item.url})
+            if len(summaries) == 2:
+                break
+        topics.append(
+            {
+                "id": topic_id,
+                "label": label,
+                "terms": list(terms),
+                "size": len(matched),
+                "sentiment": {"positive": 0.0, "neutral": 1.0, "negative": 0.0},
+                "summarySentences": summaries,
+                "articles": [
+                    {
+                        "title": item.title,
+                        "source": item.source,
+                        "url": item.url,
+                        "publishedAt": item.published_at.astimezone(timezone.utc).isoformat().replace("+00:00", "Z"),
+                    }
+                    for item in matched[:5]
+                ],
+            }
+        )
+    return topics
 
 
 def restore_items(base_url: str) -> list:
@@ -130,6 +174,11 @@ def run(config_path: Path, output_dir: Path, restore_base_url: str = "") -> int:
         output_dir / "recent.json",
         envelope({"items": [item_to_public(entry) for entry in items[:100]]}, generated_at),
     )
+    topics = build_topics(items)
+    write_json(
+        output_dir / "topics.json",
+        envelope({"stale": stale, "experimental": True, "topics": topics}, generated_at),
+    )
     write_json(
         output_dir / "sources.json",
         envelope(
@@ -201,7 +250,7 @@ def run(config_path: Path, output_dir: Path, restore_base_url: str = "") -> int:
             {
                 "status": archive_status,
                 "lastFastAt": generated_at if current_items else None,
-                "lastDeepAt": None,
+                "lastDeepAt": generated_at if topics else None,
                 "lastSeoAt": None,
                 "methodVersion": "news-heat-v2-22-sources",
                 "scheduleDaysUntilPause": None,

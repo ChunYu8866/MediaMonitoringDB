@@ -176,7 +176,7 @@ export interface Topic {
   terms: string[];
   /** 涉及內容數。 */
   size: number;
-  /** 抽取式摘要句（每句均為來源原文子字串）。 */
+  /** 來源標題或 RSS 短摘要片段，並保留對應原文 URL。 */
   summarySentences: { text: string; source: SourceId; url: string }[];
   /** 情緒分布（正/中/負，加總為 1）。 */
   sentiment: { positive: number; neutral: number; negative: number };

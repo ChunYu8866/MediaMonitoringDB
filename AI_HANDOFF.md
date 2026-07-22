@@ -166,6 +166,7 @@ NewsHeat = 100 × (0.50V + 0.33A + 0.17D)
 - `main` 已有 React 搜尋首頁、Worker 三個 endpoints、Python RSS／官網 metadata 快照管線與 Google Trends TW adapter。
 - 公開資料契約已升至 schema `2.0.0`；前端只接受主版本 2。
 - 來源白名單固定 22 家；官方 RSS 優先、Google News RSS 補足，低頻官網擷取只取標題、短摘要、時間與原文連結。
+- `topics.json` 每次由真實新聞快照依可檢查關鍵詞規則重建；摘要片段與代表內容保留該筆新聞 URL，不使用範例連結。
 - 前端在未設定 Worker URL 時會讀取 `news-archive.json`／`trends.json` 並標示 stale。
 - GitHub Actions 已改為每 15 分鐘 best-effort 更新、測試、建置與部署。
 - Cloudflare Worker 與 GitHub Pages 已部署；後續修改必須同時驗證 Worker API、Pages 建置與公開 JSON。
