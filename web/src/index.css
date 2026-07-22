@@ -835,6 +835,14 @@ table.data th.num {
 .trend-chips button:hover { border-color: var(--accent); transform: translateY(-1px); }
 .trend-chips span { color: var(--text-muted); font-size: 12px; }
 .trends-section { margin-bottom: 30px; }
+.trend-detail { margin: -10px 0 30px; }
+.trend-detail > .section-row { padding: 18px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface-1); }
+.trend-detail h2 { margin-top: 10px; }
+.trend-news-list { display: grid; gap: 0; }
+.trend-news-item { padding: 14px 0; border-bottom: 1px solid var(--border); }
+.trend-news-item:last-child { border-bottom: 0; }
+.trend-news-item span { color: var(--text-muted); font-size: 12px; }
+.trend-news-item h3 { margin: 6px 0 0; font-size: 16px; }
 .search-results .grid { margin-bottom: 18px; }
 .news-list { display: grid; gap: 0; }
 .news-item { padding: 16px 0; border-bottom: 1px solid var(--border); }

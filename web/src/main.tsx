@@ -8,7 +8,6 @@ import { OverviewPage } from './pages/OverviewPage';
 import { KeywordsPage } from './pages/KeywordsPage';
 import { TopicsPage } from './pages/TopicsPage';
 import { EntitiesPage } from './pages/EntitiesPage';
-import { SeoPage } from './pages/SeoPage';
 import { MethodPage } from './pages/MethodPage';
 import { SearchPage } from './pages/SearchPage';
 
@@ -23,7 +22,6 @@ createRoot(document.getElementById('root')!).render(
             <Route path="keywords" element={<KeywordsPage />} />
             <Route path="topics" element={<TopicsPage />} />
             <Route path="entities" element={<EntitiesPage />} />
-            <Route path="seo" element={<SeoPage />} />
             <Route path="method" element={<MethodPage />} />
           </Route>
         </Routes>

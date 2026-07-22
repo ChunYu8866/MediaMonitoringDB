@@ -6,7 +6,7 @@ import { Badge, Banner, Card, EmptyState, LoadingState, SourceTag, StatTile } fr
 import { GRID, catAxis, tooltip, valAxis } from '../lib/charts';
 import { fmtDateTime, fmtNum, fmtTime } from '../lib/format';
 import { useChartTokens } from '../lib/theme';
-import type { Envelope, SearchData, SearchRange, TrendsData } from '../types/contracts';
+import type { Envelope, SearchData, SearchRange, TrendItem, TrendsData } from '../types/contracts';
 
 const RANGES: { value: SearchRange; label: string }[] = [
   { value: '1h', label: '1 小時' },
@@ -23,19 +23,21 @@ export function SearchPage() {
   const [searchError, setSearchError] = useState<string | null>(null);
   const [trends, setTrends] = useState<Envelope<TrendsData> | null>(null);
   const [trendsError, setTrendsError] = useState<string | null>(null);
+  const [selectedTrend, setSelectedTrend] = useState<TrendItem | null>(null);
   const tokens = useChartTokens();
 
   useEffect(() => {
     fetchTrends().then(setTrends).catch((error: Error) => setTrendsError(error.message));
   }, []);
 
-  async function runSearch(term = query) {
+  async function runSearch(term = query, trend: TrendItem | null = null) {
     const normalized = term.trim();
     if (normalized.length < 2 || normalized.length > 50) {
       setSearchError('請輸入 2 至 50 個字元的關鍵字。');
       return;
     }
     setQuery(normalized);
+    setSelectedTrend(trend);
     setSearching(true);
     setSearchError(null);
     try {
@@ -129,7 +131,7 @@ export function SearchPage() {
         ) : (
           <div className="trend-chips">
             {trends.data.items.slice(0, 12).map((item) => (
-              <button key={`${item.title}-${item.publishedAt}`} type="button" onClick={() => void runSearch(item.title)}>
+              <button key={`${item.title}-${item.publishedAt}`} type="button" onClick={() => void runSearch(item.title, item)}>
                 <strong>{item.title}</strong>
                 <span>{item.approximateTraffic || '未提供搜尋量'}</span>
               </button>
@@ -137,6 +139,33 @@ export function SearchPage() {
           </div>
         )}
       </section>
+
+      {selectedTrend && (
+        <section className="trend-detail" aria-labelledby="trend-detail-title">
+          <div className="section-row">
+            <div>
+              <Badge variant="accent">Google Trends 相關內容</Badge>
+              <h2 id="trend-detail-title">「{selectedTrend.title}」熱門搜尋資訊</h2>
+              <p>約略搜尋量：<strong>{selectedTrend.approximateTraffic || '未提供'}</strong>・開始時間：{fmtDateTime(selectedTrend.publishedAt)}</p>
+            </div>
+            {trends && <a href={trends.data.sourceUrl} target="_blank" rel="noreferrer noopener">開啟 Google Trends RSS ↗</a>}
+          </div>
+          <Card title="Google Trends 相關新聞" hint="由 Google Trends RSS 提供；不納入下方 22 家媒體熱度統計">
+            {selectedTrend.news.length === 0 ? (
+              <EmptyState title="Google Trends 未附相關新聞" desc="仍可查看下方 22 家媒體的關鍵字搜尋結果。" />
+            ) : (
+              <div className="trend-news-list">
+                {selectedTrend.news.map((news) => (
+                  <article className="trend-news-item" key={`${news.url}-${news.title}`}>
+                    <span>{news.source || '未標示來源'}</span>
+                    <h3><a href={news.url} target="_blank" rel="noreferrer noopener">{news.title}</a></h3>
+                  </article>
+                ))}
+              </div>
+            )}
+          </Card>
+        </section>
+      )}
 
       {searching && <LoadingState label="正在比對新聞來源…" />}
       {result && !searching && (

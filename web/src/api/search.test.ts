@@ -59,6 +59,21 @@ describe('static snapshot fallback', () => {
       }),
     ).toThrow('趨勢資料格式不相容');
   });
+
+  it('rejects malformed Google Trends related-news metadata', () => {
+    expect(() => parseTrendsResponse({
+      schemaVersion: '2.0.0',
+      generatedAt: '2026-07-22T00:00:00Z',
+      data: {
+        geo: 'TW', source: 'google-trends-rss', status: 'ok', stale: false,
+        sourceUrl: 'https://trends.google.com/',
+        items: [{
+          title: 'short selling', approximateTraffic: '200+', publishedAt: '2026-07-22T00:00:00Z',
+          news: [{ title: 'news', source: 'publisher' }],
+        }],
+      },
+    })).toThrow('趨勢資料格式不相容');
+  });
 });
 
 describe('parseSearchResponse', () => {

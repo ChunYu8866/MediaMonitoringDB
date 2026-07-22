@@ -152,7 +152,7 @@ async function handleSearch(request, env, url) {
 
 async function handleTrends(request, env) {
   try {
-    const items = parseTrendsRss(await fetchText(TRENDS_URL), NEWS_SOURCES);
+    const items = parseTrendsRss(await fetchText(TRENDS_URL));
     return json(
       request,
       env,

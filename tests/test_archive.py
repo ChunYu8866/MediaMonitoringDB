@@ -60,15 +60,15 @@ def test_parse_google_trends_tw_rss():
     assert items[0]["news"][0]["url"] == "https://example.com/news/1"
 
 
-def test_trends_related_news_is_restricted_to_requested_publishers():
+def test_trends_related_news_is_preserved_even_outside_requested_publishers():
     items = [{"title": "熱門", "news": [
         {"title": "保留", "url": "https://news.tvbs.com.tw/politics/1"},
         {"title": "移除", "url": "https://example.com/news/2"},
     ]}]
 
-    filtered = cli.filter_trends_news(items, [{"domains": ["news.tvbs.com.tw"]}])
+    filtered = cli.prepare_trends_items(items)
 
-    assert [entry["title"] for entry in filtered[0]["news"]] == ["保留"]
+    assert len(filtered[0]["news"]) == 2
 
 
 def test_one_rss_failure_is_returned_as_source_error(monkeypatch):

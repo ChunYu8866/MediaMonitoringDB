@@ -20,8 +20,7 @@ export interface Envelope<T> {
 
 /**
  * 來源代碼。
- * 新聞：使用者指定的 22 家台灣新聞媒體。
- * SEO：Google Search Console，僅供獨立 SEO 頁使用。
+ * 使用者指定的 22 家台灣新聞媒體。
  */
 export type SourceId =
   | 'tvbs'
@@ -45,8 +44,7 @@ export type SourceId =
   | 'newtalk'
   | 'nownews'
   | 'nextapple'
-  | 'ettoday'
-  | 'gsc';
+  | 'ettoday';
 
 export type SourceStatus = 'ok' | 'stale' | 'degraded' | 'disabled' | 'error';
 
@@ -62,8 +60,6 @@ export interface Meta {
   lastFastAt: string | null;
   /** 深度 NLP 管線最後成功時間。 */
   lastDeepAt: string | null;
-  /** SEO 管線最後成功時間。 */
-  lastSeoAt: string | null;
   /** 方法版本，用於前端顯示「方法說明」。 */
   methodVersion: string;
   /**
@@ -218,38 +214,6 @@ export interface EntitiesData {
   edges: EntityEdge[];
 }
 
-// ── seo.json ──────────────────────────────────────────────────────────────────
-
-export interface SeoDailyPoint {
-  date: string;
-  clicks: number;
-  impressions: number;
-  ctr: number;
-  position: number;
-}
-
-export interface SeoQueryRow {
-  query: string;
-  clicks: number;
-  impressions: number;
-  ctr: number;
-  position: number;
-}
-
-export interface SeoData {
-  /** 是否已完成 Search Console 驗證與串接。 */
-  connected: boolean;
-  /** 最近一次成功同步時間。 */
-  lastSyncAt: string | null;
-  /** 最新資料是否為初步（尚未定案）。 */
-  preliminary: boolean;
-  /** 站台 URL。 */
-  siteUrl: string | null;
-  daily: SeoDailyPoint[];
-  topQueries: SeoQueryRow[];
-  totals: { clicks: number; impressions: number; ctr: number; position: number };
-}
-
 // ── recent.json ───────────────────────────────────────────────────────────────
 
 export interface RecentItem {
@@ -276,7 +240,7 @@ export interface SearchArticle extends RecentItem {
 }
 
 export interface SearchSourceStatus {
-  id: Exclude<SourceId, 'gsc'>;
+  id: SourceId;
   displayName: string;
   status: Extract<SourceStatus, 'ok' | 'stale' | 'degraded' | 'error' | 'disabled'>;
   itemCount: number;
@@ -305,7 +269,7 @@ export interface SearchData {
   stale: boolean;
   metrics: SearchMetrics;
   timeline: SearchTimelinePoint[];
-  sourceCounts: Partial<Record<Exclude<SourceId, 'gsc'>, number>>;
+  sourceCounts: Partial<Record<SourceId, number>>;
   sources: SearchSourceStatus[];
   items: SearchArticle[];
 }

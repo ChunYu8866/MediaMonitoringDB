@@ -1,11 +1,10 @@
 {
   "schemaVersion": "2.0.0",
-  "generatedAt": "2026-07-22T14:02:07.537578Z",
+  "generatedAt": "2026-07-22T14:38:09.892021Z",
   "data": {
     "status": "partial",
-    "lastFastAt": "2026-07-22T14:02:07.537578Z",
-    "lastDeepAt": "2026-07-22T14:02:07.537578Z",
-    "lastSeoAt": null,
+    "lastFastAt": "2026-07-22T14:38:09.892021Z",
+    "lastDeepAt": "2026-07-22T14:38:09.892021Z",
     "methodVersion": "news-heat-v2-22-sources",
     "scheduleDaysUntilPause": null,
     "coverage": {

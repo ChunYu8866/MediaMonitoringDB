@@ -35,10 +35,9 @@ export function MethodPage() {
         {meta.loading ? (
           <LoadingState />
         ) : (
-          <div className="grid cols-3" style={{ gap: 14 }}>
+          <div className="grid cols-2" style={{ gap: 14 }}>
             <TimeStat label="快管線（聲量／熱度）" at={m?.lastFastAt ?? null} />
             <TimeStat label="深度分析（情緒／主題／關係）" at={m?.lastDeepAt ?? null} />
-            <TimeStat label="SEO（每日）" at={m?.lastSeoAt ?? null} />
           </div>
         )}
         {m && (
@@ -158,7 +157,6 @@ const LIMITS = [
   { icon: '🗳️', title: '不代表整體民意', desc: '樣本來自特定公開來源，僅為研究指標，不能推論台灣整體民意。' },
   { icon: '🕸️', title: '共現不代表關係', desc: '人物／組織共現只表示一起被提到，不代表支持、敵對或因果。' },
   { icon: '📰', title: '來源涵蓋有限', desc: '結果只涵蓋已啟用且成功回應的新聞來源，不等於全網新聞。' },
-  { icon: '🔍', title: 'SEO 有延遲且獨立', desc: 'Search Console 是本站搜尋成效，非全網熱搜，資料延遲且不併入即時熱度。' },
   { icon: '⏱️', title: '排程為 best effort', desc: 'GitHub Actions 排程與 Pages 部署盡力而為，不保證 5 分鐘內完成。' },
   { icon: '📡', title: 'RSS 更新有延遲', desc: '來源發布與 RSS 更新時間不同，排程亦採 best effort。' },
   { icon: '🧪', title: '模型為實驗性', desc: '情緒與 NER 未達 F1 0.70 前標示實驗性，摘要採可追溯的抽取式。' },

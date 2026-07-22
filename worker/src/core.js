@@ -117,7 +117,7 @@ export function parseGoogleNewsRss(xml, sources) {
     .filter(Boolean);
 }
 
-export function parseTrendsRss(xml, sources = []) {
+export function parseTrendsRss(xml) {
   return entryBlocks(xml)
     .slice(0, 20)
     .map((block) => {
@@ -129,13 +129,7 @@ export function parseTrendsRss(xml, sources = []) {
         }))
         .filter((item) => {
           if (!item.title || !item.url) return false;
-          if (sources.length === 0) return true;
-          try {
-            const hostname = new URL(item.url).hostname.toLowerCase();
-            return sources.some((source) => source.domains.some((domain) => hostname === domain || hostname.endsWith(`.${domain}`)));
-          } catch {
-            return false;
-          }
+          return true;
         });
       const timestamp = Date.parse(extract(block, 'pubDate'));
       return {

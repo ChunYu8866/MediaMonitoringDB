@@ -60,3 +60,22 @@ test('24h search merges Google News results with the low-frequency Pages snapsho
     globalThis.fetch = originalFetch;
   }
 });
+
+test('trends endpoint preserves related news from publishers outside the 22-source registry', async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => new Response(`<rss xmlns:ht="https://trends.google.com/trending/rss"><channel><item>
+    <title>short selling</title><ht:approx_traffic>200+</ht:approx_traffic>
+    <pubDate>Wed, 22 Jul 2026 12:00:00 GMT</pubDate>
+    <ht:news_item><ht:news_item_title>Daily market report</ht:news_item_title>
+    <ht:news_item_url>https://external.example/story/1</ht:news_item_url>
+    <ht:news_item_source>External Finance</ht:news_item_source></ht:news_item>
+  </item></channel></rss>`);
+  try {
+    const response = await worker.fetch(new Request('https://worker.example/api/trends'), {});
+    const body = await response.json();
+    assert.equal(body.data.items[0].news.length, 1);
+    assert.equal(body.data.items[0].news[0].source, 'External Finance');
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});

@@ -5,7 +5,6 @@ import argparse
 import json
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from urllib.parse import urlparse
 
 import requests
 import yaml
@@ -43,16 +42,8 @@ def keep_allowed_sources(items: list, source_ids: set[str]) -> list:
     return [item for item in items if item.source in source_ids]
 
 
-def filter_trends_news(items: list[dict], sources: list[dict]) -> list[dict]:
-    """Keep only requested publishers inside Google Trends related-news metadata."""
-    domains = {domain.lower() for source in sources for domain in source.get("domains", [])}
-    for item in items:
-        item["news"] = [
-            news
-            for news in item.get("news", [])
-            if (hostname := urlparse(news.get("url", "")).hostname)
-            and any(hostname.lower() == domain or hostname.lower().endswith(f".{domain}") for domain in domains)
-        ]
+def prepare_trends_items(items: list[dict]) -> list[dict]:
+    """Keep Google Trends related-news metadata separate from the 22-source analysis."""
     return items
 
 
@@ -220,7 +211,7 @@ def run(config_path: Path, output_dir: Path, restore_base_url: str = "") -> int:
 
     trends_stale = False
     try:
-        trends_items = filter_trends_news(parse_trends_feed(_fetch_bytes(TRENDS_URL, timeout))[:20], sources)
+        trends_items = prepare_trends_items(parse_trends_feed(_fetch_bytes(TRENDS_URL, timeout))[:20])
     except Exception:  # noqa: BLE001 - 趨勢失敗不阻擋新聞部署
         trends_items = []
         previous = output_dir / "trends.json"
@@ -251,7 +242,6 @@ def run(config_path: Path, output_dir: Path, restore_base_url: str = "") -> int:
                 "status": archive_status,
                 "lastFastAt": generated_at if current_items else None,
                 "lastDeepAt": generated_at if topics else None,
-                "lastSeoAt": None,
                 "methodVersion": "news-heat-v2-22-sources",
                 "scheduleDaysUntilPause": None,
                 "coverage": {"fastBucketHours": 24, "hourlyDays": 7, "dailyDays": 7},

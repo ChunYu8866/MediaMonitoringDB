@@ -82,7 +82,7 @@ test('calculateMetrics returns zero heat for zero news volume', () => {
   assert.equal(calculateMetrics([], '24h', Date.now(), 5).heat, 0);
 });
 
-test('parseTrendsRss reads Taiwan Trending Now RSS and filters related news to the allowlist', () => {
+test('parseTrendsRss reads Taiwan Trending Now RSS and preserves all related news', () => {
   const xml = `<rss xmlns:ht="https://trends.google.com/trending/rss"><channel><item>
     <title>台灣颱風</title><ht:approx_traffic>20,000+</ht:approx_traffic>
     <pubDate>Wed, 22 Jul 2026 08:00:00 GMT</pubDate>
@@ -94,10 +94,10 @@ test('parseTrendsRss reads Taiwan Trending Now RSS and filters related news to t
     <ht:news_item_source>未知</ht:news_item_source></ht:news_item>
   </item></channel></rss>`;
 
-  const result = parseTrendsRss(xml, [{ domains: ['example.com'] }]);
+  const result = parseTrendsRss(xml);
 
   assert.equal(result[0].title, '台灣颱風');
   assert.equal(result[0].approximateTraffic, '20,000+');
   assert.equal(result[0].news[0].source, '中央社');
-  assert.equal(result[0].news.length, 1);
+  assert.equal(result[0].news.length, 2);
 });

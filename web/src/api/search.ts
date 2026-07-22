@@ -66,7 +66,21 @@ export function parseTrendsResponse(value: unknown): Envelope<TrendsData> {
     throw new Error('趨勢資料格式不相容');
   }
   const data = value.data as Partial<TrendsData>;
-  if (data.geo !== 'TW' || data.source !== 'google-trends-rss' || !Array.isArray(data.items)) {
+  const validItems = Array.isArray(data.items) && data.items.every((item) =>
+    item &&
+    typeof item.title === 'string' &&
+    typeof item.approximateTraffic === 'string' &&
+    typeof item.publishedAt === 'string' &&
+    Array.isArray(item.news) &&
+    item.news.every((news) =>
+      news &&
+      typeof news.title === 'string' &&
+      typeof news.source === 'string' &&
+      typeof news.url === 'string' &&
+      /^https?:\/\//.test(news.url),
+    ),
+  );
+  if (data.geo !== 'TW' || data.source !== 'google-trends-rss' || !validItems) {
     throw new Error('趨勢資料格式不相容');
   }
   return value as Envelope<TrendsData>;
@@ -154,7 +168,7 @@ export function buildStaticSearchData(
     timeline,
     sourceCounts,
     sources: Object.entries(SOURCE_NAMES).map(([id, displayName]) => ({
-      id: id as Exclude<SearchArticle['source'], 'gsc'>,
+      id: id as SearchArticle['source'],
       displayName,
       status: 'stale',
       itemCount: sourceCounts[id as keyof typeof sourceCounts] ?? 0,

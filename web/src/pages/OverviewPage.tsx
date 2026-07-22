@@ -118,7 +118,7 @@ export function OverviewPage() {
       </div>
 
       <Banner variant="info" icon="🧪">
-        目前顯示的是 <strong>示範資料</strong>（Phase 3 前端）。之後會由 Python 快／深／SEO 管線產生真實資料取代。
+        此頁呈現公開新聞快照；資料更新狀態與來源限制請以「方法與狀態」頁為準。
       </Banner>
 
       {staleSources.length > 0 && (

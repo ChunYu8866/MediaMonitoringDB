@@ -1,6 +1,6 @@
 {
   "schemaVersion": "2.0.0",
-  "generatedAt": "2026-07-22T14:02:07.537578Z",
+  "generatedAt": "2026-07-22T14:38:09.892021Z",
   "data": {
     "geo": "TW",
     "status": "ok",
@@ -9,76 +9,192 @@
     "sourceUrl": "https://trends.google.com/trending/rss?geo=TW&hl=zh-TW",
     "items": [
       {
+        "title": "ig",
+        "approximateTraffic": "5000+",
+        "publishedAt": "2026-07-22T14:20:00Z",
+        "news": [
+          {
+            "title": "Is Instagram down right now? Users reporting issues with Instagram",
+            "source": "Asbury Park Press",
+            "url": "https://www.app.com/story/tech/2026/07/22/instagram-down-downdetector-july-22-2026/91006967007/"
+          },
+          {
+            "title": "Global Meta outage disrupts Facebook and Instagram services worldwide",
+            "source": "The Jerusalem Post",
+            "url": "https://www.jpost.com/business-and-innovation/article-902924"
+          },
+          {
+            "title": "Facebook, Instagram and Messenger down in widespread Meta outage",
+            "source": "The Independent",
+            "url": "https://www.the-independent.com/tech/facebook-instagram-messenger-down-not-working-meta-b3017615.html"
+          }
+        ]
+      },
+      {
+        "title": "王維皓",
+        "approximateTraffic": "200+",
+        "publishedAt": "2026-07-22T14:20:00Z",
+        "news": [
+          {
+            "title": "才被讚金曲第一帥！幻藍小熊老闆王維皓涉嫌閃兵 被限制出境",
+            "source": "噓！星聞",
+            "url": "https://stars.udn.com/star/story/10092/9644921"
+          },
+          {
+            "title": "曾唱《痞子英雄》主題曲！王維皓涉花10萬逃兵 60萬交保",
+            "source": "台視新聞網",
+            "url": "https://news.ttv.com.tw/news/11507220002700W"
+          },
+          {
+            "title": "快訊／閃兵藝人+1！唱紅《痞子英雄》主題曲「最帥老闆」涉買病歷遭拘提",
+            "source": "三立娛樂星聞",
+            "url": "https://star.setn.com/news/1876831"
+          }
+        ]
+      },
+      {
+        "title": "中職",
+        "approximateTraffic": "500+",
+        "publishedAt": "2026-07-22T14:20:00Z",
+        "news": []
+      },
+      {
+        "title": "張士綸",
+        "approximateTraffic": "100+",
+        "publishedAt": "2026-07-22T14:20:00Z",
+        "news": []
+      },
+      {
+        "title": "meta",
+        "approximateTraffic": "100+",
+        "publishedAt": "2026-07-22T14:20:00Z",
+        "news": [
+          {
+            "title": "If Mark Zuckerberg Says These Words on July 29, Meta Platforms' Stock Could Skyrocket",
+            "source": "Yahoo Finance",
+            "url": "https://finance.yahoo.com/markets/stocks/articles/mark-zuckerberg-says-words-july-102500680.html"
+          },
+          {
+            "title": "Meta Platforms: Vertical Integration Is The Play - Reiterating Strong Buy (Earnings Preview)",
+            "source": "Seeking Alpha",
+            "url": "https://seekingalpha.com/article/4923635-meta-platforms-vertical-integration-is-the-play-reiterating-strong-buy-earnings-preview"
+          },
+          {
+            "title": "Meta Just Got a Major Boost From Zuckerberg, and Investors Should Take Notice",
+            "source": "The Motley Fool",
+            "url": "https://www.fool.com/investing/2026/07/21/meta-just-got-a-major-boost-from-zuckerberg-and-in/"
+          }
+        ]
+      },
+      {
+        "title": "美超微股價",
+        "approximateTraffic": "200+",
+        "publishedAt": "2026-07-22T14:20:00Z",
+        "news": [
+          {
+            "title": "AI伺服器訂單大爆發 美超微電腦在手訂單破600億美元 盤前飆漲15%",
+            "source": "鉅亨網",
+            "url": "https://news.cnyes.com/news/id/6543039"
+          },
+          {
+            "title": "美超微訂單爆發、毛利率預測翻倍 盤後飆漲18％",
+            "source": "工商時報",
+            "url": "https://www.ctee.com.tw/news/20260722700475-430704"
+          },
+          {
+            "title": "SpaceX資料中心添柴？美超微毛利/接單旺盤後飆- 新聞",
+            "source": "MoneyDJ",
+            "url": "https://www.moneydj.com/kmdj/news/newsviewer.aspx?a=a20e50a7-d95c-4417-8b75-8ed74319699e"
+          }
+        ]
+      },
+      {
+        "title": "郭阜林",
+        "approximateTraffic": "100+",
+        "publishedAt": "2026-07-22T14:10:00Z",
+        "news": [
+          {
+            "title": "中職》打瘋了！兄弟本季最多得分大勝台鋼雄鷹 差點寫隊史紀錄",
+            "source": "自由體育",
+            "url": "https://sports.ltn.com.tw/news/breakingnews/5514410"
+          },
+          {
+            "title": "中信兄弟火力放送 主場大勝台鋼雄鷹 - 中職 - 棒球",
+            "source": "運動視界Sports Vision",
+            "url": "https://www.sportsv.net/articles/127771"
+          },
+          {
+            "title": "郭阜林防守站位惹議？象迷氣炸「真正原因」曝光：牽涉到品行問題",
+            "source": "NOWnews今日新聞",
+            "url": "https://www.nownews.com/news/6859246"
+          }
+        ]
+      },
+      {
+        "title": "百味人生",
+        "approximateTraffic": "100+",
+        "publishedAt": "2026-07-22T14:00:00Z",
+        "news": [
+          {
+            "title": "劉書宏哭到快登出！　「百味人生」喪父又失憶崩潰喊震撼教育",
+            "source": "噓！星聞",
+            "url": "https://stars.udn.com/star/story/10091/9641407"
+          },
+          {
+            "title": "喪父、失憶雙重震撼彈！劉書宏驚爆「撞墓碑醒記憶」 哭到人生險登出",
+            "source": "自由娛樂",
+            "url": "https://ent.ltn.com.tw/news/breakingnews/5512308"
+          },
+          {
+            "title": "高張力情緒戲拍到幾近崩潰 劉書宏：震撼教育 | 青年日報",
+            "source": "LINE TODAY",
+            "url": "https://today.line.me/tw/v3/article/DRm39l8"
+          }
+        ]
+      },
+      {
         "title": "賣空",
         "approximateTraffic": "200+",
         "publishedAt": "2026-07-22T13:50:00Z",
-        "news": []
-      },
-      {
-        "title": "童子賢",
-        "approximateTraffic": "100+",
-        "publishedAt": "2026-07-22T13:50:00Z",
-        "news": []
+        "news": [
+          {
+            "title": "每日空头追踪：AT&T(T.US)卖空量激增705万，卖空成交比例达9%",
+            "source": "Moomoo",
+            "url": "https://www.moomoo.com/hans/news/post/73363701/daily-short-sale-tracking-at-t-s-short-volume-increased"
+          },
+          {
+            "title": "7月22日港股公用事业行业沽空数据盘点，中电控股、华润电力、中广核电力沽空金额位居行业前三-证券之星",
+            "source": "证券之星",
+            "url": "https://hk.stockstar.com/RB2026072200037551.shtml"
+          },
+          {
+            "title": "智通港股沽空统计|7月17日",
+            "source": "Moomoo",
+            "url": "https://www.moomoo.com/hans/news/post/73101616/gtn-hong-kong-short-selling-statistics-july-17"
+          }
+        ]
       },
       {
         "title": "漫博2026",
-        "approximateTraffic": "100+",
-        "publishedAt": "2026-07-22T13:50:00Z",
-        "news": []
-      },
-      {
-        "title": "朱迦恩",
-        "approximateTraffic": "100+",
-        "publishedAt": "2026-07-22T13:40:00Z",
-        "news": [
-          {
-            "title": "中職》亞運國手遭下放二軍 餅總解釋原因",
-            "source": "自由體育",
-            "url": "https://sports.ltn.com.tw/news/breakingnews/5514218"
-          }
-        ]
-      },
-      {
-        "title": "許信良",
-        "approximateTraffic": "500+",
-        "publishedAt": "2026-07-22T13:30:00Z",
-        "news": []
-      },
-      {
-        "title": "國泰 理 專",
-        "approximateTraffic": "2000+",
-        "publishedAt": "2026-07-22T13:30:00Z",
-        "news": [
-          {
-            "title": "民眾控遭誤導購買近5千萬保單 銀行：查無相關指控",
-            "source": "公視新聞網PNN",
-            "url": "https://news.pts.org.tw/article/818797"
-          }
-        ]
-      },
-      {
-        "title": "samsung",
-        "approximateTraffic": "500+",
-        "publishedAt": "2026-07-22T13:20:00Z",
-        "news": []
-      },
-      {
-        "title": "三星",
-        "approximateTraffic": "500+",
-        "publishedAt": "2026-07-22T13:10:00Z",
-        "news": []
-      },
-      {
-        "title": "劉曉憶",
         "approximateTraffic": "200+",
-        "publishedAt": "2026-07-22T13:10:00Z",
-        "news": []
-      },
-      {
-        "title": "苦茶油",
-        "approximateTraffic": "500+",
-        "publishedAt": "2026-07-22T12:50:00Z",
-        "news": []
+        "publishedAt": "2026-07-22T13:50:00Z",
+        "news": [
+          {
+            "title": "【懶人包】《漫博2026 》羚邦集結《咒術迴戰》、《排球少年!!》等 25 項大人氣IP 限量福袋、《吉伊卡哇》電影套票公開",
+            "source": "上報Up Media",
+            "url": "https://www.upmedia.mg/tw/game/community/264202"
+          },
+          {
+            "title": "【漫博 26】羚邦將推出旗下 25 部人氣作品全新商品及多款限定福袋",
+            "source": "PChome Online 新聞",
+            "url": "https://news.pchome.com.tw/game/gamer/20260721/index-78461655542491203104.html"
+          },
+          {
+            "title": "2026漫畫博覽會&電玩電競展指南｜時間地點、門票與活動總整理",
+            "source": "Yahoo新聞",
+            "url": "https://tw.news.yahoo.com/2026%E6%BC%AB%E7%95%AB%E5%8D%9A%E8%A6%BD%E6%9C%83%E9%9B%BB%E7%8E%A9%E9%9B%BB%E7%AB%B6%E5%B1%95%E6%8C%87%E5%8D%97%EF%BD%9C%E6%99%82%E9%96%93%E5%9C%B0%E9%BB%9E%E3%80%81%E9%96%80%E7%A5%A8%E8%88%87%E6%B4%BB%E5%8B%95%E7%B8%BD%E6%95%B4%E7%90%86-113027067.html"
+          }
+        ]
       }
     ]
   }

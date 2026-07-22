@@ -35,7 +35,6 @@ export const SOURCE_META: Record<SourceId, SourceMeta> = {
   nownews: { id: 'nownews', name: 'NOWNEWS', short: 'NOWNEWS', series: 3, news: true },
   nextapple: { id: 'nextapple', name: '壹蘋新聞網', short: '壹蘋', series: 4, news: true },
   ettoday: { id: 'ettoday', name: 'ETtoday', short: 'ETtoday', series: 5, news: true },
-  gsc: { id: 'gsc', name: 'Google Search Console', short: 'Search Console', series: 6, news: false },
 };
 
 /** 依顯示順序排列的新聞來源。 */

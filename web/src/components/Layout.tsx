@@ -22,7 +22,6 @@ const NAV: NavItem[] = [
   { to: '/keywords', label: '關鍵字熱度', icon: '🔥' },
   { to: '/topics', label: '事件與主題', icon: '🗂️' },
   { to: '/entities', label: '人物關係', icon: '🕸️' },
-  { to: '/seo', label: '網站 SEO', icon: '🔍' },
   { to: '/method', label: '方法與狀態', icon: '🧭' },
 ];
 
