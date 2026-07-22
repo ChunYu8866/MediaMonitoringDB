@@ -43,15 +43,19 @@ const json = (request, env, body, status = 200, cacheSeconds = 0) =>
     },
   });
 
-async function fetchText(url, attempts = 2) {
+async function fetchText(url, attempts = 2, timeoutMs = 5_000) {
   let lastError;
   for (let attempt = 0; attempt < attempts; attempt += 1) {
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 5_000);
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
     try {
       const response = await fetch(url, {
         signal: controller.signal,
-        headers: { Accept: 'application/rss+xml, application/xml, text/xml, */*' },
+        headers: {
+          Accept: 'application/rss+xml, application/xml, text/xml, */*',
+          'Accept-Language': 'zh-TW,zh;q=0.9',
+          'User-Agent': 'MediaMonitoringDemo/1.0 (+https://chunyu8866.github.io/MediaMonitoringDB/)',
+        },
       });
       if (!response.ok) throw new Error(`HTTP_${response.status}`);
       return await response.text();
@@ -98,7 +102,7 @@ async function handleSearch(request, env, url) {
   let googleItems = [];
   let googleError = null;
   try {
-    googleItems = parseGoogleNewsRss(await fetchText(googleNewsUrl(input.query)), NEWS_SOURCES);
+    googleItems = parseGoogleNewsRss(await fetchText(googleNewsUrl(input.query), 1, 4_000), NEWS_SOURCES);
   } catch (error) {
     googleError = error.message || 'GOOGLE_NEWS_FETCH_ERROR';
   }
