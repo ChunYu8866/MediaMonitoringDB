@@ -1,23 +1,19 @@
-# 前端（Phase 3）GitHub Pages 部署工作流程
-#
-# 目前只建置 web/ 前端並使用範例資料部署。之後的 Python 快／深／SEO 管線
-# 會取代 `gen:data` 步驟，改為擷取真實公開來源後寫入 web/public/data/。
-#
-# 注意（與設計規格一致）：
-# - 部署採 best effort，不宣稱固定間隔 SLA。
-# - 公開 repo 若連續 60 天無活動，GitHub 會自動停用 schedule；請定期確認。
-name: Deploy web to GitHub Pages
+name: Update news snapshot and deploy Pages
 
 on:
   push:
     branches: [main]
     paths:
       - 'web/**'
+      - 'src/**'
+      - 'tests/**'
+      - 'config/**'
+      - 'worker/**'
+      - 'requirements.txt'
       - '.github/workflows/deploy-web.yml'
   workflow_dispatch:
-  # 未來由資料管線 orchestrator 啟用（frontend-only 階段先不每 5 分鐘重建範例資料）：
-  # schedule:
-  #   - cron: '*/5 * * * *'
+  schedule:
+    - cron: '*/15 * * * *'
 
 permissions:
   contents: read
@@ -32,29 +28,60 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: web
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: 安裝 Python 相依套件
+        run: pip install -r requirements.txt
+
+      - name: Python 測試
+        run: python -m pytest -q
+        env:
+          PYTHONPATH: src
+
+      - name: 更新官方 RSS 與 Google Trends TW 快照
+        run: python -m opinion_pipeline.cli --restore-base-url https://chunyu8866.github.io/MediaMonitoringDB
+        env:
+          PYTHONPATH: src
+
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
-          cache-dependency-path: web/package-lock.json
+          cache-dependency-path: |
+            web/package-lock.json
+            worker/package-lock.json
 
-      - name: 安裝相依套件
+      - name: 安裝 Worker 相依套件
         run: npm ci
+        working-directory: worker
 
-      - name: 產生資料（目前為範例資料）
-        run: npm run gen:data
+      - name: Worker 核心測試
+        run: npm test
+        working-directory: worker
+
+      - name: 安裝前端相依套件
+        run: npm ci
+        working-directory: web
+
+      - name: 前端單元測試
+        run: npm test
+        working-directory: web
 
       - name: 型別檢查
         run: npm run typecheck
+        working-directory: web
 
       - name: 建置
         run: npm run build
+        working-directory: web
+        env:
+          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
 
       - uses: actions/configure-pages@v5
 

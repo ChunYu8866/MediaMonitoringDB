@@ -1,0 +1,7 @@
+name = "media-monitoring-demo"
+main = "src/index.js"
+compatibility_date = "2026-07-22"
+
+[vars]
+ALLOWED_ORIGIN = "https://chunyu8866.github.io"
+ARCHIVE_BASE_URL = "https://chunyu8866.github.io/MediaMonitoringDB"

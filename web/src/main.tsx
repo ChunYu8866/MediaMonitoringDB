@@ -10,14 +10,16 @@ import { TopicsPage } from './pages/TopicsPage';
 import { EntitiesPage } from './pages/EntitiesPage';
 import { SeoPage } from './pages/SeoPage';
 import { MethodPage } from './pages/MethodPage';
+import { SearchPage } from './pages/SearchPage';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider>
-      <HashRouter>
+      <HashRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <Routes>
           <Route element={<Layout />}>
-            <Route index element={<OverviewPage />} />
+            <Route index element={<SearchPage />} />
+            <Route path="overview" element={<OverviewPage />} />
             <Route path="keywords" element={<KeywordsPage />} />
             <Route path="topics" element={<TopicsPage />} />
             <Route path="entities" element={<EntitiesPage />} />

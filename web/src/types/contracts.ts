@@ -7,7 +7,7 @@
  */
 
 /** 目前前端支援的主版本；major 不同即視為不相容。 */
-export const SUPPORTED_SCHEMA_MAJOR = 1;
+export const SUPPORTED_SCHEMA_MAJOR = 2;
 
 /** 所有公開 JSON 的共同外殼。 */
 export interface Envelope<T> {
@@ -20,8 +20,8 @@ export interface Envelope<T> {
 
 /**
  * 來源代碼。
- * 新聞：中央社、ETtoday、三立、鏡新聞、TVBS、自由時報。
- * 社群：Bluesky。SEO：Google Search Console。PTT 目前停用，僅保留識別。
+ * 新聞：中央社、ETtoday、三立、鏡新聞、TVBS、自由時報、Currents（選配）。
+ * SEO：Google Search Console，僅供獨立 SEO 頁使用。
  */
 export type SourceId =
   | 'cna'
@@ -30,9 +30,8 @@ export type SourceId =
   | 'mirror'
   | 'tvbs'
   | 'ltn'
-  | 'bluesky'
-  | 'gsc'
-  | 'ptt';
+  | 'currents'
+  | 'gsc';
 
 export type SourceStatus = 'ok' | 'stale' | 'degraded' | 'disabled' | 'error';
 
@@ -105,7 +104,7 @@ export interface HeatPoint {
   mentions: number;
 }
 
-/** 熱度公式四個分量（0–1）。缺互動數時 e 為 null 並重分配權重。 */
+/** 新聞熱度三個分量（0–1）。 */
 export interface HeatComponents {
   /** V 聲量百分位。 */
   volume: number;
@@ -113,10 +112,8 @@ export interface HeatComponents {
   acceleration: number;
   /** D 來源多樣性。 */
   diversity: number;
-  /** E 互動；來源無互動數時為 null。 */
-  engagement: number | null;
-  /** 實際採用的權重（缺 E 時已重分配）。 */
-  weights: { volume: number; acceleration: number; diversity: number; engagement: number };
+  /** 固定新聞熱度權重。 */
+  weights: { volume: number; acceleration: number; diversity: number };
 }
 
 export type KeywordKind = 'manual' | 'auto';
@@ -248,4 +245,76 @@ export interface RecentItem {
 
 export interface RecentData {
   items: RecentItem[];
+}
+
+// ── Worker 即時新聞搜尋 ─────────────────────────────────────────────────────
+
+export type SearchRange = '1h' | '6h' | '24h' | '7d';
+
+export interface SearchArticle extends RecentItem {
+  /** 標題與短摘要的實驗性字典判讀；未判讀時為 null。 */
+  sentiment: 'positive' | 'neutral' | 'negative' | null;
+}
+
+export interface SearchSourceStatus {
+  id: Exclude<SourceId, 'gsc'>;
+  displayName: string;
+  status: Extract<SourceStatus, 'ok' | 'stale' | 'degraded' | 'error' | 'disabled'>;
+  itemCount: number;
+  errorCode: string | null;
+}
+
+export interface SearchMetrics {
+  heat: number;
+  mentions: number;
+  sourceCount: number;
+  volume: number;
+  acceleration: number;
+  diversity: number;
+}
+
+export interface SearchTimelinePoint {
+  t: string;
+  mentions: number;
+  heat: number;
+}
+
+export interface SearchData {
+  query: string;
+  range: SearchRange;
+  status: GlobalStatus;
+  stale: boolean;
+  metrics: SearchMetrics;
+  timeline: SearchTimelinePoint[];
+  sourceCounts: Partial<Record<Exclude<SourceId, 'gsc'>, number>>;
+  sources: SearchSourceStatus[];
+  items: SearchArticle[];
+}
+
+export interface NewsArchiveData {
+  status: GlobalStatus;
+  stale: boolean;
+  items: SearchArticle[];
+}
+
+export interface TrendNewsItem {
+  title: string;
+  source: string;
+  url: string;
+}
+
+export interface TrendItem {
+  title: string;
+  approximateTraffic: string;
+  publishedAt: string;
+  news: TrendNewsItem[];
+}
+
+export interface TrendsData {
+  geo: 'TW';
+  status: GlobalStatus;
+  stale: boolean;
+  source: 'google-trends-rss';
+  sourceUrl: string;
+  items: TrendItem[];
 }

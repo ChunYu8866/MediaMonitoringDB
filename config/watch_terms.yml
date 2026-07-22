@@ -1,0 +1,39 @@
+# 人工監測詞。即使當期沒有聲量也會顯示（熱度 0），維持研究時間序列完整。
+# any_of：命中任一詞即算（含主詞與別名）。exclude：命中任一詞則排除。
+watch_terms:
+  - id: tsmc
+    display: 台積電
+    any_of: [台積電, 台積, TSMC, 護國神山]
+    exclude: []
+
+  - id: legislature
+    display: 立法院
+    any_of: [立法院, 立院, 朝野協商]
+    exclude: []
+
+  - id: typhoon
+    display: 颱風
+    any_of: [颱風, 熱帶低壓, 颱風假, 停班停課]
+    exclude: []
+
+  - id: power_price
+    display: 電價
+    any_of: [電價, 電費, 台電]
+    exclude: []
+
+  - id: exchange_rate
+    display: 台幣匯率
+    any_of: [台幣, 新台幣, 匯率]
+    exclude: []
+
+  - id: housing
+    display: 房價
+    any_of: [房價, 房市, 打房]
+    exclude: []
+
+# 自動熱詞設定
+auto_terms:
+  max_terms: 10
+  min_docs: 2          # 至少出現在幾筆獨立內容
+  min_length: 2        # 候選詞最短字數
+  stopwords: [快訊, 影, 圖, 獨家, 直播, 專訪, 報導, 新聞, 今日, 昨日, 記者, 表示, 指出, 一名, 民眾, 台灣, 相關]

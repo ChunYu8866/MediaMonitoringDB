@@ -1,7 +1,7 @@
 # 台灣新聞搜尋與 Google Trends Demo：AI 交接文件
 
 > 更新日期：2026-07-22
-> 狀態：新版設計已核准，等待實作計畫與程式調整
+> 狀態：核心 Demo 已實作並通過本機測試；待部署 Worker 與合併至 `main`
 > 正式規格：`docs/superpowers/specs/2026-07-22-news-search-demo-design.md`
 
 ## 1. 交接目標
@@ -89,28 +89,25 @@ GitHub Actions
 ### `GET /api/search`
 
 - `q`：必要，2–50 字元。
-- `range`：`24h`、`48h`、`7d`，預設 `24h`。
-- `sources`：只接受來源白名單。
-- `limit`：1–100，預設 50。
+- `range`：`1h`、`6h`、`24h`、`7d`，預設 `24h`。
 
-回傳 `schemaVersion`、`query`、`fetchedAt`、`cache`、`partial`、`sourceStatus` 與 `items`。
+回傳固定 envelope：`schemaVersion`、`generatedAt`、`data`。`data` 內含 `query`、`range`、`status`、`stale`、`metrics`、`timeline`、`sourceCounts`、`sources` 與 `items`。
 
 Worker 會合併即時 RSS／API 結果與 Pages 固定位置的 `news-archive.json`。`7d` 只代表已啟用來源所收集到的七天 metadata，不是全網完整新聞庫。
 
 每筆 item 至少包含：
 
 - `id`
-- `sourceId`
-- `sourceName`
+- `source`
 - `title`
 - `excerpt`
 - `publishedAt`
 - `url`
-- `matchedTerms`
+- `sentiment`（未執行實驗性判讀時為 `null`）
 
 ### `GET /api/trends`
 
-回傳 `fetchedAt`、`sourceUrl`、`stale` 與趨勢 items；不得公開第三方新聞圖片。
+回傳固定 envelope；`data` 內含 `geo`、`status`、`sourceUrl`、`stale` 與趨勢 items；不公開第三方新聞圖片。
 
 ### `GET /api/health`
 
@@ -174,24 +171,20 @@ NewsHeat = 100 × (0.50V + 0.33A + 0.17D)
 
 ## 10. 目前程式狀態
 
-- React／TypeScript／Vite 前端與範例 JSON 已存在。
-- README 顯示前端 Phase 3 已完成，但仍含已取消的社群來源說明。
-- Python `NormalizedItem` 與 RSS connector 骨架已存在。
-- `config/`、`requirements.txt`、`src/` 目前可能包含尚未提交的既有工作；不得刪除、覆寫或自行重建。
-- Cloudflare Worker、真實即時搜尋與 Google Trends adapter 尚未實作。
-
-下一個 AI 必須先檢查 `git status` 與 diff，保留所有既有未提交內容。
+- `feature/news-search-demo` 已有 React 搜尋首頁、Worker 三個 endpoints、Python RSS 快照管線與 Google Trends TW adapter。
+- 公開資料契約已升至 schema `2.0.0`；前端只接受主版本 2。
+- 本機真實擷取可取得至少 4 個新聞來源；TVBS 目前回傳 `HTTP_403`，三立維持停用。
+- 前端在未設定 Worker URL 時會讀取 `news-archive.json`／`trends.json` 並標示 stale。
+- GitHub Actions 已改為每 15 分鐘 best-effort 更新、測試、建置與部署。
+- 尚未完成：Cloudflare 帳號登入與實際 Worker 部署、GitHub repository variable `VITE_API_BASE_URL`、公開站 HTTP 驗證。
 
 ## 11. 實作順序
 
-1. 移除所有舊社群來源的使用者文件、型別、來源登錄、範例資料、UI 與測試。
-2. 更新 README 與資料契約至 schema `2.0.0`。
-3. 建立 Worker 專案與 search／trends／health endpoints。
-4. 以 fixture TDD 完成 RSS 搜尋、正規化、去重、快取與錯誤隔離。
-5. 完成 Google Trends adapter 與 10 分鐘快取。
-6. 改造前端為動態搜尋，加入 Trends 點擊帶入與 Worker fallback。
-7. 加入 Currents 可選 adapter；GDELT 只做關閉預設的實驗 adapter。
-8. 執行安全掃描、桌面／360px E2E 與公開 demo 驗收。
+1. 執行所有測試、build、residue/secret 掃描與桌面／360px 瀏覽器驗收。
+2. 使用擁有者的 Cloudflare 帳號執行 `worker/npm run deploy`。
+3. 在 GitHub repository variable 設定 `VITE_API_BASE_URL`。
+4. 合併或推送至 `main`，等待 Pages workflow 完成。
+5. 對公開 `/api/health`、首頁搜尋、Trends 與原文連結做 HTTP／UI 驗證。
 
 ## 12. 完成定義
 

@@ -17,11 +17,10 @@ export const SOURCE_META: Record<SourceId, SourceMeta> = {
   ltn: { id: 'ltn', name: '自由時報', short: '自由時報', series: 1, news: true },
   mirror: { id: 'mirror', name: '鏡新聞', short: '鏡新聞', series: 2, news: true },
   tvbs: { id: 'tvbs', name: 'TVBS 新聞網', short: 'TVBS', series: 3, news: true },
-  bluesky: { id: 'bluesky', name: 'Bluesky（公開）', short: 'Bluesky', series: 4, news: false },
   ettoday: { id: 'ettoday', name: 'ETtoday 新聞雲', short: 'ETtoday', series: 5, news: true },
+  currents: { id: 'currents', name: 'Currents API（選配）', short: 'Currents', series: 4, news: true },
   gsc: { id: 'gsc', name: 'Google Search Console', short: 'Search Console', series: 6, news: false },
   set: { id: 'set', name: '三立新聞網', short: '三立', series: 7, news: true },
-  ptt: { id: 'ptt', name: 'PTT（停用）', short: 'PTT', series: null, news: false },
 };
 
 /** 依顯示順序排列的新聞來源。 */

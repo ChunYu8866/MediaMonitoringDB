@@ -1,106 +1,73 @@
 {
-  "schemaVersion": "1.0.0",
-  "generatedAt": "2026-07-21T15:35:23.435Z",
+  "schemaVersion": "2.0.0",
+  "generatedAt": "2026-07-22T11:49:38.916783Z",
   "data": {
     "sources": [
       {
         "id": "cna",
         "displayName": "中央通訊社",
         "status": "ok",
-        "lastAttemptAt": "2026-07-21T15:35:23.435Z",
-        "lastSuccessAt": "2026-07-21T15:35:23.435Z",
+        "lastAttemptAt": "2026-07-22T11:49:38.916783Z",
+        "lastSuccessAt": "2026-07-22T11:49:38.916783Z",
         "errorCode": null,
         "stale": false,
-        "itemCount": 42,
-        "usageNote": "僅取官方 RSS 的標題、前言、發稿時間與原文連結；保留「中央通訊社」來源標示，不抓取正文全文。"
-      },
-      {
-        "id": "ettoday",
-        "displayName": "ETtoday 新聞雲",
-        "status": "stale",
-        "lastAttemptAt": "2026-07-21T15:35:23.435Z",
-        "lastSuccessAt": "2026-07-21T14:56:23.435Z",
-        "errorCode": "HTTP_429",
-        "stale": true,
-        "itemCount": 0,
-        "usageNote": "使用官方 RSS；公開畫面只顯示標題、短前言、時間與原文連結，不重製全文或圖片。目前遭速率限制（429），沿用上次成功資料並標示過期。"
-      },
-      {
-        "id": "set",
-        "displayName": "三立新聞網",
-        "status": "ok",
-        "lastAttemptAt": "2026-07-21T15:35:23.435Z",
-        "lastSuccessAt": "2026-07-21T15:35:23.435Z",
-        "errorCode": null,
-        "stale": false,
-        "itemCount": 38,
-        "usageNote": "使用官方 RSS；公開畫面只顯示標題、短前言、時間與原文連結，不重製全文或圖片。實際上線前需再確認 setn.com RSS 網址與著作權條款。"
-      },
-      {
-        "id": "mirror",
-        "displayName": "鏡新聞",
-        "status": "ok",
-        "lastAttemptAt": "2026-07-21T15:35:23.435Z",
-        "lastSuccessAt": "2026-07-21T15:35:23.435Z",
-        "errorCode": null,
-        "stale": false,
-        "itemCount": 24,
-        "usageNote": "使用官方 RSS／feed；只呈現標題、短前言、時間與原文連結。實際上線前需確認 mnews.tw feed 與授權範圍。"
-      },
-      {
-        "id": "tvbs",
-        "displayName": "TVBS 新聞網",
-        "status": "ok",
-        "lastAttemptAt": "2026-07-21T15:35:23.435Z",
-        "lastSuccessAt": "2026-07-21T15:34:23.435Z",
-        "errorCode": null,
-        "stale": false,
-        "itemCount": 31,
-        "usageNote": "使用官方 RSS；只呈現標題、短前言、時間與原文連結，不重製全文。實際上線前需確認 news.tvbs.com.tw RSS 與著作權條款。"
+        "itemCount": 6,
+        "usageNote": "官方 RSS；僅顯示標題、短摘要、時間與原文連結。"
       },
       {
         "id": "ltn",
         "displayName": "自由時報",
         "status": "ok",
-        "lastAttemptAt": "2026-07-21T15:35:23.435Z",
-        "lastSuccessAt": "2026-07-21T15:35:23.435Z",
+        "lastAttemptAt": "2026-07-22T11:49:38.916783Z",
+        "lastSuccessAt": "2026-07-22T11:49:38.916783Z",
         "errorCode": null,
         "stale": false,
-        "itemCount": 45,
-        "usageNote": "使用官方 RSS（news.ltn.com.tw）；只呈現標題、短前言、時間與原文連結，不抓正文全文或圖片。實際上線前需確認各分類 feed 與合理使用條件。"
+        "itemCount": 40,
+        "usageNote": "官方 RSS；僅顯示標題、短摘要、時間與原文連結。"
       },
       {
-        "id": "bluesky",
-        "displayName": "Bluesky（公開 AppView）",
+        "id": "ettoday",
+        "displayName": "ETtoday 新聞雲",
         "status": "ok",
-        "lastAttemptAt": "2026-07-21T15:35:23.435Z",
-        "lastSuccessAt": "2026-07-21T15:35:23.435Z",
+        "lastAttemptAt": "2026-07-22T11:49:38.916783Z",
+        "lastSuccessAt": "2026-07-22T11:49:38.916783Z",
         "errorCode": null,
         "stale": false,
-        "itemCount": 63,
-        "usageNote": "使用 app.bsky.feed.searchPosts 公開端點；在本地補做繁體與台灣相關性篩選。lang 不代表地理位置，樣本不代表台灣人口。"
+        "itemCount": 50,
+        "usageNote": "官方 RSS；僅顯示標題、短摘要、時間與原文連結。"
       },
       {
-        "id": "gsc",
-        "displayName": "Google Search Console",
+        "id": "mirror",
+        "displayName": "鏡傳媒（鏡週刊）",
         "status": "ok",
-        "lastAttemptAt": "2026-07-21T07:37:23.435Z",
-        "lastSuccessAt": "2026-07-21T07:37:23.435Z",
+        "lastAttemptAt": "2026-07-22T11:49:38.916783Z",
+        "lastSuccessAt": "2026-07-22T11:49:38.916783Z",
         "errorCode": null,
         "stale": false,
-        "itemCount": 20,
-        "usageNote": "只分析本站已驗證的 GitHub Pages property，每日同步一次。這是本站 SEO 成效，非全網熱搜；資料有延遲，不併入即時熱度。"
+        "itemCount": 60,
+        "usageNote": "官方 RSS；僅顯示標題、短摘要、時間與原文連結。"
       },
       {
-        "id": "ptt",
-        "displayName": "PTT",
-        "status": "disabled",
-        "lastAttemptAt": null,
+        "id": "tvbs",
+        "displayName": "TVBS 新聞網",
+        "status": "error",
+        "lastAttemptAt": "2026-07-22T11:49:38.916783Z",
         "lastSuccessAt": null,
-        "errorCode": null,
-        "stale": false,
+        "errorCode": "HTTP_403",
+        "stale": true,
         "itemCount": 0,
-        "usageNote": "未取得站方書面授權或正式研究 API 前一律停用，僅保留 SourceConnector 介面。"
+        "usageNote": "官方 RSS；僅顯示標題、短摘要、時間與原文連結。"
+      },
+      {
+        "id": "set",
+        "displayName": "三立新聞網",
+        "status": "disabled",
+        "lastAttemptAt": "2026-07-22T11:49:38.916783Z",
+        "lastSuccessAt": null,
+        "errorCode": "DISABLED",
+        "stale": true,
+        "itemCount": 0,
+        "usageNote": "官方 RSS；僅顯示標題、短摘要、時間與原文連結。"
       }
     ]
   }

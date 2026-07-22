@@ -1,0 +1,51 @@
+# 新聞來源設定。每家以官方 RSS/feed 為入口，只取標題、短前言、時間與原文連結。
+# enabled: false 的來源不會擷取，但仍會在狀態頁標示為停用。
+#
+# 註記：
+# - TVBS 官方 feed（cc.tvbs.com.tw）會擋部分自動請求（403）；設為 enabled，
+#   由具韌性的管線嘗試，失敗只標記該來源，不影響其他來源。
+# - 三立（SETN）目前找不到可直接使用的官方 RSS；先停用，取得官方 feed 後填入 url 並改為 enabled。
+# - mirror 使用鏡傳媒（鏡週刊／鏡新聞同集團）官方 RSS。
+
+sources:
+  - id: cna
+    name: 中央通訊社
+    type: rss
+    enabled: true
+    url: https://feeds.feedburner.com/cnaFirstNews
+
+  - id: ltn
+    name: 自由時報
+    type: rss
+    enabled: true
+    url: https://news.ltn.com.tw/rss/all.xml
+
+  - id: ettoday
+    name: ETtoday 新聞雲
+    type: rss
+    enabled: true
+    url: https://feeds.feedburner.com/ettoday/realtime
+
+  - id: mirror
+    name: 鏡傳媒（鏡週刊）
+    type: rss
+    enabled: true
+    url: https://www.mirrormedia.mg/rss/rss.xml
+
+  - id: tvbs
+    name: TVBS 新聞網
+    type: rss
+    enabled: true
+    url: https://cc.tvbs.com.tw/rss/text/realtime
+
+  - id: set
+    name: 三立新聞網
+    type: rss
+    enabled: false
+    # 待填入官方 RSS 網址後改 enabled: true
+    url: ""
+
+# 每次擷取每來源的請求逾時（秒）與最多保留項目數
+fetch:
+  timeout_seconds: 20
+  max_items_per_source: 60

@@ -1,18 +1,18 @@
 {
-  "schemaVersion": "1.0.0",
-  "generatedAt": "2026-07-21T15:35:23.435Z",
+  "schemaVersion": "2.0.0",
+  "generatedAt": "2026-07-22T11:49:38.916783Z",
   "data": {
     "status": "partial",
-    "lastFastAt": "2026-07-21T15:35:23.435Z",
-    "lastDeepAt": "2026-07-21T15:25:23.435Z",
-    "lastSeoAt": "2026-07-21T07:37:23.435Z",
-    "methodVersion": "2026.07-mvp",
-    "scheduleDaysUntilPause": 58,
+    "lastFastAt": "2026-07-22T11:49:38.916783Z",
+    "lastDeepAt": null,
+    "lastSeoAt": null,
+    "methodVersion": "news-heat-v1",
+    "scheduleDaysUntilPause": null,
     "coverage": {
-      "fastBucketHours": 48,
-      "hourlyDays": 30,
-      "dailyDays": 365
+      "fastBucketHours": 24,
+      "hourlyDays": 7,
+      "dailyDays": 7
     },
-    "stateRestoreFailed": false
+    "stateRestoreFailed": true
   }
 }

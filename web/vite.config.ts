@@ -19,9 +19,14 @@ export default defineConfig({
     rollupOptions: {
       output: {
         // 將較大的第三方套件切成獨立 chunk，改善瀏覽器快取
-        manualChunks: {
-          echarts: ['echarts', 'echarts-for-react'],
-          react: ['react', 'react-dom', 'react-router-dom'],
+        manualChunks(id) {
+          if (id.includes('/node_modules/echarts') || id.includes('/node_modules/zrender')) return 'echarts';
+          if (
+            id.includes('/node_modules/react/') ||
+            id.includes('/node_modules/react-dom/') ||
+            id.includes('/node_modules/react-router')
+          ) return 'react';
+          return undefined;
         },
       },
     },

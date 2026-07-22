@@ -2,6 +2,8 @@
   "schemaVersion": "2.0.0",
   "generatedAt": "2026-07-22T11:49:38.916783Z",
   "data": {
+    "status": "partial",
+    "stale": false,
     "items": [
       {
         "id": "3b9a8972054e5918056e",
@@ -901,6 +903,456 @@
         "excerpt": "",
         "publishedAt": "2026-07-22T10:18:00Z",
         "url": "https://www.mirrormedia.mg/story/20260722edi025",
+        "sentiment": null
+      },
+      {
+        "id": "e1f226cc3211f1a9db22",
+        "source": "mirror",
+        "title": "喬治王子13歲了！最新生日照曝光 昔日萌娃蛻變陽光小紳士",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T10:08:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722edi064",
+        "sentiment": null
+      },
+      {
+        "id": "ef7575e640d1153760d1",
+        "source": "mirror",
+        "title": "渣男偶像同台不倫女算命！占卜師當面警告「不珍惜老婆會遭天譴」 超尷尬畫面曝光",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T10:08:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722edi071",
+        "sentiment": null
+      },
+      {
+        "id": "6c6ee0e9f878ae0d787c",
+        "source": "mirror",
+        "title": "朱軒洋險辭演《欠妳》！認了遭嚴藝文「嚴厲對待」 自曝：我最常進「小房間」",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T10:08:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722pod001",
+        "sentiment": null
+      },
+      {
+        "id": "dc8253d945b342c69e8f",
+        "source": "mirror",
+        "title": "友訊成立機器人公司 首款AI陪伴機器人瞄準450萬單身族：愈聊愈懂你",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T10:05:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722-43bus-170626",
+        "sentiment": null
+      },
+      {
+        "id": "2e946119db69f0bbd84f",
+        "source": "mirror",
+        "title": "有片／女星「潑水重擊粉絲」力道超猛 事後道歉：下次保證一視同仁從頭濕到腳",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T10:04:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722edi031",
+        "sentiment": null
+      },
+      {
+        "id": "552c1ca41fdd1c426258",
+        "source": "mirror",
+        "title": "恆春侵襲率34%！熱帶低壓生成「估週六增強為颱風」 粉專分析路徑",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T10:03:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722edi060",
+        "sentiment": null
+      },
+      {
+        "id": "1cd35d2f5751a88f9e29",
+        "source": "mirror",
+        "title": "恐懼核心來自「恐同」 《愛的魔樣》致敬經典恐怖片挑戰極限",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T09:56:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722-144ins-175635",
+        "sentiment": null
+      },
+      {
+        "id": "cc007f4647a22f2e1f63",
+        "source": "mirror",
+        "title": "客機突瀰漫不明臭味！漢莎航空起飛急返航羽田 341名乘客平安脫險",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T09:51:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722edi039",
+        "sentiment": null
+      },
+      {
+        "id": "61606a83c0fd1ea678c1",
+        "source": "mirror",
+        "title": "小樂吳思賢接連和男團們合拍Reels 成男團合作王",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T09:45:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722-194ent-174556",
+        "sentiment": null
+      },
+      {
+        "id": "2afd5261c0f01438a049",
+        "source": "mirror",
+        "title": "新車上市/法系小鋼炮 PEUGEOT 208再返台灣市場",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T09:40:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722-car-peugeot208",
+        "sentiment": null
+      },
+      {
+        "id": "38709bce3f2d9bdd2aef",
+        "source": "mirror",
+        "title": "假警察誆「妳被發逮捕令」 台籍男大生詐2婦近259萬元第4度遭逮",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T09:39:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722edi059",
+        "sentiment": null
+      },
+      {
+        "id": "0b9ea255522119b2ae03",
+        "source": "mirror",
+        "title": "溫慶珠傳奇將延續！ 品牌首發聲：家族接棒經營ISABELLE WEN",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T09:34:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722edi024",
+        "sentiment": null
+      },
+      {
+        "id": "5b6cfc8416c4eedb96d5",
+        "source": "mirror",
+        "title": "外資回頭了！三大法人買超319億 囤貨這幾檔ETF「00403A最香」",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T09:33:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722edi069",
+        "sentiment": null
+      },
+      {
+        "id": "8a525cab1140933d30cd",
+        "source": "mirror",
+        "title": "節目打鬧演成飯圈大戰 正主約飯沒用 劉宇寧工作室怒提告",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T09:29:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722-187ent-172953",
+        "sentiment": null
+      },
+      {
+        "id": "8f4cc52d82c718a9277b",
+        "source": "mirror",
+        "title": "《東!帶我走》9月12、13日在臺東登場 許茹芸、杜德偉經典登場",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T09:23:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722-194ent-172328",
+        "sentiment": null
+      },
+      {
+        "id": "f2ed2eb68533c13079e1",
+        "source": "mirror",
+        "title": "SEMICON迎18國參與創新高 曹世綸：半導體難脫全球分工",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T09:17:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722-180fin-170405",
+        "sentiment": null
+      },
+      {
+        "id": "83ed2884e62e79407d04",
+        "source": "mirror",
+        "title": "莫允雯夏威夷被求婚超狼狽！2克拉鑽戒險噴飛 「求婚紀錄全沒了」超扯",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T09:15:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722-195ent-171524",
+        "sentiment": null
+      },
+      {
+        "id": "eb63462e56aaefede766",
+        "source": "mirror",
+        "title": "LOPIA有望插旗竹北！最快明年2月開幕 新竹人狂敲碗同一件事",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T09:03:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722edi038",
+        "sentiment": null
+      },
+      {
+        "id": "fa3c071b64425fc23690",
+        "source": "mirror",
+        "title": "高明駿回來了！十月舉辦演唱會 了卻心中多年心願",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T08:55:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722-194ent-165513",
+        "sentiment": null
+      },
+      {
+        "id": "539830281e642a41c9a6",
+        "source": "mirror",
+        "title": "嚇！楠梓都會公園驚見「頭顱、多塊人骨散落」 拖鞋水壺遺物躺樹叢",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T08:44:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722edi057",
+        "sentiment": null
+      },
+      {
+        "id": "4dcebe307a18c102e7a8",
+        "source": "mirror",
+        "title": "漠視大甲虎媽餓死女兒 膽小父親視為共犯判2年4月",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T08:39:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722-167inv-163439",
+        "sentiment": null
+      },
+      {
+        "id": "f11a7bf4cb9f85ad68fa",
+        "source": "mirror",
+        "title": "傳奇門將「墨西哥吳鎮宇」宣布退役 6度征戰世界盃比肩梅西、C羅",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T08:36:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722edi030",
+        "sentiment": null
+      },
+      {
+        "id": "dd9f68ebbebb489af5f3",
+        "source": "mirror",
+        "title": "「小貓天生28根腳趾」神奇浪浪被收編！ 飼主笑曝：多趾唯一困擾在這",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T08:35:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722edi055",
+        "sentiment": null
+      },
+      {
+        "id": "17b73625c10fd10b32f3",
+        "source": "mirror",
+        "title": "爭議延燒／蔡阿嘎、二伯風波燒進實體店 咖啡廳人潮驟減 店員認了：來客數少很多",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T08:33:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722-193ent-163301",
+        "sentiment": null
+      },
+      {
+        "id": "8fc250dd00a048534e8e",
+        "source": "mirror",
+        "title": "飛到一半機艙窗戶破了！ 61歲男「懸掛高空2分鐘」奇蹟活命",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T08:28:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722edi023",
+        "sentiment": null
+      },
+      {
+        "id": "b91888386f460726e901",
+        "source": "mirror",
+        "title": "持孩童票搭新自強號！旅客拒補票鬧車廂 害列車誤點26分鐘",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T08:26:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722edi037",
+        "sentiment": null
+      },
+      {
+        "id": "51b8e2c35efc66badbc7",
+        "source": "mirror",
+        "title": "爭議延燒／蔡阿嘎、二伯婚戒黑歷史遭挖 曾拿Tiffany戒款找銀樓訂製「複製版」再掀議",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T08:25:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722-193ent-162549",
+        "sentiment": null
+      },
+      {
+        "id": "038ddc998ee0f6ce9de2",
+        "source": "mirror",
+        "title": "二度攻蛋再完售！劉若英《飛行日》升級回歸 重溫高雄感動約定",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T08:25:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722-90ent-132557",
+        "sentiment": null
+      },
+      {
+        "id": "d05927cfd78a4ed3dc9a",
+        "source": "mirror",
+        "title": "萬聖節嚇破膽！日本環球影城首推「限制級」恐怖設施 先簽切結書才能玩",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T08:22:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722edi056",
+        "sentiment": null
+      },
+      {
+        "id": "accbeab096518ce0f6ac",
+        "source": "mirror",
+        "title": "恐怖情人謝政瀛／謝政瀛遭控隱婚、監控、抹黃女友 謝母胡立文回應了",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T08:14:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722-169soc-161318",
+        "sentiment": null
+      },
+      {
+        "id": "1da6e63b5ffc3b43d4ec",
+        "source": "mirror",
+        "title": "歡迎台積電加碼赴美 AIT處長谷立言：美台半導體投資非單向",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T08:14:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722-180fin-160625",
+        "sentiment": null
+      },
+      {
+        "id": "ca8316c4a11a8aa7b35e",
+        "source": "mirror",
+        "title": "提名蔣萬安選北市！鄭麗文驚吐「那時每天睡一起」 加碼口誤：睡議長",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T08:13:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722edi054",
+        "sentiment": null
+      },
+      {
+        "id": "e8347caccb6967a6afc2",
+        "source": "mirror",
+        "title": "藏匿毒品遭當場抓包 張耀揚吸毒嫖娼退圈多年 滿頭白髮帥出新高度",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T07:47:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722-187ent-154703",
+        "sentiment": null
+      },
+      {
+        "id": "650b238488f1c6dac95f",
+        "source": "mirror",
+        "title": "《奧德賽》忠於史實禁穿拖鞋 麥特戴蒙拍到腰酸背痛",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T07:33:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722-191ent-153357",
+        "sentiment": null
+      },
+      {
+        "id": "96e486af31cf97bf78d2",
+        "source": "mirror",
+        "title": "柯文哲屋贈陳佩琪遭控惡意脫產 反問為何要追殺",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T06:11:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722-162inv-135227",
+        "sentiment": null
+      },
+      {
+        "id": "55a5ca0cfac7c625a394",
+        "source": "mirror",
+        "title": "NCT JNJM高雄首場見面會登場 帝努、渽民唱跳演還演繹《想見你》橋段",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T05:41:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722-188ent-134103",
+        "sentiment": null
+      },
+      {
+        "id": "3d7530f87a1acbdb6d19",
+        "source": "mirror",
+        "title": "新法讓用電大戶緊張 經部再憂刪無人機預算自斷臂膀",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T05:31:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722-181fin-133154",
+        "sentiment": null
+      },
+      {
+        "id": "5daa29f5e334fc767011",
+        "source": "mirror",
+        "title": "「台灣電影教父」很前衛！ 60年前就拍女女戀、瘋豬哥求愛",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T04:13:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722-144ins-121332",
+        "sentiment": null
+      },
+      {
+        "id": "af6374af46ebfb37efef",
+        "source": "mirror",
+        "title": "禾浩辰新婚三個月進法院 挑戰全台語檢察官！現身《無罪推定2》開鏡",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T03:56:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722-195ent-115632",
+        "sentiment": null
+      },
+      {
+        "id": "180f6eaf7c153104bc7c",
+        "source": "mirror",
+        "title": "癌油風暴衝擊中元食品旺季？ 經長龔明鑫：庫存＋外援8月底無虞",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T03:46:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722-181fin-114638",
+        "sentiment": null
+      },
+      {
+        "id": "d2a942f2dbe9530f63a0",
+        "source": "mirror",
+        "title": "鄭麗文力挺萬美玲母子讚「東方不敗」 李柏瑟反批：挺霸凌言論令人心寒",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T03:36:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722-169soc-113454",
+        "sentiment": null
+      },
+      {
+        "id": "20be68d88d9e91548282",
+        "source": "mirror",
+        "title": "當眾摑掌法袍律師宣判 林女犯5罪各1年6月到1年1月不等",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T03:32:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722-167inv-112846",
+        "sentiment": null
+      },
+      {
+        "id": "c04619e81e7b94cc756b",
+        "source": "mirror",
+        "title": "趙又廷半年僅收10個劇本 遇中國影視寒冬感慨「電影已經沒了」",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T03:26:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722-188ent-112621",
+        "sentiment": null
+      },
+      {
+        "id": "d75378f7770bf8a94740",
+        "source": "mirror",
+        "title": "以娛樂的方式表演古典音樂 TwoSet Violin 雙琴俠9月來台",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T03:24:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722-197ins-112414",
+        "sentiment": null
+      },
+      {
+        "id": "2bbf3eb890fe3e5763fb",
+        "source": "mirror",
+        "title": "為兄因中聯油案背鍋喊冤 余凌沖妹妹：幕後實質控制人是誰",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T02:13:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260722-167inv-100842",
+        "sentiment": null
+      },
+      {
+        "id": "26ae65a5a87c59291927",
+        "source": "mirror",
+        "title": "韓牌ept新竹快閃店限量開賣 台灣限定焦糖棕必收",
+        "excerpt": "",
+        "publishedAt": "2026-07-22T00:30:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260721-218ent-011449",
+        "sentiment": null
+      },
+      {
+        "id": "4be419f9e634ebcfe4f0",
+        "source": "mirror",
+        "title": "浪漫風格成絕響 服裝設計師溫慶珠辭世享壽69歲",
+        "excerpt": "",
+        "publishedAt": "2026-07-21T16:04:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260721-218ent-235902",
+        "sentiment": null
+      },
+      {
+        "id": "09f33bd5125d5208f517",
+        "source": "mirror",
+        "title": "獨家／法院驚魂 書記官獨站八樓窗外遭勸回",
+        "excerpt": "",
+        "publishedAt": "2026-07-21T14:19:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260721-162inv-193647",
+        "sentiment": null
+      },
+      {
+        "id": "976759a46ff894bab38e",
+        "source": "mirror",
+        "title": "傳謝賢病危 張柏芝急招Lucas回港 爺孫情深最後陪伴",
+        "excerpt": "",
+        "publishedAt": "2026-07-21T09:01:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260721-187ent-170134",
+        "sentiment": null
+      },
+      {
+        "id": "c69f74390ccac8cfd103",
+        "source": "mirror",
+        "title": "租賃專法修法急轉彎 3年租期、租金漲幅限制暫喊卡",
+        "excerpt": "",
+        "publishedAt": "2026-07-21T08:34:00Z",
+        "url": "https://www.mirrormedia.mg/story/20260721-179fin-163307",
         "sentiment": null
       }
     ]

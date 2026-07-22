@@ -19,7 +19,8 @@ interface NavItem {
 }
 
 const NAV: NavItem[] = [
-  { to: '/', label: '總覽', icon: '📊', end: true },
+  { to: '/', label: '新聞搜尋', icon: '🔎', end: true },
+  { to: '/overview', label: '資料總覽', icon: '📊' },
   { to: '/keywords', label: '關鍵字熱度', icon: '🔥' },
   { to: '/topics', label: '事件與主題', icon: '🗂️' },
   { to: '/entities', label: '人物關係', icon: '🕸️' },
@@ -64,8 +65,8 @@ function Footer() {
             {BRAND_FULL}
           </div>
           <p className="footer__desc">
-            個人／研究型 MVP。整合中央社、ETtoday、三立、鏡新聞、TVBS、自由時報等主流媒體與 Bluesky 公開資料，
-            計算關鍵字熱度、情緒、主題與人物共現。
+            個人／研究型 MVP。整合中央社、ETtoday、鏡傳媒、TVBS、自由時報等新聞 RSS，
+            提供關鍵字搜尋、新聞熱度與台灣 Google Trends RSS 摘要。
           </p>
         </div>
         <nav className="footer__links" aria-label="外部連結">
@@ -75,7 +76,7 @@ function Footer() {
       </div>
       <p className="footer__note">
         指標僅供研究參考，不代表台灣整體民意；「共現」不代表支持、反對或因果。更新採 best effort，不宣稱固定間隔 SLA。
-        目前顯示為示範資料。
+        請以頁面標示的資料時間、來源狀態與 stale 提示判讀。
       </p>
     </footer>
   );
@@ -92,7 +93,7 @@ export function Layout() {
         <div className="appbar__spacer" />
         <GlobalStatus />
         <a
-          className="iconbtn"
+          className="iconbtn appbar__repo"
           href={REPO_URL}
           target="_blank"
           rel="noreferrer noopener"

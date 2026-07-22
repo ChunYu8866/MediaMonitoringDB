@@ -107,14 +107,12 @@ export function MethodPage() {
               margin: '4px 0 12px',
             }}
           >
-            Heat = 100 × (0.45·V + 0.30·A + 0.15·D + 0.10·E)
+            NewsHeat = 100 × (0.50·V + 0.33·A + 0.17·D)
           </div>
           <ul className="small" style={{ margin: 0, paddingLeft: 18, display: 'flex', flexDirection: 'column', gap: 5 }}>
             <li><strong>V 聲量</strong>：近 60 分鐘提及數取 log1p 後，於同批關鍵字做百分位正規化。</li>
             <li><strong>A 加速度</strong>：近 15 分鐘相對前 15 分鐘的正向成長率，以 5 倍成長封頂。</li>
             <li><strong>D 來源多樣性</strong>：來源分布熵除以最大熵；只有單一來源時為 0。</li>
-            <li><strong>E 互動</strong>：僅使用來源確實提供的互動數，先在各來源內正規化再合併。</li>
-            <li>若來源無互動欄位，<strong>E 不當成 0</strong>，其權重按比例重分配回 V／A／D。</li>
           </ul>
         </Card>
       </div>
@@ -156,10 +154,10 @@ function TimeStat({ label, at }: { label: string; at: string | null }) {
 const LIMITS = [
   { icon: '🗳️', title: '不代表整體民意', desc: '樣本來自特定公開來源，僅為研究指標，不能推論台灣整體民意。' },
   { icon: '🕸️', title: '共現不代表關係', desc: '人物／組織共現只表示一起被提到，不代表支持、敵對或因果。' },
-  { icon: '🦋', title: 'Bluesky 樣本偏誤', desc: 'lang 不等於地理位置，Bluesky 樣本不代表台灣人口結構。' },
+  { icon: '📰', title: '來源涵蓋有限', desc: '結果只涵蓋已啟用且成功回應的新聞來源，不等於全網新聞。' },
   { icon: '🔍', title: 'SEO 有延遲且獨立', desc: 'Search Console 是本站搜尋成效，非全網熱搜，資料延遲且不併入即時熱度。' },
   { icon: '⏱️', title: '排程為 best effort', desc: 'GitHub Actions 排程與 Pages 部署盡力而為，不保證 5 分鐘內完成。' },
-  { icon: '🚫', title: 'PTT／Dcard 停用', desc: '未取得正式授權或研究 API 前不爬取，僅保留連接器介面。' },
+  { icon: '📡', title: 'RSS 更新有延遲', desc: '來源發布與 RSS 更新時間不同，排程亦採 best effort。' },
   { icon: '🧪', title: '模型為實驗性', desc: '情緒與 NER 未達 F1 0.70 前標示實驗性，摘要採可追溯的抽取式。' },
-  { icon: '🔒', title: '不公開敏感內容', desc: '不重製新聞全文或大量社群原文；快照與 log 不含任何 token 或憑證。' },
+  { icon: '🔒', title: '不公開敏感內容', desc: '不重製新聞全文；快照與 log 不含任何 token 或憑證。' },
 ];

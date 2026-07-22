@@ -17,7 +17,7 @@ function csvCell(v: string): string {
 
 /** 將目前篩選後的關鍵字匯出成 CSV（含 BOM，Excel 可正確顯示中文）。 */
 function downloadKeywordsCsv(rows: Keyword[]) {
-  const header = ['關鍵字', '類型', '熱度', '60分鐘聲量', 'V_聲量', 'A_加速度', 'D_多樣性', 'E_互動', '來源占比'];
+  const header = ['關鍵字', '類型', '熱度', '60分鐘聲量', 'V_聲量', 'A_加速度', 'D_多樣性', '來源占比'];
   const lines = rows.map((k) => {
     const c = k.components;
     const shares = Object.entries(k.sourceShare)
@@ -32,7 +32,6 @@ function downloadKeywordsCsv(rows: Keyword[]) {
       c.volume.toFixed(3),
       c.acceleration.toFixed(3),
       c.diversity.toFixed(3),
-      c.engagement == null ? '' : c.engagement.toFixed(3),
       shares,
     ]
       .map(csvCell)
@@ -52,7 +51,6 @@ const COMPONENT_META = [
   { key: 'volume', label: 'V 聲量', desc: '近 60 分鐘提及數（log1p）在當期關鍵字中的百分位' },
   { key: 'acceleration', label: 'A 加速度', desc: '近 15 分鐘相對前 15 分鐘的正向成長率，5 倍封頂' },
   { key: 'diversity', label: 'D 來源多樣性', desc: '來源分布熵正規化；跨來源者較高' },
-  { key: 'engagement', label: 'E 互動', desc: '各來源可取得的互動數正規化；無互動數時不計為 0' },
 ] as const;
 
 export function KeywordsPage() {
@@ -111,7 +109,7 @@ export function KeywordsPage() {
       <div className="page-head">
         <h1>關鍵字熱度</h1>
         <p>
-          同時追蹤人工監測詞與系統自動熱詞。熱度為 0–100，由聲量、加速度、來源多樣性與互動四個分量加權，
+          同時追蹤人工監測詞與系統自動熱詞。熱度為 0–100，由新聞聲量、加速度與來源多樣性三個分量加權，
           所有分量與權重皆公開可重算。
         </p>
       </div>
@@ -282,29 +280,25 @@ function KeywordDetail({ keyword }: { keyword: Keyword }) {
 
       <div style={{ marginTop: 14 }}>
         <div className="card__hint" style={{ marginBottom: 8 }}>
-          Heat = 100 × (0.45·V + 0.30·A + 0.15·D + 0.10·E)
-          {c.engagement === null && '（此詞無互動數，E 權重已按比例重分配回 V/A/D）'}
+          NewsHeat = 100 × (0.50·V + 0.33·A + 0.17·D)
         </div>
         {COMPONENT_META.map((m) => {
-          const val = c[m.key as keyof typeof c] as number | null;
+          const val = c[m.key as keyof typeof c] as number;
           const weight = c.weights[m.key as keyof typeof c.weights];
-          const disabled = val === null;
           return (
             <div key={m.key} style={{ marginBottom: 10 }} title={m.desc}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12.5, marginBottom: 3 }}>
-                <span style={{ color: disabled ? 'var(--text-muted)' : 'var(--text-secondary)' }}>
-                  {m.label} {disabled && '（不適用）'}
-                </span>
+                <span style={{ color: 'var(--text-secondary)' }}>{m.label}</span>
                 <span className="num muted">
-                  {disabled ? '—' : val!.toFixed(2)} × 權重 {weight.toFixed(2)}
+                  {val.toFixed(2)} × 權重 {weight.toFixed(2)}
                 </span>
               </div>
               <div className="heatbar">
                 <div
                   className="heatbar__fill"
                   style={{
-                    width: `${disabled ? 0 : (val ?? 0) * 100}%`,
-                    background: disabled ? 'var(--grid)' : 'var(--accent)',
+                    width: `${val * 100}%`,
+                    background: 'var(--accent)',
                   }}
                 />
               </div>
