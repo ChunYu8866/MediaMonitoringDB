@@ -117,25 +117,6 @@ export function parseGoogleNewsRss(xml, sources) {
     .filter(Boolean);
 }
 
-export function parseGoogleNewsMetadata(xml, limit = 10) {
-  return entryBlocks(xml)
-    .slice(0, limit)
-    .map((block) => {
-      const title = extract(block, 'title');
-      const source = extract(block, 'source');
-      const url = canonicalUrl(linkOf(block));
-      const timestamp = Date.parse(extract(block, 'pubDate') || extract(block, 'published') || extract(block, 'updated'));
-      if (!title || !url) return null;
-      return {
-        title: title.slice(0, 200),
-        source: source || 'Google News',
-        url,
-        publishedAt: Number.isNaN(timestamp) ? '' : new Date(timestamp).toISOString(),
-      };
-    })
-    .filter(Boolean);
-}
-
 export function parseTrendsRss(xml) {
   return entryBlocks(xml)
     .slice(0, 20)

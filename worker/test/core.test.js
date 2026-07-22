@@ -4,7 +4,6 @@ import assert from 'node:assert/strict';
 import {
   calculateMetrics,
   parseGoogleNewsRss,
-  parseGoogleNewsMetadata,
   parseRss,
   parseTrendsRss,
   validateQuery,
@@ -42,20 +41,6 @@ test('parseGoogleNewsRss keeps only allowlisted publishers and normalizes source
   assert.equal(items[0].source, 'setn');
   assert.equal(items[0].title, '台積電三立新聞');
   assert.equal('content' in items[0], false);
-});
-
-test('parseGoogleNewsMetadata preserves publishers outside the 22-source registry', () => {
-  const xml = `<rss><channel><item><guid>g1</guid><title>熱門人物最新消息</title>
-    <link>https://news.google.com/rss/articles/g1</link>
-    <pubDate>Wed, 22 Jul 2026 12:00:00 GMT</pubDate>
-    <source url="https://external.example">外部媒體</source></item></channel></rss>`;
-
-  assert.deepEqual(parseGoogleNewsMetadata(xml, 3), [{
-    title: '熱門人物最新消息',
-    source: '外部媒體',
-    url: 'https://news.google.com/rss/articles/g1',
-    publishedAt: '2026-07-22T12:00:00.000Z',
-  }]);
 });
 
 test('validateQuery accepts 2 to 50 characters and known ranges', () => {

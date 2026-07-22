@@ -2,7 +2,6 @@ import {
   calculateMetrics,
   filterAndDedupe,
   parseGoogleNewsRss,
-  parseGoogleNewsMetadata,
   parseRss,
   parseTrendsRss,
   timelineFor,
@@ -175,17 +174,6 @@ async function handleTrends(request, env) {
   }
 }
 
-async function handleTrendNews(request, env, url) {
-  const query = String(url.searchParams.get('q') || '').trim();
-  if (query.length < 1 || query.length > 100) return json(request, env, { error: 'INVALID_QUERY' }, 400);
-  try {
-    const items = parseGoogleNewsMetadata(await fetchText(googleNewsUrl(query), 2, 8_000), 10);
-    return json(request, env, envelope({ query, source: 'google-news-rss', items }));
-  } catch {
-    return json(request, env, { error: 'TREND_NEWS_UNAVAILABLE' }, 503);
-  }
-}
-
 export default {
   async fetch(request, env, ctx) {
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: corsHeaders(request, env) });
@@ -202,7 +190,6 @@ export default {
     let response;
     if (url.pathname === '/api/search') response = await handleSearch(request, env, url);
     else if (url.pathname === '/api/trends') response = await handleTrends(request, env);
-    else if (url.pathname === '/api/trend-news') response = await handleTrendNews(request, env, url);
     if (response) {
       if (cache && response.ok) ctx?.waitUntil(cache.put(request, response.clone()));
       return response;

@@ -1,12 +1,12 @@
 import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import type { EChartsOption } from 'echarts';
-import { fetchTrendNews, fetchTrends, searchNews } from '../api/search';
+import { fetchTrends, searchNews } from '../api/search';
 import { Chart } from '../components/Chart';
 import { Badge, Banner, Card, EmptyState, LoadingState, SourceTag, StatTile } from '../components/ui';
 import { GRID, catAxis, tooltip, valAxis } from '../lib/charts';
 import { fmtDateTime, fmtNum, fmtTime } from '../lib/format';
 import { useChartTokens } from '../lib/theme';
-import { nextRefreshSeconds, REFRESH_INTERVALS } from '../lib/refresh';
+import { nextRefreshSeconds, REFRESH_INTERVALS, searchArticlesToTrendNews } from '../lib/refresh';
 import type { Envelope, SearchData, SearchRange, TrendItem, TrendsData } from '../types/contracts';
 
 const RANGES: { value: SearchRange; label: string }[] = [
@@ -66,11 +66,14 @@ export function SearchPage() {
     else setSearching(true);
     setSearchError(null);
     try {
-      setResult(await searchNews(normalized, range));
+      const response = await searchNews(normalized, range);
+      setResult(response);
       setLastUpdatedAt(Date.now());
+      return response;
     } catch (error) {
       if (!background) setResult(null);
       setSearchError((error as Error).message);
+      return null;
     } finally {
       if (background) setRefreshing(false);
       else setSearching(false);
@@ -108,11 +111,12 @@ export function SearchPage() {
   async function selectTrend(item: TrendItem) {
     setSelectedTrend(item);
     setTrendNewsFallback(false);
-    void runSearch(item.title, item);
+    const searchRequest = runSearch(item.title, item);
     if (item.news.length > 0) return;
     setTrendNewsLoading(true);
     try {
-      const news = await fetchTrendNews(item.title);
+      const response = await searchRequest;
+      const news = searchArticlesToTrendNews(response?.data.items ?? []);
       setSelectedTrend((current) => current?.title === item.title ? { ...current, news } : current);
       setTrendNewsFallback(true);
     } catch (error) {
@@ -217,7 +221,7 @@ export function SearchPage() {
             </div>
             {trends && <a href={trends.data.sourceUrl} target="_blank" rel="noreferrer noopener">開啟 Google Trends RSS ↗</a>}
           </div>
-          <Card title="Google Trends 相關新聞" hint={trendNewsFallback ? 'Trends 未附新聞，已由 Google News 即時補充；不納入下方 22 家媒體熱度統計' : '由 Google Trends RSS 提供；不納入下方 22 家媒體熱度統計'}>
+          <Card title="Google Trends 相關新聞" hint={trendNewsFallback ? 'Trends 未附新聞，已重用 22 家媒體即時搜尋結果；不重複計入熱度' : '由 Google Trends RSS 提供；不納入下方 22 家媒體熱度統計'}>
             {trendNewsLoading ? (
               <LoadingState label="正在即時搜尋相關新聞…" />
             ) : selectedTrend.news.length === 0 ? (

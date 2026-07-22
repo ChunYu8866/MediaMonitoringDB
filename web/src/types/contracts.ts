@@ -302,9 +302,3 @@ export interface TrendsData {
   sourceUrl: string;
   items: TrendItem[];
 }
-
-export interface TrendNewsData {
-  query: string;
-  source: 'google-news-rss';
-  items: TrendNewsItem[];
-}

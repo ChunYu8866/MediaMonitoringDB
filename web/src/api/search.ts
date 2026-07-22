@@ -5,8 +5,6 @@ import type {
   SearchData,
   SearchMetrics,
   SearchRange,
-  TrendNewsData,
-  TrendNewsItem,
   TrendsData,
 } from '../types/contracts';
 import { SUPPORTED_SCHEMA_MAJOR } from '../types/contracts';
@@ -219,20 +217,6 @@ export async function fetchTrends(): Promise<Envelope<TrendsData>> {
   const snapshot = await fetchData<TrendsData>('trends');
   const parsed = parseTrendsResponse(snapshot);
   return { ...parsed, data: { ...parsed.data, status: 'stale', stale: true } };
-}
-
-export async function fetchTrendNews(term: string): Promise<TrendNewsItem[]> {
-  const base = apiBase();
-  if (!base) return [];
-  const response = await fetch(`${base}/api/trend-news?q=${encodeURIComponent(term.trim())}`, { cache: 'no-store' });
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  const value = await response.json() as Envelope<TrendNewsData>;
-  if (!isEnvelope(value) || value.data?.source !== 'google-news-rss' || !Array.isArray(value.data.items)) {
-    throw new Error('趨勢新聞格式不相容');
-  }
-  return value.data.items.filter((item) =>
-    typeof item.title === 'string' && typeof item.source === 'string' && /^https?:\/\//.test(item.url),
-  );
 }
 
 export type { SearchMetrics };

@@ -26,7 +26,6 @@ GitHub Pages（React + TypeScript + Vite）
    │
    ├─ GET /api/search?q=...&range=24h
    ├─ GET /api/trends
-   ├─ GET /api/trend-news?q=...
    └─ GET /api/health
    │
 Cloudflare Worker Free
@@ -72,7 +71,7 @@ UDN 與經濟日報不得直接擷取官網；所有來源都不得繞過 robots
 - 顯示熱門詞、約略搜尋量與開始時間。
 - 標示「資料來源：Google Trends」並連回原始頁。
 - 點選熱搜詞後直接執行新聞搜尋。
-- RSS 未附新聞時，由 `/api/trend-news` 查 Google News RSS 補充，且不納入 22 家媒體熱度。
+- RSS 未附新聞時，重用同一次 `/api/search` 的 22 家媒體結果，避免額外上游請求與逾時。
 - 任意 query 若未出現在目前 RSS，不顯示或推估 Google 搜尋量。
 - Google Trends 與新聞熱度是不同資料，不得混成單一指標。
 - 失敗時顯示 last-good 靜態資料並標示 stale。
@@ -101,10 +100,6 @@ Worker 會合併即時 RSS／API 結果與 Pages 固定位置的 `news-archive.j
 ### `GET /api/trends`
 
 回傳固定 envelope；`data` 內含 `geo`、`status`、`sourceUrl`、`stale` 與趨勢 items；不公開第三方新聞圖片。
-
-### `GET /api/trend-news`
-
-只在 Trends RSS 沒有附帶新聞時，以熱門詞查詢 Google News RSS。回傳標題、來源、發布時間與連結，不納入 22 家媒體熱度。
 
 ### `GET /api/health`
 
