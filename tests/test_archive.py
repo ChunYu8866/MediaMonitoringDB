@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from opinion_pipeline.archive import dedupe_items, filter_items, item_to_public
+from opinion_pipeline.archive import dedupe_items, filter_items, item_to_public, public_to_item
 from opinion_pipeline import cli
 from opinion_pipeline.connectors.trends import parse_trends_feed
 from opinion_pipeline.connectors import rss
@@ -57,6 +57,20 @@ def test_rss_time_parser_corrects_plausible_taiwan_time_mislabeled_as_utc():
     entry = {"published_parsed": (2026, 7, 22, 21, 43, 0, 0, 0, 0)}
     now = datetime(2026, 7, 22, 15, 0, tzinfo=timezone.utc)
     assert rss._parse_time(entry, now) == datetime(2026, 7, 22, 13, 43, tzinfo=timezone.utc)
+
+
+def test_restored_snapshot_corrects_plausible_taiwan_time_mislabeled_as_utc():
+    value = {
+        "id": "old",
+        "source": "setn",
+        "title": "委內瑞拉雙震",
+        "url": "https://example.com/story",
+        "publishedAt": "2026-07-22T21:43:00Z",
+    }
+    now = datetime(2026, 7, 22, 15, 0, tzinfo=timezone.utc)
+    restored = public_to_item(value, now)
+    assert restored is not None
+    assert restored.published_at == datetime(2026, 7, 22, 13, 43, tzinfo=timezone.utc)
 
 
 def test_parse_google_trends_tw_rss():

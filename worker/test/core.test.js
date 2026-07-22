@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 
 import {
   calculateMetrics,
+  filterAndDedupe,
   normalizePublishedAt,
   matchesQuery,
   parseGoogleNewsRss,
@@ -81,6 +82,13 @@ test('normalizes Taiwan local time mislabeled as GMT when it lands in the future
 test('parseRss discards items without a valid publication time', () => {
   const xml = '<rss><channel><item><guid>x</guid><title>無時間新聞</title><link>https://example.com/x</link></item></channel></rss>';
   assert.deepEqual(parseRss(xml, 'cna'), []);
+});
+
+test('filterAndDedupe corrects a future timestamp restored from an old snapshot', () => {
+  const now = Date.parse('2026-07-22T15:00:00Z');
+  const items = [{ id: 'old', source: 'setn', title: '委內瑞拉雙震', excerpt: '', publishedAt: '2026-07-22T21:43:00Z', url: 'https://example.com/story' }];
+  const result = filterAndDedupe(items, '委內瑞拉', '24h', now);
+  assert.equal(result[0].publishedAt, '2026-07-22T13:43:00.000Z');
 });
 
 test('calculateMetrics uses 50/33/17 news-only heat weights', () => {

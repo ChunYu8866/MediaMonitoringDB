@@ -62,9 +62,16 @@ def item_to_public(entry: NormalizedItem) -> dict:
     }
 
 
-def public_to_item(value: dict) -> NormalizedItem | None:
+def public_to_item(value: dict, now: datetime | None = None) -> NormalizedItem | None:
     try:
+        current = now or datetime.now(timezone.utc)
         published = datetime.fromisoformat(str(value["publishedAt"]).replace("Z", "+00:00"))
+        if published > current + timedelta(minutes=5):
+            corrected = published - timedelta(hours=8)
+            if corrected <= current + timedelta(minutes=5):
+                published = corrected
+        if published > current + timedelta(minutes=5):
+            return None
         return NormalizedItem(
             source=str(value["source"]),
             source_item_id=str(value.get("id") or value["url"]),

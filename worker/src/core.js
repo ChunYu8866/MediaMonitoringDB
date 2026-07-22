@@ -204,6 +204,11 @@ export function calculateMetrics(items, range, now = Date.now(), enabledSourceCo
 export function filterAndDedupe(items, query, range, now = Date.now()) {
   const cutoff = now - RANGE_MS[range];
   const selected = items
+    .map((item) => {
+      const publishedAt = normalizePublishedAt(item.publishedAt, now);
+      return publishedAt ? { ...item, publishedAt } : null;
+    })
+    .filter(Boolean)
     .filter((item) => Date.parse(item.publishedAt) >= cutoff)
     .filter((item) => matchesQuery(`${item.title} ${item.excerpt || ''}`, query))
     .sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt));
