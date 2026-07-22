@@ -20,7 +20,7 @@ export interface Envelope<T> {
 
 /**
  * 來源代碼。
- * 使用者指定的 22 家台灣新聞媒體。
+ * 使用者指定的 24 家台灣新聞媒體。
  */
 export type SourceId =
   | 'tvbs'
@@ -31,6 +31,8 @@ export type SourceId =
   | 'era'
   | 'nexttv'
   | 'pts'
+  | 'ttv'
+  | 'cts'
   | 'udn'
   | 'ltn'
   | 'cna'
@@ -69,12 +71,12 @@ export interface Meta {
   scheduleDaysUntilPause: number | null;
   /** 資料涵蓋範圍說明。 */
   coverage: {
-    /** 5 分鐘 bucket 保留時數。 */
-    fastBucketHours: number;
-    /** 小時彙總保留天數。 */
-    hourlyDays: number;
-    /** 每日彙總保留天數。 */
-    dailyDays: number;
+    /** 關鍵字統計視窗（小時）。 */
+    keywordWindowHours: number;
+    /** 趨勢 bucket 長度（分鐘）。 */
+    trendBucketMinutes: number;
+    /** 快照保留天數。 */
+    archiveDays: number;
   };
   /** 若無法還原上一版快照為 true，代表歷史資料可能不完整。 */
   stateRestoreFailed: boolean;
@@ -99,8 +101,8 @@ export interface SourceHealth {
   stale: boolean;
   /** 最近一次成功取得的項目數。 */
   itemCount: number;
-  /** 使用邊界說明（授權、可呈現欄位）。 */
-  usageNote: string;
+  /** 這次擷取被捨棄的項目統計（診斷用，例如 invalid_time）。 */
+  dropped?: Record<string, number>;
 }
 
 export interface SourcesData {
@@ -140,19 +142,21 @@ export interface Keyword {
   kind: KeywordKind;
   /** 目前熱度 0–100。 */
   heat: number;
-  /** 最近 60 分鐘提及數。 */
-  mentions60m: number;
+  /** 最近 24 小時命中新聞數。 */
+  mentions24h: number;
   /** 熱度公式分解。 */
   components: HeatComponents;
   /** 各來源提及占比（0–1，加總約為 1）。 */
   sourceShare: Partial<Record<SourceId, number>>;
-  /** 最近一段時間的熱度趨勢（5 分鐘 bucket）。 */
+  /** 最近 24 小時的熱度趨勢（1 小時 bucket）。 */
   trend: HeatPoint[];
   /** 手動詞的別名（僅 manual）。 */
   aliases?: string[];
 }
 
 export interface KeywordsData {
+  /** 資料是否來自過期快照。 */
+  stale?: boolean;
   keywords: Keyword[];
 }
 

@@ -272,7 +272,7 @@ export function SearchPage() {
                 <Card title="新聞聲量趨勢" hint="依所選時間範圍分桶"><Chart option={timelineOption} height={280} /></Card>
                 <Card title="來源分布" hint="相符新聞篇數"><Chart option={sourceOption} height={280} /></Card>
               </div>
-              <Card title="相關新聞" hint="僅顯示標題、短摘要、時間與原文連結">
+              <Card title="相關新聞" hint="點擊標題開啟原文">
                 <div className="news-list">
                   {result.data.items.map((item) => (
                     <article key={item.id} className="news-item">

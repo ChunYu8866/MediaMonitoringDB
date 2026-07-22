@@ -3,13 +3,13 @@ import { describe, expect, it } from 'vitest';
 import { NEWS_SOURCE_IDS, SOURCE_META, sourceModeLabel } from './sources';
 
 const EXPECTED_SOURCE_IDS = [
-  'tvbs', 'ebc', 'setn', 'ftv', 'cti', 'era', 'nexttv', 'pts', 'udn', 'ltn', 'cna',
-  'moneyudn', 'ctee', 'anue', 'wealth', 'businessweekly', 'thenewslens', 'reporter',
-  'newtalk', 'nownews', 'nextapple', 'ettoday',
+  'tvbs', 'ebc', 'setn', 'ftv', 'cti', 'era', 'nexttv', 'pts', 'ttv', 'cts', 'udn',
+  'ltn', 'cna', 'moneyudn', 'ctee', 'anue', 'wealth', 'businessweekly', 'thenewslens',
+  'reporter', 'newtalk', 'nownews', 'nextapple', 'ettoday',
 ];
 
 describe('news source registry', () => {
-  it('contains exactly the requested 22 publishers', () => {
+  it('contains exactly the requested 24 publishers', () => {
     expect(NEWS_SOURCE_IDS).toEqual(EXPECTED_SOURCE_IDS);
     expect(Object.keys(SOURCE_META)).not.toContain('mirror');
     expect(Object.keys(SOURCE_META)).not.toContain('currents');

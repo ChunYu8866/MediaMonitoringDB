@@ -1,16 +1,16 @@
 {
-  "schemaVersion": "2.0.0",
-  "generatedAt": "2026-07-22T14:38:09.892021Z",
+  "schemaVersion": "2.1.0",
+  "generatedAt": "2026-07-22T15:55:32.529254Z",
   "data": {
-    "status": "partial",
-    "lastFastAt": "2026-07-22T14:38:09.892021Z",
-    "lastDeepAt": "2026-07-22T14:38:09.892021Z",
-    "methodVersion": "news-heat-v2-22-sources",
+    "status": "ok",
+    "lastFastAt": "2026-07-22T15:55:32.529254Z",
+    "lastDeepAt": "2026-07-22T15:55:32.529254Z",
+    "methodVersion": "news-heat-v3-24-sources",
     "scheduleDaysUntilPause": null,
     "coverage": {
-      "fastBucketHours": 24,
-      "hourlyDays": 7,
-      "dailyDays": 7
+      "keywordWindowHours": 24,
+      "trendBucketMinutes": 60,
+      "archiveDays": 7
     },
     "stateRestoreFailed": false
   }

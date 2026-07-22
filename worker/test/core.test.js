@@ -14,14 +14,14 @@ import {
 import { NEWS_SOURCES } from '../src/sources.js';
 
 const EXPECTED_SOURCE_IDS = [
-  'tvbs', 'ebc', 'setn', 'ftv', 'cti', 'era', 'nexttv', 'pts', 'udn', 'ltn', 'cna',
+  'tvbs', 'ebc', 'setn', 'ftv', 'cti', 'era', 'nexttv', 'pts', 'ttv', 'cts', 'udn', 'ltn', 'cna',
   'moneyudn', 'ctee', 'anue', 'wealth', 'businessweekly', 'thenewslens', 'reporter',
   'newtalk', 'nownews', 'nextapple', 'ettoday',
 ];
 
-test('news source registry contains exactly the requested 22 publishers', () => {
+test('news source registry contains exactly the requested 24 publishers', () => {
   assert.deepEqual(NEWS_SOURCES.map((source) => source.id), EXPECTED_SOURCE_IDS);
-  assert.equal(new Set(NEWS_SOURCES.flatMap((source) => source.domains)).size >= 22, true);
+  assert.equal(new Set(NEWS_SOURCES.flatMap((source) => source.domains)).size >= 24, true);
 });
 
 test('parseGoogleNewsRss keeps only allowlisted publishers and normalizes source ids', () => {

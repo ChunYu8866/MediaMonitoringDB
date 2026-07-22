@@ -23,12 +23,31 @@ def canonical_url(url: str) -> str:
     return urlunsplit((parts.scheme.lower(), parts.netloc.lower(), path, urlencode(query), ""))
 
 
+def _title_key(entry: NormalizedItem) -> tuple[str, str]:
+    return entry.source, "".join(entry.title.split()).casefold()
+
+
+def _is_original_url(entry: NormalizedItem) -> bool:
+    return "news.google.com" not in entry.url
+
+
 def dedupe_items(items: list[NormalizedItem]) -> list[NormalizedItem]:
-    """依 canonical URL 去重；相同 URL 保留較新的項目。"""
-    chosen: dict[str, NormalizedItem] = {}
+    """兩層去重：先依 canonical URL，再依（來源, 標題）。
+
+    同一篇新聞可能同時出現 Google News 轉址 URL 與原文 URL，
+    標題層去重時偏好原文 URL 的版本。
+    """
+    by_url: dict[str, NormalizedItem] = {}
     for entry in sorted(items, key=lambda value: value.published_at, reverse=True):
-        chosen.setdefault(canonical_url(entry.url), entry)
-    return sorted(chosen.values(), key=lambda value: value.published_at, reverse=True)
+        by_url.setdefault(canonical_url(entry.url), entry)
+
+    by_title: dict[tuple[str, str], NormalizedItem] = {}
+    for entry in by_url.values():
+        key = _title_key(entry)
+        kept = by_title.get(key)
+        if kept is None or (_is_original_url(entry) and not _is_original_url(kept)):
+            by_title[key] = entry
+    return sorted(by_title.values(), key=lambda value: value.published_at, reverse=True)
 
 
 def filter_items(

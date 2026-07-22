@@ -67,6 +67,23 @@ sources:
     rss_url: https://news.pts.org.tw/xml/newsfeed.xml
     crawl: { enabled: false, url: "" }
 
+  - id: ttv
+    name: 台視新聞
+    domains: [news.ttv.com.tw, ttv.com.tw]
+    aliases: [台視新聞網, 台視新聞, 台視]
+    rss_url: ""
+    crawl:
+      enabled: true
+      url: https://news.ttv.com.tw/realtime
+      article_url_pattern: '^https://news\.ttv\.com\.tw/news/\w+$'
+
+  - id: cts
+    name: 華視新聞
+    domains: [news.cts.com.tw, cts.com.tw]
+    aliases: [華視新聞網, 華視新聞, 華視]
+    rss_url: ""
+    crawl: { enabled: false, url: "" }
+
   - id: udn
     name: UDN
     domains: [udn.com, www.udn.com]

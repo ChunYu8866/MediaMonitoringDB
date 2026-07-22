@@ -27,8 +27,8 @@ export function OverviewPage() {
   const sources = useData<SourcesData>('sources');
   const recent = useData<RecentData>('recent');
   const tokens = useChartTokens();
-  // 趨勢時間範圍（點數；每點 5 分鐘）：12=1h、24=2h、48=4h
-  const [rangePoints, setRangePoints] = useState(48);
+  // 趨勢時間範圍（點數；每點 1 小時）：6=6h、12=12h、24=24h
+  const [rangePoints, setRangePoints] = useState(24);
 
   const err = kw.error || meta.error;
   if (err) return <ErrorState error={err} onRetry={() => { kw.reload(); meta.reload(); }} />;
@@ -37,12 +37,12 @@ export function OverviewPage() {
   const staleSources = (sources.data?.sources ?? []).filter((s) => s.stale);
   const topN = keywords.slice(0, 5);
 
-  const totalMentions = keywords.reduce((a, k) => a + k.mentions60m, 0);
+  const totalMentions = keywords.reduce((a, k) => a + k.mentions24h, 0);
   const hottest = keywords[0];
 
   // 熱度趨勢（前 5 詞多線）；依所選時間範圍取尾段
   const sliceTail = <T,>(arr: T[]) => arr.slice(-rangePoints);
-  const labelInterval = rangePoints <= 12 ? 1 : rangePoints <= 24 ? 3 : 7;
+  const labelInterval = rangePoints <= 6 ? 0 : rangePoints <= 12 ? 1 : 2;
   const trendOption: EChartsOption = {
     color: tokens.series,
     tooltip: tooltip(tokens, { trigger: 'axis' }),
@@ -72,33 +72,46 @@ export function OverviewPage() {
   };
 
   const RANGES: [number, string][] = [
-    [12, '1 小時'],
-    [24, '2 小時'],
-    [48, '4 小時'],
+    [6, '6 小時'],
+    [12, '12 小時'],
+    [24, '24 小時'],
   ];
 
-  // 來源聲量占比（近 60 分鐘，跨所有關鍵字加總）
+  // 來源聲量占比（近 24 小時，跨所有關鍵字加總）；只列前 10 名，其餘併入「其他」
   const srcAgg: Record<string, number> = {};
   keywords.forEach((k) =>
     Object.entries(k.sourceShare).forEach(([s, share]) => {
-      srcAgg[s] = (srcAgg[s] ?? 0) + (share ?? 0) * k.mentions60m;
+      srcAgg[s] = (srcAgg[s] ?? 0) + (share ?? 0) * k.mentions24h;
     }),
   );
-  const srcData = Object.entries(srcAgg)
+  const srcRanked = Object.entries(srcAgg)
     .map(([s, v]) => ({
       name: sourceShort(s as SourceId),
       value: Math.round(v),
       itemStyle: { color: sourceColorValue(s as SourceId, tokens) },
     }))
+    .filter((d) => d.value > 0)
     .sort((a, b) => b.value - a.value);
+  const othersValue = srcRanked.slice(10).reduce((a, d) => a + d.value, 0);
+  const srcData = [
+    ...srcRanked.slice(0, 10),
+    ...(othersValue > 0 ? [{ name: '其他', value: othersValue, itemStyle: { color: tokens.muted } }] : []),
+  ];
   const donutOption: EChartsOption = {
     tooltip: tooltip(tokens, { trigger: 'item', formatter: '{b}：{c}（{d}%）' }),
-    legend: { bottom: 0, textStyle: { color: tokens.secondary, fontSize: 12 }, icon: 'circle' },
+    legend: {
+      type: 'scroll',
+      bottom: 0,
+      textStyle: { color: tokens.secondary, fontSize: 12 },
+      icon: 'circle',
+      pageIconColor: tokens.secondary,
+      pageTextStyle: { color: tokens.muted },
+    },
     series: [
       {
         type: 'pie',
-        radius: ['52%', '74%'],
-        center: ['50%', '44%'],
+        radius: ['50%', '72%'],
+        center: ['50%', '42%'],
         avoidLabelOverlap: true,
         itemStyle: { borderColor: tokens.surface, borderWidth: 2 },
         label: { show: false },
@@ -147,9 +160,9 @@ export function OverviewPage() {
             icon="📈"
           />
           <StatTile
-            label="60 分鐘總聲量"
+            label="24 小時總聲量"
             value={fmtCompact(totalMentions)}
-            sub="所有關鍵字提及數合計"
+            sub="所有關鍵字命中新聞數合計"
             icon="💬"
           />
           <StatTile
@@ -165,7 +178,7 @@ export function OverviewPage() {
       <div className="grid wide-left" style={{ marginTop: 16 }}>
         <Card
           title="熱度趨勢（前 5 名）"
-          hint="每 5 分鐘一點 · 0–100"
+          hint="每小時一點 · 0–100"
           right={
             <div style={{ display: 'flex', gap: 4 }}>
               {RANGES.map(([pts, label]) => (
@@ -183,7 +196,7 @@ export function OverviewPage() {
         >
           {kw.loading ? <LoadingState /> : <Chart option={trendOption} height={300} />}
         </Card>
-        <Card title="來源聲量占比" hint="近 60 分鐘估計">
+        <Card title="來源聲量占比" hint="近 24 小時命中新聞">
           {kw.loading ? <LoadingState /> : <Chart option={donutOption} height={300} />}
         </Card>
       </div>
@@ -232,7 +245,7 @@ export function OverviewPage() {
 
         <Card
           title="近期內容"
-          hint="僅短前言與原文連結"
+          hint="點擊開啟原文"
           right={<Freshness at={recent.envelope?.generatedAt ?? null} />}
         >
           {recent.loading ? (

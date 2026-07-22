@@ -33,6 +33,8 @@ class SourceResult:
     ok: bool
     error_code: str | None = None
     items: list[NormalizedItem] = field(default_factory=list)
+    # 這次擷取被捨棄的項目統計（例如 {"invalid_time": 3, "no_link_or_title": 1}），供狀態頁診斷。
+    drop_reasons: dict[str, int] = field(default_factory=dict)
 
     @property
     def item_count(self) -> int:

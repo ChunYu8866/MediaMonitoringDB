@@ -1,8 +1,17 @@
-# 台灣新聞搜尋與 Google Trends Demo：AI 交接文件
+# 台灣新聞輿情監測系統：AI 交接文件
 
-> 更新日期：2026-07-22
-> 狀態：核心 Demo 使用固定 22 家台灣新聞來源，並透過 GitHub Pages 與 Cloudflare Worker 提供服務
-> 正式規格：`docs/superpowers/specs/2026-07-22-taiwan-22-news-sources-design.md`
+> 更新日期：2026-07-22（第二版：24 家來源、真實 keywords/entities）
+> 狀態：正式使用中（非 demo）。固定 24 家台灣新聞來源（22 家規格 + 使用者要求新增台視、華視），透過 GitHub Pages 與 Cloudflare Worker 提供服務
+> 正式規格：`docs/superpowers/specs/2026-07-22-taiwan-22-news-sources-design.md`（來源清單以 `config/sources.yml` 為準）
+
+## 0. 2026-07-22 第二版重點變更
+
+- 來源 22 → 24：新增台視（ttv）、華視（cts）。兩家皆已關閉官方 RSS，以 Google News RSS（`site:官方網域`）取得；台視另有官網列表低頻擷取。
+- Python 管線新增 Google News RSS 補充（`connectors/google_news.py`）：官方 RSS 失敗或不存在時使用，讓無 RSS 來源不再依賴 6 小時官網擷取。
+- `keywords.json` 與 `entities.json` 改由每次執行從真實 items 重算（`analysis.py`），舊的手寫假資料已刪除；`config/watch_terms.yml`（監測詞＋自動熱詞設定）與 `config/entities.yml`（ORG 詞典）為調整入口。
+- 時間正規化統一進 `timeutil.py`：naive 時間視為台北時間（修正原本被當 UTC 的 +8 小時偏移）；未來時間校正或捨棄；來源狀態新增 `dropped` 捨棄統計（ETtoday 官方 RSS 全數 invalid_time 的問題由此可見，並由 Google News 補上）。
+- 來源清單三處（`config/sources.yml`、`worker/src/sources.js`、`web/src/lib/sources.ts`＋`contracts.ts`）由 `tests/test_sources.py` 的一致性測試強制同步。
+- 儀表板前端每 90 秒自動刷新；Actions 排程觸發跳過重複測試以縮短資料延遲；schema 升至 `2.1.0`（`mentions60m` → `mentions24h`、coverage 欄位改版、移除 `usageNote`）。
 
 ## 1. 交接目標
 
@@ -30,7 +39,7 @@ GitHub Pages（React + TypeScript + Vite）
    │
 Cloudflare Worker Free
    ├─ 官方新聞 RSS
-   ├─ Google News RSS（只接受 22 家白名單媒體）
+   ├─ Google News RSS（只接受 24 家白名單媒體）
    └─ Google Trends TW RSS
    │
 GitHub Actions
@@ -47,7 +56,7 @@ GitHub Actions
 
 ### 固定白名單
 
-TVBS、東森、三立、民視、中天、年代、壹電視、公視新聞、UDN、自由時報、中央社、經濟日報、工商時報、鉅亨網、財訊、商業週刊、關鍵評論網、報導者、新頭殼、NOWNEWS、壹蘋新聞網與 ETtoday，共 22 家。
+TVBS、東森、三立、民視、中天、年代、壹電視、公視新聞、台視新聞、華視新聞、UDN、自由時報、中央社、經濟日報、工商時報、鉅亨網、財訊、商業週刊、關鍵評論網、報導者、新頭殼、NOWNEWS、壹蘋新聞網與 ETtoday，共 24 家。
 
 ### 取得順序
 
@@ -71,7 +80,7 @@ UDN 與經濟日報不得直接擷取官網；所有來源都不得繞過 robots
 - 顯示熱門詞、約略搜尋量與開始時間。
 - 標示「資料來源：Google Trends」並連回原始頁。
 - 點選熱搜詞後直接執行新聞搜尋。
-- RSS 未附新聞時，重用同一次 `/api/search` 的 22 家媒體結果，避免額外上游請求與逾時。
+- RSS 未附新聞時，重用同一次 `/api/search` 的 24 家媒體結果，避免額外上游請求與逾時。
 - 任意 query 若未出現在目前 RSS，不顯示或推估 Google 搜尋量。
 - Google Trends 與新聞熱度是不同資料，不得混成單一指標。
 - 失敗時顯示 last-good 靜態資料並標示 stale。
@@ -81,7 +90,7 @@ UDN 與經濟日報不得直接擷取官網；所有來源都不得繞過 robots
 ### 進階分析查詢語意
 
 - `/api/search` 的 `q` 支援以空白分隔的 `AND`、`OR`、`NOT`、前綴減號排除詞與雙引號精準詞。
-- `/analysis` 最多平行比較三個主題，仍只計入指定 22 家媒體。
+- `/analysis` 最多平行比較三個主題，仍只計入指定 24 家媒體。
 - 情緒、關聯詞與升溫詞是標題／短摘要的透明字典統計，不是人工標註或生成式摘要。
 - 無效 RSS 日期必須捨棄；若台灣本地時間誤標為 GMT 且造成未來時間，可減八小時校正。
 
@@ -160,7 +169,7 @@ NewsHeat = 100 × (0.50V + 0.33A + 0.17D)
 ## 9. 錯誤與降級
 
 - 單一來源失敗：其他來源照常回傳，`partial: true`。
-- 個別官方 RSS 不可用：改用 22 家白名單內的 Google News RSS 結果；符合設定者每 6 小時補一次官網 metadata。
+- 個別官方 RSS 不可用：改用 24 家白名單內的 Google News RSS 結果；符合設定者每 6 小時補一次官網 metadata。
 - Trends 失敗：使用 last-good 並標 stale。
 - Worker 無法使用：前端讀取 Pages 靜態快照。
 - 全部失敗：顯示錯誤與最後成功時間，不生成假資料。
@@ -171,7 +180,7 @@ NewsHeat = 100 × (0.50V + 0.33A + 0.17D)
 
 - `main` 已有 React 搜尋首頁、Worker 三個 endpoints、Python RSS／官網 metadata 快照管線與 Google Trends TW adapter。
 - 公開資料契約已升至 schema `2.0.0`；前端只接受主版本 2。
-- 來源白名單固定 22 家；官方 RSS 優先、Google News RSS 補足，低頻官網擷取只取標題、短摘要、時間與原文連結。
+- 來源白名單固定 24 家；官方 RSS 優先、Google News RSS 補足，低頻官網擷取只取標題、短摘要、時間與原文連結。
 - `topics.json` 每次由真實新聞快照依可檢查關鍵詞規則重建；摘要片段與代表內容保留該筆新聞 URL，不使用範例連結。
 - 前端在未設定 Worker URL 時會讀取 `news-archive.json`／`trends.json` 並標示 stale。
 - GitHub Actions 已改為每 15 分鐘 best-effort 更新、測試、建置與部署。
@@ -182,7 +191,7 @@ NewsHeat = 100 × (0.50V + 0.33A + 0.17D)
 1. 執行所有測試、build、residue/secret 掃描。
 2. 推送至 `main`，等待 Pages workflow 完成。
 3. 在 `worker/` 執行 `npm run deploy`。
-4. 對公開 `/api/health`、`/api/search`、`/api/trends`、Pages 首頁與 22 家來源 JSON 做實際驗證。
+4. 對公開 `/api/health`、`/api/search`、`/api/trends`、Pages 首頁與 24 家來源 JSON 做實際驗證。
 
 ## 12. 完成定義
 
@@ -207,7 +216,7 @@ NewsHeat = 100 × (0.50V + 0.33A + 0.17D)
 可直接貼給下一個 AI：
 
 ```text
-請先閱讀根目錄 AI_HANDOFF.md 與 docs/superpowers/specs/2026-07-22-taiwan-22-news-sources-design.md。先檢查 git status 並保留所有既有未提交內容。系統的新聞來源固定為 22 家，不得還原鏡傳媒、Bluesky 或 Currents；實作採 TDD，完成前執行測試、build、secret/residue 掃描、Worker 與 Pages 公開站驗證。
+請先閱讀根目錄 AI_HANDOFF.md 與 docs/superpowers/specs/2026-07-22-taiwan-22-news-sources-design.md。先檢查 git status 並保留所有既有未提交內容。系統的新聞來源固定為 24 家（22 家規格＋台視、華視），不得還原鏡傳媒、Bluesky 或 Currents；實作採 TDD，完成前執行測試、build、secret/residue 掃描、Worker 與 Pages 公開站驗證。
 ```
 
 ## 14. 官方參考

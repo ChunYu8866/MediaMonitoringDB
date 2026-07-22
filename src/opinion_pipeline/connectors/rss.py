@@ -106,13 +106,16 @@ def fetch_source(source: dict, timeout: int, max_items: int) -> SourceResult:
         return SourceResult(id=sid, name=name, enabled=True, ok=False, error_code="EMPTY_OR_BAD_FEED")
 
     items: list[NormalizedItem] = []
+    drops: dict[str, int] = {}
     for entry in entries[:max_items]:
         link = (entry.get("link") or "").strip()
         title = _clean(entry.get("title", ""), limit=200)
         if not link or not title:
+            drops["no_link_or_title"] = drops.get("no_link_or_title", 0) + 1
             continue
         published_at = _parse_time(entry)
         if published_at is None:
+            drops["invalid_time"] = drops.get("invalid_time", 0) + 1
             continue
         items.append(
             NormalizedItem(
@@ -126,5 +129,7 @@ def fetch_source(source: dict, timeout: int, max_items: int) -> SourceResult:
         )
 
     if not items:
-        return SourceResult(id=sid, name=name, enabled=True, ok=False, error_code="NO_VALID_ITEMS")
-    return SourceResult(id=sid, name=name, enabled=True, ok=True, items=items)
+        return SourceResult(
+            id=sid, name=name, enabled=True, ok=False, error_code="NO_VALID_ITEMS", drop_reasons=drops
+        )
+    return SourceResult(id=sid, name=name, enabled=True, ok=True, items=items, drop_reasons=drops)

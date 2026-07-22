@@ -1,6 +1,6 @@
 {
-  "schemaVersion": "2.0.0",
-  "generatedAt": "2026-07-22T14:38:09.892021Z",
+  "schemaVersion": "2.1.0",
+  "generatedAt": "2026-07-22T15:55:32.529254Z",
   "data": {
     "geo": "TW",
     "status": "ok",
@@ -9,192 +9,176 @@
     "sourceUrl": "https://trends.google.com/trending/rss?geo=TW&hl=zh-TW",
     "items": [
       {
-        "title": "ig",
+        "title": "sony fx5",
+        "approximateTraffic": "100+",
+        "publishedAt": "2026-07-22T15:30:00Z",
+        "news": [
+          {
+            "title": "Sony Electronics Launches the FX5, a Cinema Line Camera with a Newly Developed Image Sensor, Open Gate Recording, Internal RAW Recording, and Enhanced Operability",
+            "source": "Morningstar",
+            "url": "https://www.morningstar.com/news/pr-newswire/20260722la09873/sony-electronics-launches-the-fx5-a-cinema-line-camera-with-a-newly-developed-image-sensor-open-gate-recording-internal-raw-recording-and-enhanced-operability"
+          },
+          {
+            "title": "Camera nerds, clear your schedule: Sony is launching a new camera tomorrow",
+            "source": "Digital Camera World",
+            "url": "https://www.digitalcameraworld.com/cameras/cinema-cameras/sony-is-launching-a-new-camera-tomorrow-and-were-all-invited-along-to-watch"
+          },
+          {
+            "title": "Finally! Sony launched the official Sony FX5 teaser! Preorders open at Fotoerhardt and notifications at BHphoto",
+            "source": "SonyAlphaRumors",
+            "url": "https://www.sonyalpharumors.com/finally-sony-launched-the-official-sony-fx5-teaser-preorders-open-at-fotoerhardt/"
+          }
+        ]
+      },
+      {
+        "title": "heart signal 5",
+        "approximateTraffic": "100+",
+        "publishedAt": "2026-07-22T15:30:00Z",
+        "news": [
+          {
+            "title": "Park Wo-yeol posts couple photo with Kang Yoo-kyung, thanks fans for Heart Signal 5 - CHOSUNBIZ",
+            "source": "Chosunbiz",
+            "url": "https://biz.chosun.com/en/en-entertainment/2026/07/22/FKB4MBIYNRBUPENVT537BZ7S3U/"
+          },
+          {
+            "title": "Does Kang Yu-kyung hint at a breakup? Tears just before the final choice: \"I think I'll only cry and talk with you, oppa\" [Heart Signal 5]",
+            "source": "스타뉴스",
+            "url": "https://www.starnewskorea.com/en/broadcast-show/2026/07/21/2026072108215378795"
+          },
+          {
+            "title": "Heart Signal Season 5’s Park Woo-yeol and Kang Yoo-kyung Make Their Final Choice... Become a Real Couple",
+            "source": "매일경제",
+            "url": "https://www.mk.co.kr/en/broadcasting-service/12104144"
+          }
+        ]
+      },
+      {
+        "title": "葉君璋",
         "approximateTraffic": "5000+",
-        "publishedAt": "2026-07-22T14:20:00Z",
-        "news": [
-          {
-            "title": "Is Instagram down right now? Users reporting issues with Instagram",
-            "source": "Asbury Park Press",
-            "url": "https://www.app.com/story/tech/2026/07/22/instagram-down-downdetector-july-22-2026/91006967007/"
-          },
-          {
-            "title": "Global Meta outage disrupts Facebook and Instagram services worldwide",
-            "source": "The Jerusalem Post",
-            "url": "https://www.jpost.com/business-and-innovation/article-902924"
-          },
-          {
-            "title": "Facebook, Instagram and Messenger down in widespread Meta outage",
-            "source": "The Independent",
-            "url": "https://www.the-independent.com/tech/facebook-instagram-messenger-down-not-working-meta-b3017615.html"
-          }
-        ]
-      },
-      {
-        "title": "王維皓",
-        "approximateTraffic": "200+",
-        "publishedAt": "2026-07-22T14:20:00Z",
-        "news": [
-          {
-            "title": "才被讚金曲第一帥！幻藍小熊老闆王維皓涉嫌閃兵 被限制出境",
-            "source": "噓！星聞",
-            "url": "https://stars.udn.com/star/story/10092/9644921"
-          },
-          {
-            "title": "曾唱《痞子英雄》主題曲！王維皓涉花10萬逃兵 60萬交保",
-            "source": "台視新聞網",
-            "url": "https://news.ttv.com.tw/news/11507220002700W"
-          },
-          {
-            "title": "快訊／閃兵藝人+1！唱紅《痞子英雄》主題曲「最帥老闆」涉買病歷遭拘提",
-            "source": "三立娛樂星聞",
-            "url": "https://star.setn.com/news/1876831"
-          }
-        ]
-      },
-      {
-        "title": "中職",
-        "approximateTraffic": "500+",
-        "publishedAt": "2026-07-22T14:20:00Z",
+        "publishedAt": "2026-07-22T15:20:00Z",
         "news": []
       },
       {
-        "title": "張士綸",
-        "approximateTraffic": "100+",
-        "publishedAt": "2026-07-22T14:20:00Z",
-        "news": []
-      },
-      {
-        "title": "meta",
-        "approximateTraffic": "100+",
-        "publishedAt": "2026-07-22T14:20:00Z",
+        "title": "國泰理專詐騙",
+        "approximateTraffic": "2000+",
+        "publishedAt": "2026-07-22T15:20:00Z",
         "news": [
           {
-            "title": "If Mark Zuckerberg Says These Words on July 29, Meta Platforms' Stock Could Skyrocket",
-            "source": "Yahoo Finance",
-            "url": "https://finance.yahoo.com/markets/stocks/articles/mark-zuckerberg-says-words-july-102500680.html"
-          },
-          {
-            "title": "Meta Platforms: Vertical Integration Is The Play - Reiterating Strong Buy (Earnings Preview)",
-            "source": "Seeking Alpha",
-            "url": "https://seekingalpha.com/article/4923635-meta-platforms-vertical-integration-is-the-play-reiterating-strong-buy-earnings-preview"
-          },
-          {
-            "title": "Meta Just Got a Major Boost From Zuckerberg, and Investors Should Take Notice",
-            "source": "The Motley Fool",
-            "url": "https://www.fool.com/investing/2026/07/21/meta-just-got-a-major-boost-from-zuckerberg-and-in/"
-          }
-        ]
-      },
-      {
-        "title": "美超微股價",
-        "approximateTraffic": "200+",
-        "publishedAt": "2026-07-22T14:20:00Z",
-        "news": [
-          {
-            "title": "AI伺服器訂單大爆發 美超微電腦在手訂單破600億美元 盤前飆漲15%",
-            "source": "鉅亨網",
-            "url": "https://news.cnyes.com/news/id/6543039"
-          },
-          {
-            "title": "美超微訂單爆發、毛利率預測翻倍 盤後飆漲18％",
-            "source": "工商時報",
-            "url": "https://www.ctee.com.tw/news/20260722700475-430704"
-          },
-          {
-            "title": "SpaceX資料中心添柴？美超微毛利/接單旺盤後飆- 新聞",
-            "source": "MoneyDJ",
-            "url": "https://www.moneydj.com/kmdj/news/newsviewer.aspx?a=a20e50a7-d95c-4417-8b75-8ed74319699e"
-          }
-        ]
-      },
-      {
-        "title": "郭阜林",
-        "approximateTraffic": "100+",
-        "publishedAt": "2026-07-22T14:10:00Z",
-        "news": [
-          {
-            "title": "中職》打瘋了！兄弟本季最多得分大勝台鋼雄鷹 差點寫隊史紀錄",
-            "source": "自由體育",
-            "url": "https://sports.ltn.com.tw/news/breakingnews/5514410"
-          },
-          {
-            "title": "中信兄弟火力放送 主場大勝台鋼雄鷹 - 中職 - 棒球",
-            "source": "運動視界Sports Vision",
-            "url": "https://www.sportsv.net/articles/127771"
-          },
-          {
-            "title": "郭阜林防守站位惹議？象迷氣炸「真正原因」曝光：牽涉到品行問題",
-            "source": "NOWnews今日新聞",
-            "url": "https://www.nownews.com/news/6859246"
-          }
-        ]
-      },
-      {
-        "title": "百味人生",
-        "approximateTraffic": "100+",
-        "publishedAt": "2026-07-22T14:00:00Z",
-        "news": [
-          {
-            "title": "劉書宏哭到快登出！　「百味人生」喪父又失憶崩潰喊震撼教育",
-            "source": "噓！星聞",
-            "url": "https://stars.udn.com/star/story/10091/9641407"
-          },
-          {
-            "title": "喪父、失憶雙重震撼彈！劉書宏驚爆「撞墓碑醒記憶」 哭到人生險登出",
-            "source": "自由娛樂",
-            "url": "https://ent.ltn.com.tw/news/breakingnews/5512308"
-          },
-          {
-            "title": "高張力情緒戲拍到幾近崩潰 劉書宏：震撼教育 | 青年日報",
-            "source": "LINE TODAY",
-            "url": "https://today.line.me/tw/v3/article/DRm39l8"
-          }
-        ]
-      },
-      {
-        "title": "賣空",
-        "approximateTraffic": "200+",
-        "publishedAt": "2026-07-22T13:50:00Z",
-        "news": [
-          {
-            "title": "每日空头追踪：AT&T(T.US)卖空量激增705万，卖空成交比例达9%",
-            "source": "Moomoo",
-            "url": "https://www.moomoo.com/hans/news/post/73363701/daily-short-sale-tracking-at-t-s-short-volume-increased"
-          },
-          {
-            "title": "7月22日港股公用事业行业沽空数据盘点，中电控股、华润电力、中广核电力沽空金额位居行业前三-证券之星",
-            "source": "证券之星",
-            "url": "https://hk.stockstar.com/RB2026072200037551.shtml"
-          },
-          {
-            "title": "智通港股沽空统计|7月17日",
-            "source": "Moomoo",
-            "url": "https://www.moomoo.com/hans/news/post/73101616/gtn-hong-kong-short-selling-statistics-july-17"
-          }
-        ]
-      },
-      {
-        "title": "漫博2026",
-        "approximateTraffic": "200+",
-        "publishedAt": "2026-07-22T13:50:00Z",
-        "news": [
-          {
-            "title": "【懶人包】《漫博2026 》羚邦集結《咒術迴戰》、《排球少年!!》等 25 項大人氣IP 限量福袋、《吉伊卡哇》電影套票公開",
-            "source": "上報Up Media",
-            "url": "https://www.upmedia.mg/tw/game/community/264202"
-          },
-          {
-            "title": "【漫博 26】羚邦將推出旗下 25 部人氣作品全新商品及多款限定福袋",
-            "source": "PChome Online 新聞",
-            "url": "https://news.pchome.com.tw/game/gamer/20260721/index-78461655542491203104.html"
-          },
-          {
-            "title": "2026漫畫博覽會&電玩電競展指南｜時間地點、門票與活動總整理",
+            "title": "誘導貸款買5千萬保單 銀行挨控不當招攬",
             "source": "Yahoo新聞",
-            "url": "https://tw.news.yahoo.com/2026%E6%BC%AB%E7%95%AB%E5%8D%9A%E8%A6%BD%E6%9C%83%E9%9B%BB%E7%8E%A9%E9%9B%BB%E7%AB%B6%E5%B1%95%E6%8C%87%E5%8D%97%EF%BD%9C%E6%99%82%E9%96%93%E5%9C%B0%E9%BB%9E%E3%80%81%E9%96%80%E7%A5%A8%E8%88%87%E6%B4%BB%E5%8B%95%E7%B8%BD%E6%95%B4%E7%90%86-113027067.html"
+            "url": "https://tw.news.yahoo.com/%E8%AA%98%E5%B0%8E%E8%B2%B8%E6%AC%BE%E8%B2%B75%E5%8D%83%E8%90%AC%E4%BF%9D%E5%96%AE-%E5%9C%8B%E6%B3%B0%E4%B8%96%E8%8F%AF%E6%8C%A8%E6%8E%A7%E4%B8%8D%E7%95%B6%E6%8B%9B%E6%94%AC-070009671.html"
+          },
+          {
+            "title": "民眾控遭誤導購買近5千萬保單 銀行：查無相關指控",
+            "source": "公視新聞網PNN",
+            "url": "https://news.pts.org.tw/article/818797"
+          },
+          {
+            "title": "投資5千萬變「死亡保單」 理專涉誘騙？ 業者回應了",
+            "source": "中時新聞網",
+            "url": "https://www.chinatimes.com/realtimenews/20260722003177-260402"
           }
         ]
+      },
+      {
+        "title": "故宮龍藏經",
+        "approximateTraffic": "100+",
+        "publishedAt": "2026-07-22T15:10:00Z",
+        "news": [
+          {
+            "title": "看過「龍藏經」有七世福報？！ 民眾奔故宮朝聖：滿滿能量｜#鏡新聞",
+            "source": "Yahoo新聞",
+            "url": "https://tw.news.yahoo.com/%E7%9C%8B%E9%81%8E-%E9%BE%8D%E8%97%8F%E7%B6%93-%E6%9C%89%E4%B8%83%E4%B8%96%E7%A6%8F%E5%A0%B1-%E6%B0%91%E7%9C%BE%E5%A5%94%E6%95%85%E5%AE%AE%E6%9C%9D%E8%81%96-%E6%BB%BF%E6%BB%BF%E8%83%BD%E9%87%8F-105033466.html"
+          },
+          {
+            "title": "逛故宮突「頭暈又發麻」！一票人曝《龍藏經》奇妙感受：平靜到無欲無求",
+            "source": "UDN",
+            "url": "https://udn.com/news/story/120912/9640588"
+          },
+          {
+            "title": "參觀故宮突頭皮發麻一票人見《龍藏經》喊：能量超強- 生活",
+            "source": "中時新聞網",
+            "url": "https://www.chinatimes.com/realtimenews/20260720001963-260405"
+          }
+        ]
+      },
+      {
+        "title": "資產",
+        "approximateTraffic": "200+",
+        "publishedAt": "2026-07-22T14:50:00Z",
+        "news": []
+      },
+      {
+        "title": "alphabet",
+        "approximateTraffic": "500+",
+        "publishedAt": "2026-07-22T14:50:00Z",
+        "news": [
+          {
+            "title": "Alphabet earnings offer a moment of truth in this tech stock battle",
+            "source": "Yahoo Finance",
+            "url": "https://finance.yahoo.com/technology/article/alphabet-earnings-offer-a-moment-of-truth-in-this-tech-stock-battle-121514421.html"
+          },
+          {
+            "title": "Alphabet Earnings Preview: Will Doubling AI Capex Pay Off for GOOGL Stock?",
+            "source": "Barron's",
+            "url": "https://www.barrons.com/articles/alphabet-earnings-googl-stock-price-274aed13"
+          },
+          {
+            "title": "Alphabet set to report Q2 results: Evercore's Mark Mahaney on what to expect",
+            "source": "CNBC",
+            "url": "https://www.cnbc.com/video/2026/07/22/alphabet-set-to-report-q2-results-evercores-mark-mahaney-on-what-to-expect.html"
+          }
+        ]
+      },
+      {
+        "title": "中國鋼鐵",
+        "approximateTraffic": "500+",
+        "publishedAt": "2026-07-22T14:40:00Z",
+        "news": [
+          {
+            "title": "中鋼上半年轉虧為盈！稅前賺破23億元 年增249％",
+            "source": "Yahoo股市",
+            "url": "https://tw.stock.yahoo.com/news/%E4%B8%AD%E9%8B%BC%E4%B8%8A%E5%8D%8A%E5%B9%B4%E8%BD%89%E8%99%A7%E7%82%BA%E7%9B%88%EF%BC%81%E7%A8%85%E5%89%8D%E8%B3%BA%E7%A0%B423%E5%84%84%E5%85%83-%E5%B9%B4%E5%A2%9E249%EF%BC%85-084547050.html"
+          },
+          {
+            "title": "中鋼上半年「轉虧為盈」前6月稅前賺逾23億元、年增249％",
+            "source": "自由財經",
+            "url": "https://ec.ltn.com.tw/article/breakingnews/5513967"
+          },
+          {
+            "title": "中鋼獲利／6月自結稅前盈餘創今年最高 累計上半年轉虧為盈",
+            "source": "UDN",
+            "url": "https://udn.com/news/story/7252/9644529"
+          }
+        ]
+      },
+      {
+        "title": "fx5",
+        "approximateTraffic": "200+",
+        "publishedAt": "2026-07-22T14:40:00Z",
+        "news": [
+          {
+            "title": "ソニー、Cinema Lineのティザー公開。22日23時に新製品発表か",
+            "source": "AV Watch",
+            "url": "https://av.watch.impress.co.jp/docs/news/2126724.html"
+          },
+          {
+            "title": "ソニー、シネマカメラ「FX5」を発表〜コンパクト機ながらX-OCNで16bitシーンリニアのRAW記録を実現！",
+            "source": "VIDEO SALON.web",
+            "url": "https://videosalon.jp/news/fx5/"
+          },
+          {
+            "title": "EVF装着可能で5Kオープンゲート記録のソニー・フルサイズムービーカム「FX5」発表",
+            "source": "ASCII.jp",
+            "url": "https://ascii.jp/elem/000/004/421/4421121/"
+          }
+        ]
+      },
+      {
+        "title": "連淨苦茶油",
+        "approximateTraffic": "2000+",
+        "publishedAt": "2026-07-22T14:30:00Z",
+        "news": []
       }
     ]
   }

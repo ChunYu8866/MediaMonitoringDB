@@ -55,7 +55,7 @@ test('24h search merges Google News results with the low-frequency Pages snapsho
 
     assert.equal(response.status, 200);
     assert.equal(response.headers.get('Cache-Control'), 'no-store');
-    assert.equal(body.data.sources.length, 22);
+    assert.equal(body.data.sources.length, 24);
     assert.deepEqual(new Set(body.data.items.map((item) => item.source)), new Set(['setn', 'ebc']));
   } finally {
     globalThis.fetch = originalFetch;

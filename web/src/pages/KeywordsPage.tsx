@@ -17,7 +17,7 @@ function csvCell(v: string): string {
 
 /** 將目前篩選後的關鍵字匯出成 CSV（含 BOM，Excel 可正確顯示中文）。 */
 function downloadKeywordsCsv(rows: Keyword[]) {
-  const header = ['關鍵字', '類型', '熱度', '60分鐘聲量', 'V_聲量', 'A_加速度', 'D_多樣性', '來源占比'];
+  const header = ['關鍵字', '類型', '熱度', '24小時聲量', 'V_聲量', 'A_加速度', 'D_多樣性', '來源占比'];
   const lines = rows.map((k) => {
     const c = k.components;
     const shares = Object.entries(k.sourceShare)
@@ -28,7 +28,7 @@ function downloadKeywordsCsv(rows: Keyword[]) {
       k.term,
       k.kind === 'manual' ? '監測' : '自動',
       k.heat.toFixed(1),
-      String(k.mentions60m),
+      String(k.mentions24h),
       c.volume.toFixed(3),
       c.acceleration.toFixed(3),
       c.diversity.toFixed(3),
@@ -48,8 +48,8 @@ function downloadKeywordsCsv(rows: Keyword[]) {
 }
 
 const COMPONENT_META = [
-  { key: 'volume', label: 'V 聲量', desc: '近 60 分鐘提及數（log1p）在當期關鍵字中的百分位' },
-  { key: 'acceleration', label: 'A 加速度', desc: '近 15 分鐘相對前 15 分鐘的正向成長率，5 倍封頂' },
+  { key: 'volume', label: 'V 聲量', desc: '24 小時命中新聞數（log1p）相對當期最大值' },
+  { key: 'acceleration', label: 'A 加速度', desc: '近 6 小時相對前 6 小時的成長；0.5 為持平，低聲量時向持平收斂' },
   { key: 'diversity', label: 'D 來源多樣性', desc: '來源分布熵正規化；跨來源者較高' },
 ] as const;
 
@@ -198,7 +198,7 @@ export function KeywordsPage() {
                   <th>類型</th>
                   <th className="num">熱度</th>
                   <th style={{ width: 140 }}>熱度條</th>
-                  <th className="num">60 分聲量</th>
+                  <th className="num">24 小時聲量</th>
                   <th>主要來源</th>
                 </tr>
               </thead>
@@ -220,7 +220,7 @@ export function KeywordsPage() {
                     </td>
                     <td className="num" style={{ fontWeight: 650 }}>{k.heat.toFixed(0)}</td>
                     <td><HeatBar heat={k.heat} /></td>
-                    <td className="num">{fmtNum(k.mentions60m)}</td>
+                    <td className="num">{fmtNum(k.mentions24h)}</td>
                     <td>
                       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                         {Object.entries(k.sourceShare)
@@ -255,7 +255,7 @@ function KeywordDetail({ keyword }: { keyword: Keyword }) {
       type: 'category',
       data: keyword.trend.map((p) => fmtTime(p.t)),
       ...catAxis(tokens),
-      axisLabel: { color: tokens.muted, fontSize: 10, interval: 9 },
+      axisLabel: { color: tokens.muted, fontSize: 10, interval: 3 },
     },
     yAxis: { type: 'value', min: 0, max: 100, ...valAxis(tokens) },
     series: [

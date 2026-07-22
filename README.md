@@ -1,19 +1,19 @@
-# 台灣新聞輿情搜尋與關鍵字熱度 Demo
+# 台灣新聞輿情監測系統
 
-免費優先的新聞輿情 Demo：輸入關鍵字後，合併官方 RSS、指定媒體的 Google News RSS 與每 6 小時官網 metadata 快照，顯示新聞熱度、聲量趨勢、來源分布與原文連結；首頁另顯示台灣 Google Trends「熱門搜尋」官方 RSS 摘要。
+台灣新聞輿情監測：合併官方 RSS、各媒體的 Google News RSS（`site:官方網域`）與每 6 小時官網 metadata 快照，提供關鍵字搜尋、真實關鍵字熱度、來源分布、組織共現網絡與原文連結；首頁另顯示台灣 Google Trends「熱門搜尋」官方 RSS 摘要。
 
 ## 目前可用功能
 
 - 新聞關鍵字搜尋：`1h`、`6h`、`24h`、`7d`。
-- 新聞熱度：`100 × (0.50V + 0.33A + 0.17D)`。
+- 關鍵字熱度（真實資料）：由近 24 小時新聞重算 `100 × (0.50V + 0.33A + 0.17D)`；人工監測詞來自 `config/watch_terms.yml`，自動熱詞由標題 n-gram 統計（跨 ≥3 家媒體才入榜）。
+- 組織共現網絡（真實資料）：以 `config/entities.yml` 的 ORG 詞典比對近 24 小時新聞，同篇共現建邊。
 - 台灣 Google Trends RSS：熱門字、約略搜尋量、發布時間與相關新聞。
 - 個別來源失敗時顯示 `partial`；Worker 離線時改讀 GitHub Pages 最後快照並標示 `stale`。
-- 搜尋結果不使用共用快取，搜尋後每 30 秒自動刷新；Google Trends 每 2 分鐘檢查，Worker 最多快取 60 秒。
-- Trends RSS 未附新聞時，點選熱門詞會重用同一次 22 家媒體即時搜尋結果，不再等待第二個請求。
+- 搜尋結果不使用共用快取，搜尋後每 30 秒自動刷新；儀表板頁面每 90 秒自動刷新快照；Google Trends 每 2 分鐘檢查，Worker 最多快取 60 秒。
 - 進階分析工作台：最多三主題比較，支援 `AND`、`OR`、`NOT`、`-排除詞` 與雙引號精準詞，包含聲量、來源、實驗性情緒、關聯詞與文章篩選。
-- 新聞時間只採用可解析的來源 RSS 時間；會校正台灣時間誤標為 GMT 的未來時間，不再以抓取時間顯示假的「剛剛」。
+- 時間正規化單一規則（`timeutil.py`）：無時區時間視為台北時間；台灣時間誤標 GMT 的未來時間自動校正；無法解析或仍為未來的時間直接捨棄，並在來源狀態頁顯示捨棄統計。
 
-來源固定為 22 家指定媒體。官方 RSS 可用時優先使用；沒有可用 RSS 時由 Google News RSS 補充，TVBS、東森、三立、年代、商業週刊、新頭殼與 NOWNEWS 另有遵守 robots.txt 的低頻官網 metadata 擷取。來源狀態會隨每次更新顯示，不會把失敗來源偽裝成成功。
+來源固定為 24 家指定媒體。官方 RSS 可用時優先使用；不可用時改用該媒體官方網域的 Google News RSS 補充，部分媒體另有遵守 robots.txt 的低頻官網 metadata 擷取。來源狀態會隨每次更新顯示，不會把失敗來源偽裝成成功。
 
 ## 架構
 
@@ -22,8 +22,9 @@
   ├─ Cloudflare Worker：/api/search、/api/trends、/api/health
   └─ public/data：Worker 失敗時的最後成功快照
 
-GitHub Actions（每 15 分鐘 best effort）
-  ├─ Python RSS 管線 → news-archive.json / trends.json / sources.json
+GitHub Actions（每 15 分鐘 best effort；排程觸發跳過重複測試以縮短延遲）
+  ├─ Python 管線 → news-archive / recent / keywords / entities / topics / sources / trends
+  ├─ Google News RSS 補充 → 官方 RSS 不可用的來源每次執行都有新資料
   └─ 官網 metadata 管線 → 每個來源最多每 6 小時一次
 ```
 
@@ -75,7 +76,7 @@ npm run deploy
 
 | 來源 | 狀態與用途 |
 |---|---|
-| TVBS、東森、三立、民視、中天、年代、壹電視、公視新聞 | 官方 RSS優先；Google News 補充；允許者每 6 小時低頻擷取 metadata |
+| TVBS、東森、三立、民視、中天、年代、壹電視、公視新聞、台視新聞、華視新聞 | 官方 RSS優先；Google News 補充；允許者每 6 小時低頻擷取 metadata |
 | UDN、自由時報、中央社、經濟日報 | RSS 或 Google News；UDN 與經濟日報不直接擷取官網 |
 | 工商時報、鉅亨網、財訊、商業週刊 | 官方 RSS優先；Google News 補充；允許者低頻擷取 metadata |
 | 關鍵評論網、報導者、新頭殼、NOWNEWS、壹蘋新聞網、ETtoday | 官方 RSS優先；Google News 補充；允許者低頻擷取 metadata |

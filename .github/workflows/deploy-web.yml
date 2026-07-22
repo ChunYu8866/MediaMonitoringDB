@@ -39,7 +39,9 @@ jobs:
       - name: 安裝 Python 相依套件
         run: pip install -r requirements.txt
 
+      # 排程觸發只做資料更新與部署；完整測試在 push 時已驗證過同一版程式碼
       - name: Python 測試
+        if: github.event_name != 'schedule'
         run: python -m pytest -q
         env:
           PYTHONPATH: src
@@ -58,10 +60,12 @@ jobs:
             worker/package-lock.json
 
       - name: 安裝 Worker 相依套件
+        if: github.event_name != 'schedule'
         run: npm ci
         working-directory: worker
 
       - name: Worker 核心測試
+        if: github.event_name != 'schedule'
         run: npm test
         working-directory: worker
 
@@ -70,10 +74,12 @@ jobs:
         working-directory: web
 
       - name: 前端單元測試
+        if: github.event_name != 'schedule'
         run: npm test
         working-directory: web
 
       - name: 型別檢查
+        if: github.event_name != 'schedule'
         run: npm run typecheck
         working-directory: web
 

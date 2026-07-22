@@ -6,9 +6,9 @@ import yaml
 
 
 SOURCE_IDS = (
-    "tvbs", "ebc", "setn", "ftv", "cti", "era", "nexttv", "pts", "udn", "ltn", "cna",
-    "moneyudn", "ctee", "anue", "wealth", "businessweekly", "thenewslens", "reporter",
-    "newtalk", "nownews", "nextapple", "ettoday",
+    "tvbs", "ebc", "setn", "ftv", "cti", "era", "nexttv", "pts", "ttv", "cts", "udn",
+    "ltn", "cna", "moneyudn", "ctee", "anue", "wealth", "businessweekly", "thenewslens",
+    "reporter", "newtalk", "nownews", "nextapple", "ettoday",
 )
 
 

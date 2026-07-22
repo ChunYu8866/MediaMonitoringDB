@@ -81,9 +81,10 @@ export function EntitiesPage() {
   return (
     <>
       <div className="page-head">
-        <h1>人物 / 組織關係</h1>
+        <h1>組織共現網絡</h1>
         <p>
-          透過繁中 NER 擷取 PERSON 與 ORG，僅在同一句或同一短段共同出現時建立邊，權重為獨立文件數。
+          以公開的組織詞典比對新聞標題與短摘要（近 24 小時），兩個組織出現在同一篇即建立連線，權重為獨立文件數。
+          全程為可重算的字面統計，不使用模型推論。
         </p>
       </div>
 
@@ -92,14 +93,14 @@ export function EntitiesPage() {
       </Banner>
       {e.data?.experimental && (
         <Banner variant="serious" icon="🧪">
-          實驗性模型：PERSON／ORG 精確 span F1 尚未達 0.70 門檻，關係圖僅供參考。範例中的人物名稱為示意，非指涉真實個人。
+          涵蓋範圍限詞典內的組織名稱；詞典外的實體不會出現在圖中。人物（PERSON）辨識尚未啟用。
         </Banner>
       )}
 
       {e.loading ? (
         <LoadingState label="載入關係圖中…" />
       ) : nodes.length === 0 ? (
-        <EmptyState title="尚無實體資料" desc="深度管線辨識到足夠人物／組織後會建立共現網絡。" icon="🕸️" />
+        <EmptyState title="尚無實體資料" desc="近 24 小時的新聞中，詞典組織的共現次數還不足以建圖。" icon="🕸️" />
       ) : (
         <div className="grid wide-left">
           <Card

@@ -1,4 +1,10 @@
-"""GitHub Actions 使用的免費 RSS 快照產生器。"""
+"""GitHub Actions 使用的免費新聞快照產生器。
+
+每次執行：
+1. 每個來源依序嘗試官方 RSS → Google News RSS（site:官方網域）→ 到期的官網 metadata 擷取。
+2. 與上一版公開快照合併、去重、過濾未來時間，保留 7 天。
+3. 從真實 items 重算 keywords.json（監測詞＋自動熱詞）與 entities.json（ORG 詞典共現）。
+"""
 from __future__ import annotations
 
 import argparse
@@ -9,14 +15,18 @@ from pathlib import Path
 import requests
 import yaml
 
+from .analysis import build_entities, build_keywords, load_entity_lexicon, load_watch_config
 from .archive import dedupe_items, item_to_public, public_to_item
+from .connectors.google_news import fetch_google_news
 from .connectors.html_listing import crawl_due, fetch_listing_source
 from .connectors.rss import _fetch_bytes, fetch_source
 from .connectors.trends import parse_trends_feed
 from .models import SourceResult
 from .sources import load_sources
+from .timeutil import FUTURE_TOLERANCE
 
 
+SCHEMA_VERSION = "2.1.0"
 TRENDS_URL = "https://trends.google.com/trending/rss?geo=TW&hl=zh-TW"
 
 TOPIC_DEFINITIONS = (
@@ -29,7 +39,7 @@ TOPIC_DEFINITIONS = (
 
 
 def envelope(data: dict, generated_at: str) -> dict:
-    return {"schemaVersion": "2.0.0", "generatedAt": generated_at, "data": data}
+    return {"schemaVersion": SCHEMA_VERSION, "generatedAt": generated_at, "data": data}
 
 
 def write_json(path: Path, value: dict) -> None:
@@ -43,7 +53,7 @@ def keep_allowed_sources(items: list, source_ids: set[str]) -> list:
 
 
 def prepare_trends_items(items: list[dict]) -> list[dict]:
-    """Keep Google Trends related-news metadata separate from the 22-source analysis."""
+    """Keep Google Trends related-news metadata separate from the allowlisted-source analysis."""
     return items
 
 
@@ -107,20 +117,54 @@ def restore_source_states(base_url: str) -> dict[str, dict]:
         return {}
 
 
-def _previous_result(source: dict, state: dict | None) -> SourceResult:
-    if not state:
-        return SourceResult(id=source["id"], name=source["name"], enabled=True, ok=True)
-    ok = state.get("status") in {"ok", "stale", "degraded"}
-    return SourceResult(
-        id=source["id"],
-        name=source["name"],
-        enabled=True,
-        ok=ok,
-        error_code=None if ok else state.get("errorCode"),
-    )
+def collect_source(source: dict, state: dict | None, now: datetime, timeout: int, max_items: int) -> dict:
+    """單一來源的完整取得流程；回傳 items、狀態與實際使用的取得方式。"""
+    rss_result = fetch_source(source, timeout, max_items) if source.get("rss_url") else None
+    google_result: SourceResult | None = None
+    listing_result: SourceResult | None = None
+    crawl_attempted = False
+    if rss_result is None or not rss_result.ok:
+        google_result = fetch_google_news(source, timeout, max_items)
+        crawl = source.get("crawl") or {}
+        if crawl.get("enabled") and crawl_due(state.get("lastCrawlAt") if state else None, now):
+            crawl_attempted = True
+            listing_result = fetch_listing_source(source, timeout, max_items)
+
+    attempts = [result for result in (rss_result, google_result, listing_result) if result is not None]
+    ok_attempts = [result for result in attempts if result.ok]
+    items = [entry for result in ok_attempts for entry in result.items]
+    if rss_result is not None and rss_result.ok:
+        access_mode = "official-rss"
+    elif google_result is not None and google_result.ok:
+        access_mode = "google-news"
+    elif listing_result is not None and listing_result.ok:
+        access_mode = "site-listing"
+    else:
+        access_mode = "google-news" if not source.get("rss_url") else "official-rss"
+    drops: dict[str, int] = {}
+    for result in attempts:
+        for reason, count in result.drop_reasons.items():
+            drops[reason] = drops.get(reason, 0) + count
+    error_code = None if ok_attempts else next((result.error_code for result in attempts if result.error_code), None)
+    return {
+        "id": source["id"],
+        "name": source["name"],
+        "ok": bool(ok_attempts),
+        "items": items,
+        "accessMode": access_mode,
+        "errorCode": error_code,
+        "dropped": drops,
+        "crawlAttempted": crawl_attempted,
+    }
 
 
-def run(config_path: Path, output_dir: Path, restore_base_url: str = "") -> int:
+def run(
+    config_path: Path,
+    output_dir: Path,
+    restore_base_url: str = "",
+    watch_config_path: Path = Path("config/watch_terms.yml"),
+    entities_config_path: Path = Path("config/entities.yml"),
+) -> int:
     now = datetime.now(timezone.utc)
     generated_at = now.isoformat().replace("+00:00", "Z")
     config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
@@ -131,30 +175,19 @@ def run(config_path: Path, output_dir: Path, restore_base_url: str = "") -> int:
     max_items = int(fetch_cfg.get("max_items_per_source", 20))
 
     restored_states = restore_source_states(restore_base_url)
-    results: list[SourceResult] = []
-    crawl_attempted: set[str] = set()
-    for source in sources:
-        state = restored_states.get(source["id"])
-        rss_result = fetch_source(source, timeout, max_items) if source.get("rss_url") else None
-        result = rss_result
-        crawl = source.get("crawl") or {}
-        last_crawl_at = state.get("lastCrawlAt") if state else None
-        should_try_crawl = bool(crawl.get("enabled")) and (rss_result is None or not rss_result.ok)
-        if should_try_crawl and crawl_due(last_crawl_at, now):
-            crawl_attempted.add(source["id"])
-            listing_result = fetch_listing_source(source, timeout, max_items)
-            if listing_result.ok or result is None:
-                result = listing_result
-        elif result is None:
-            result = _previous_result(source, state)
-        results.append(result or _previous_result(source, state))
-    current_items = [entry for result in results for entry in result.items]
+    runs = [collect_source(source, restored_states.get(source["id"]), now, timeout, max_items) for source in sources]
+
+    current_items = [entry for run_ in runs for entry in run_["items"]]
     restored_items = keep_allowed_sources(restore_items(restore_base_url), set(sources_by_id))
     cutoff = now - timedelta(days=7)
-    items = [entry for entry in dedupe_items(current_items + restored_items) if entry.published_at >= cutoff]
-    enabled_results = [result for result in results if result.enabled]
-    ok_count = sum(1 for result in enabled_results if result.ok)
-    archive_status = "ok" if ok_count == len(enabled_results) else ("partial" if ok_count else "stale")
+    future_limit = now + FUTURE_TOLERANCE
+    items = [
+        entry
+        for entry in dedupe_items(current_items + restored_items)
+        if cutoff <= entry.published_at <= future_limit
+    ]
+    ok_count = sum(1 for run_ in runs if run_["ok"])
+    archive_status = "ok" if ok_count == len(runs) else ("partial" if ok_count else "stale")
     stale = not current_items and bool(restored_items)
 
     write_json(
@@ -170,39 +203,44 @@ def run(config_path: Path, output_dir: Path, restore_base_url: str = "") -> int:
         output_dir / "topics.json",
         envelope({"stale": stale, "experimental": True, "topics": topics}, generated_at),
     )
+
+    keywords = build_keywords(items, load_watch_config(watch_config_path), now, enabled_source_count=len(sources))
+    write_json(output_dir / "keywords.json", envelope({"stale": stale, "keywords": keywords}, generated_at))
+
+    day_ago = now - timedelta(hours=24)
+    entity_graph = build_entities(
+        [entry for entry in items if entry.published_at >= day_ago], load_entity_lexicon(entities_config_path)
+    )
+    write_json(
+        output_dir / "entities.json",
+        envelope({"stale": stale, "experimental": True, **entity_graph}, generated_at),
+    )
+
     write_json(
         output_dir / "sources.json",
         envelope(
             {
                 "sources": [
                     {
-                        "id": result.id,
-                        "displayName": result.name,
-                        "status": (
-                            "ok"
-                            if result.ok
-                            else "disabled"
-                            if not result.enabled
-                            else "degraded"
-                            if not sources_by_id[result.id].get("rss_url")
-                            else "error"
+                        "id": run_["id"],
+                        "displayName": run_["name"],
+                        "status": "ok" if run_["ok"] else "error",
+                        "lastAttemptAt": generated_at,
+                        "lastSuccessAt": (
+                            generated_at if run_["ok"] else restored_states.get(run_["id"], {}).get("lastSuccessAt")
                         ),
-                        "lastAttemptAt": generated_at if result.enabled else None,
-                        "lastSuccessAt": generated_at if result.ok else restored_states.get(result.id, {}).get("lastSuccessAt"),
-                        "lastCrawlAt": generated_at if result.id in crawl_attempted else restored_states.get(result.id, {}).get("lastCrawlAt"),
-                        "errorCode": result.error_code,
-                        "stale": not result.ok,
-                        "itemCount": sum(1 for item in items if item.source == result.id),
-                        "accessMode": (
-                            "site-listing"
-                            if result.id in crawl_attempted and result.ok
-                            else "official-rss"
-                            if sources_by_id[result.id].get("rss_url")
-                            else restored_states.get(result.id, {}).get("accessMode", "google-news")
+                        "lastCrawlAt": (
+                            generated_at
+                            if run_["crawlAttempted"]
+                            else restored_states.get(run_["id"], {}).get("lastCrawlAt")
                         ),
-                        "usageNote": "僅顯示標題、短摘要、時間與原文連結；不抓取全文或圖片。",
+                        "errorCode": run_["errorCode"],
+                        "stale": not run_["ok"],
+                        "itemCount": sum(1 for item in items if item.source == run_["id"]),
+                        "accessMode": run_["accessMode"],
+                        "dropped": run_["dropped"],
                     }
-                    for result in results
+                    for run_ in runs
                 ]
             },
             generated_at,
@@ -242,9 +280,9 @@ def run(config_path: Path, output_dir: Path, restore_base_url: str = "") -> int:
                 "status": archive_status,
                 "lastFastAt": generated_at if current_items else None,
                 "lastDeepAt": generated_at if topics else None,
-                "methodVersion": "news-heat-v2-22-sources",
+                "methodVersion": "news-heat-v3-24-sources",
                 "scheduleDaysUntilPause": None,
-                "coverage": {"fastBucketHours": 24, "hourlyDays": 7, "dailyDays": 7},
+                "coverage": {"keywordWindowHours": 24, "trendBucketMinutes": 60, "archiveDays": 7},
                 "stateRestoreFailed": not bool(restored_items) and bool(restore_base_url),
             },
             generated_at,
@@ -258,8 +296,16 @@ def main() -> int:
     parser.add_argument("--config", default="config/sources.yml")
     parser.add_argument("--output", default="web/public/data")
     parser.add_argument("--restore-base-url", default="")
+    parser.add_argument("--watch-config", default="config/watch_terms.yml")
+    parser.add_argument("--entities-config", default="config/entities.yml")
     args = parser.parse_args()
-    return run(Path(args.config), Path(args.output), args.restore_base_url)
+    return run(
+        Path(args.config),
+        Path(args.output),
+        args.restore_base_url,
+        Path(args.watch_config),
+        Path(args.entities_config),
+    )
 
 
 if __name__ == "__main__":

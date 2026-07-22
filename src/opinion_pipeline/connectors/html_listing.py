@@ -10,6 +10,7 @@ from urllib.robotparser import RobotFileParser
 import requests
 
 from ..models import NormalizedItem, SourceResult
+from ..timeutil import normalize_published
 
 
 CRAWL_INTERVAL = timedelta(hours=6)
@@ -51,11 +52,12 @@ def _walk(value):
 
 
 def _published_at(value: str) -> datetime | None:
+    """台灣新聞網站的 JSON-LD/meta 時間若缺時區，一律視為台北時間，避免 +8 小時的未來偏移。"""
     try:
         parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
-        return parsed if parsed.tzinfo else parsed.replace(tzinfo=timezone.utc)
     except (AttributeError, ValueError):
         return None
+    return normalize_published(parsed)
 
 
 def parse_listing_html(raw: bytes, source_id: str, base_url: str) -> list[NormalizedItem]:
@@ -143,7 +145,8 @@ def parse_article_html(raw: bytes, source_id: str, article_url: str, fallback_ti
     if not published_at:
         url_date = re.search(r"/(20\d{2}-\d{2}-\d{2})/", url)
         if url_date:
-            published_at = datetime.fromisoformat(url_date.group(1)).replace(tzinfo=timezone.utc)
+            # 只有日期精度：以 UTC 午夜表示，維持 .date() 穩定；normalize 只負責擋未來日期。
+            published_at = normalize_published(datetime.fromisoformat(url_date.group(1)).replace(tzinfo=timezone.utc))
     if not title or not published_at or not url.startswith("http"):
         return None
     return NormalizedItem(

@@ -43,7 +43,7 @@ export function MethodPage() {
         {m && (
           <div className="small muted" style={{ marginTop: 14, display: 'flex', gap: 18, flexWrap: 'wrap' }}>
             <span>方法版本：<strong>{m.methodVersion}</strong></span>
-            <span>資料保留：5 分鐘 bucket {m.coverage.fastBucketHours} 小時 · 小時彙總 {m.coverage.hourlyDays} 天 · 每日彙總 {m.coverage.dailyDays} 天</span>
+            <span>統計視窗：關鍵字 {m.coverage.keywordWindowHours} 小時 · 趨勢每 {m.coverage.trendBucketMinutes} 分鐘一點 · 快照保留 {m.coverage.archiveDays} 天</span>
           </div>
         )}
       </Card>
@@ -76,28 +76,27 @@ export function MethodPage() {
                       <td className="small muted" style={{ whiteSpace: 'nowrap' }}>{s.lastAttemptAt ? fmtRelative(s.lastAttemptAt) : '—'}</td>
                       <td className="small muted" style={{ whiteSpace: 'nowrap' }}>{s.lastSuccessAt ? fmtRelative(s.lastSuccessAt) : '—'}</td>
                       <td className="num">{s.itemCount}</td>
-                      <td className="small">{s.errorCode ? <code>{s.errorCode}</code> : '—'}</td>
+                      <td className="small">
+                        {s.errorCode ? <code>{s.errorCode}</code> : '—'}
+                        {s.dropped && Object.keys(s.dropped).length > 0 && (
+                          <span className="muted" style={{ marginLeft: 6 }}>
+                            （捨棄 {Object.entries(s.dropped).map(([k, v]) => `${k}×${v}`).join('、')}）
+                          </span>
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
           )}
-          <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {srcs.map((s) => (
-              <div key={s.id} className="small" style={{ display: 'flex', gap: 8 }}>
-                <span style={{ fontWeight: 600, flex: 'none', minWidth: 90 }}>{s.displayName}</span>
-                <span className="muted">{s.usageNote}</span>
-              </div>
-            ))}
-          </div>
         </Card>
       </div>
 
       {/* 熱度公式 */}
       <div style={{ marginTop: 16 }}>
         <Card title="熱度計算方法">
-          <p className="small" style={{ marginTop: 0 }}>每個關鍵字每 5 分鐘計算一次，固定落在 0–100：</p>
+          <p className="small" style={{ marginTop: 0 }}>每次快照（約每 15 分鐘，best effort）由近 24 小時新聞重算，固定落在 0–100：</p>
           <div
             style={{
               background: 'var(--page)',
@@ -112,9 +111,9 @@ export function MethodPage() {
             NewsHeat = 100 × (0.50·V + 0.33·A + 0.17·D)
           </div>
           <ul className="small" style={{ margin: 0, paddingLeft: 18, display: 'flex', flexDirection: 'column', gap: 5 }}>
-            <li><strong>V 聲量</strong>：近 60 分鐘提及數取 log1p 後，於同批關鍵字做百分位正規化。</li>
-            <li><strong>A 加速度</strong>：近 15 分鐘相對前 15 分鐘的正向成長率，以 5 倍成長封頂。</li>
-            <li><strong>D 來源多樣性</strong>：來源分布熵除以最大熵；只有單一來源時為 0。</li>
+            <li><strong>V 聲量</strong>：近 24 小時命中新聞數取 log1p 後，除以當期關鍵字最大值。</li>
+            <li><strong>A 加速度</strong>：近 6 小時相對前 6 小時的成長；0.5 代表持平，低聲量時向持平收斂。</li>
+            <li><strong>D 來源多樣性</strong>：來源分布熵除以 ln(啟用來源數)；只有單一來源時為 0。</li>
           </ul>
         </Card>
       </div>

@@ -1,6 +1,6 @@
 {
-  "schemaVersion": "2.0.0",
-  "generatedAt": "2026-07-22T14:38:09.892021Z",
+  "schemaVersion": "2.1.0",
+  "generatedAt": "2026-07-22T15:55:32.529254Z",
   "data": {
     "stale": false,
     "experimental": true,
@@ -15,7 +15,7 @@
           "經濟",
           "產業"
         ],
-        "size": 73,
+        "size": 126,
         "sentiment": {
           "positive": 0.0,
           "neutral": 1.0,
@@ -23,46 +23,46 @@
         },
         "summarySentences": [
           {
-            "text": "新北市長侯友宜今（22日）宣布新北大巨蛋落腳樹林機五，新北市長參選人李四川表示，畫一顆蛋很快，孵一顆蛋很難，但一顆蛋會卡在哪裡，「我不用猜，因為我都走過」，如果他接棒侯友宜，會如期如質，一步一步蓋起來，且是只蓋一顆蛋，連同樹林、鶯歌、三峽、土城的交通跟產業一起做，讓溪南長出一座「…",
-            "source": "ettoday",
-            "url": "https://www.ettoday.net/news/20260722/3206015.htm"
+            "text": "在半導體類股走弱拖累下，美股標普500指數與那指今天開低。隨著首波科技巨頭財報即將出爐，可能決定華爾街人工智慧（AI）題材行情有無續航空間，投資人態度轉趨謹慎。",
+            "source": "nextapple",
+            "url": "https://news.nextapple.com/finance/20260722/F3B66FC2466114C50364CD835AB3BDE1"
           },
           {
-            "text": "人工智慧（AI）晶片大廠輝達（NVIDIA）執行長黃仁勳談及台美半導體與科技產業合作，他表示，華府與美國當局須認清一件事，是台灣救了美國半導體科技與電腦產業，台灣是出於自身智慧與信任自願與美方合作，「我不認為需要拿槍指著台灣的頭」。 《詳全文...》",
-            "source": "ettoday",
-            "url": "https://ai.ettoday.net/news/3206044"
+            "text": "大東電美國AI布局跨步。線纜股王大東電（1623）搶攻美國AI基礎建設、AI用線纜布局邁步，近期正式啟動美國市場布局，首站落腳亞利桑那州，瞄準當地半導體與AI資料中心聚落，相關產品將於本季通過認證後出貨。",
+            "source": "moneyudn",
+            "url": "https://money.udn.com/money/story/5710/9644725"
           }
         ],
         "articles": [
           {
-            "title": "新北大巨蛋落腳樹林 「孵蛋」過來人李四川：我接棒會如期蓋起來",
-            "source": "ettoday",
-            "url": "https://www.ettoday.net/news/20260722/3206015.htm",
-            "publishedAt": "2026-07-22T14:38:51.999935Z"
+            "title": "科技巨頭財報將出爐 標普和那斯達克開低",
+            "source": "nextapple",
+            "url": "https://news.nextapple.com/finance/20260722/F3B66FC2466114C50364CD835AB3BDE1",
+            "publishedAt": "2026-07-22T15:46:24Z"
           },
           {
-            "title": "黃仁勳：台廠因智慧信任與美合作 不需要拿槍指著台灣的頭",
-            "source": "ettoday",
-            "url": "https://ai.ettoday.net/news/3206044",
-            "publishedAt": "2026-07-22T14:38:51.999773Z"
+            "title": "大東電搶美國 AI 商機",
+            "source": "moneyudn",
+            "url": "https://money.udn.com/money/story/5710/9644725",
+            "publishedAt": "2026-07-22T15:15:25Z"
           },
           {
-            "title": "鄭靚歆德妻車禍被撞險倒貼！ 「體諒對方反被甩鍋」列5忠告勸世",
-            "source": "ettoday",
-            "url": "https://star.ettoday.net/news/3206056",
-            "publishedAt": "2026-07-22T14:38:51.999599Z"
+            "title": "星宇拓展航空貨運版圖",
+            "source": "moneyudn",
+            "url": "https://money.udn.com/money/story/5710/9644732",
+            "publishedAt": "2026-07-22T15:13:01Z"
           },
           {
-            "title": "藍提案刪無人機預算 中市議員周永鴻點名這2人「請回答」",
+            "title": "中華電攜日商 衝新應用",
+            "source": "moneyudn",
+            "url": "https://money.udn.com/money/story/5710/9644780",
+            "publishedAt": "2026-07-22T15:08:58Z"
+          },
+          {
+            "title": "高雄上半年失業率全國最低 市府：產業轉型、青年就業政策奏效",
             "source": "ltn",
-            "url": "https://news.ltn.com.tw/news/politics/breakingnews/5514407",
-            "publishedAt": "2026-07-22T14:17:36Z"
-          },
-          {
-            "title": "蘇姿丰再獲大單！超微與Anthropic簽署大型AI伺服器協議",
-            "source": "ltn",
-            "url": "https://ec.ltn.com.tw/article/breakingnews/5514403",
-            "publishedAt": "2026-07-22T14:12:53Z"
+            "url": "https://news.ltn.com.tw/news/politics/breakingnews/5514447",
+            "publishedAt": "2026-07-22T15:08:53Z"
           }
         ]
       },
@@ -76,7 +76,7 @@
           "地震",
           "防災"
         ],
-        "size": 14,
+        "size": 55,
         "sentiment": {
           "positive": 0.0,
           "neutral": 1.0,
@@ -84,46 +84,46 @@
         },
         "summarySentences": [
           {
-            "text": "委內瑞拉將近一個月前在不到一分鐘之內發生兩起強烈地震，根據官方今日公布的最新統計，罹難人數已增至5346人。另據聯合國估計，失聯人數可能多達5萬人。",
-            "source": "setn",
-            "url": "https://www.setn.com/news/1876742"
+            "text": "準紅霞颱風「暴風圈掃過」逼台轉彎 風雨最大4地區曝",
+            "source": "ettoday",
+            "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE1Yek15cEdod0l1bUJXUzB1Z3VmUHMybHpXMm1RV0VROGZraURtTkhYVFk1RWxscHRXNVNMaDRMRmN3TUpBWXVkRmJGenhwbVBTTTM5U21NUkJIZ1loLVHSAUtBVV95cUxNWGdNSnR6SkNmaEhNT2lDZHlVREFNdE40SEs5RzM2REpVWWQ5SDZhYllQMnNsZFk5ZVpEcnE2SUVTU3lWcE1hNnRYdU0?oc=5"
           },
           {
-            "text": "中央氣象署預估，位於菲律賓附近的熱帶性低氣壓TD13，有增強為今年第12號輕度颱風「紅霞」的趨勢，目前距離台灣仍有1510公里遠，未來在高壓導引下將持續朝西北西靠近台灣南方海域，一旦增強為颱風將不排除立即發布海警。專家分析，目前各模式預報路徑以通過巴士海峽機率為最高，但仍有偏北或…",
-            "source": "ettoday",
-            "url": "https://www.ettoday.net/news/20260722/3206025.htm"
+            "text": "快訊／花蓮發生規模3.4地震 各地最大震度一次看",
+            "source": "ebc",
+            "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTFByeWd5TDhGSUthLVdNZU5CbGYwMWdRUkVmd3hqMFB0Z0NWTzc4QXJBN1JrZ0wxRkJpSjh0eV8xYWlBYXRmODBkZDBZOU14b3JMdllJSg?oc=5"
           }
         ],
         "articles": [
           {
-            "title": "委內瑞拉雙震增至5346死　聯合國估5萬人仍失聯",
-            "source": "setn",
-            "url": "https://www.setn.com/news/1876742",
-            "publishedAt": "2026-07-22T21:43:00Z"
+            "title": "準紅霞颱風「暴風圈掃過」逼台轉彎 風雨最大4地區曝",
+            "source": "ettoday",
+            "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE1Yek15cEdod0l1bUJXUzB1Z3VmUHMybHpXMm1RV0VROGZraURtTkhYVFk1RWxscHRXNVNMaDRMRmN3TUpBWXVkRmJGenhwbVBTTTM5U21NUkJIZ1loLVHSAUtBVV95cUxNWGdNSnR6SkNmaEhNT2lDZHlVREFNdE40SEs5RzM2REpVWWQ5SDZhYllQMnNsZFk5ZVpEcnE2SUVTU3lWcE1hNnRYdU0?oc=5",
+            "publishedAt": "2026-07-22T15:47:00Z"
+          },
+          {
+            "title": "快訊／花蓮發生規模3.4地震 各地最大震度一次看",
+            "source": "ebc",
+            "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTFByeWd5TDhGSUthLVdNZU5CbGYwMWdRUkVmd3hqMFB0Z0NWTzc4QXJBN1JrZ0wxRkJpSjh0eV8xYWlBYXRmODBkZDBZOU14b3JMdllJSg?oc=5",
+            "publishedAt": "2026-07-22T15:20:00Z"
+          },
+          {
+            "title": "花蓮單日3震！23:08秀林鄉規模3.4地震 最大震度2級",
+            "source": "ltn",
+            "url": "https://news.ltn.com.tw/news/life/breakingnews/5514459",
+            "publishedAt": "2026-07-22T15:18:12Z"
           },
           {
             "title": "紅霞「生成就發海警」估達中颱 最新路徑出爐！雨可能更大",
             "source": "ettoday",
             "url": "https://www.ettoday.net/news/20260722/3206025.htm",
-            "publishedAt": "2026-07-22T14:38:51.999680Z"
+            "publishedAt": "2026-07-22T15:04:28.873710Z"
           },
           {
             "title": "颱風「紅霞」估明晚生成 氣象署可能同步發海警",
             "source": "ettoday",
             "url": "https://www.ettoday.net/news/20260722/3205974.htm",
             "publishedAt": "2026-07-22T14:04:51.794828Z"
-          },
-          {
-            "title": "南投百香果災損嚴重！農業部現金救助申請至8／4 每公頃19.5萬",
-            "source": "ettoday",
-            "url": "https://www.ettoday.net/news/20260722/3205902.htm",
-            "publishedAt": "2026-07-22T14:04:51.794650Z"
-          },
-          {
-            "title": "週四午後山區防大雨 週六紫紅雨彈轟東部、南部",
-            "source": "ltn",
-            "url": "https://news.ltn.com.tw/news/life/breakingnews/5514183",
-            "publishedAt": "2026-07-22T13:48:08Z"
           }
         ]
       },
@@ -138,7 +138,7 @@
           "預算",
           "政黨"
         ],
-        "size": 76,
+        "size": 90,
         "sentiment": {
           "positive": 0.0,
           "neutral": 1.0,
@@ -146,46 +146,46 @@
         },
         "summarySentences": [
           {
-            "text": "隨美伊衝突持續擴大，不少人好奇美國總統川普何時會改變立場？根據地緣政治機構最新研究，答案可能隱藏在一組「數學公式」中。",
-            "source": "setn",
-            "url": "https://www.setn.com/news/1876825"
+            "text": "行政院主計總處今（22）日公布全國及各縣市115年上半年失業率，高雄市整體失業率3.2%，為6都最低，也是全國最低！ 高市府主計處今晚指出，上半年高雄失業率3.2%，是全...…",
+            "source": "ltn",
+            "url": "https://news.ltn.com.tw/news/politics/breakingnews/5514447"
           },
           {
-            "text": "115年行政院全民防衛動員準備業務訪評，21日下午於台東縣政府A101會議室舉行，由行政院全民防衛動員會報及中央各方案主管機關組成訪評小組蒞臨指導，針對台東縣動員準備業務辦理情形進行簡報、書面資料審查、實地驗證及意見交流，全面檢視地方動員整備成果，持續精進全民防衛動員工作。 《詳…",
+            "text": "115年行政院全民防衛動員準備業務訪評，21日下午於台東縣政府A101會議室舉行，由行政院全民防衛動員會報及中央各方案主管機關組成訪評小組蒞臨指導，針對台東縣動員準備業務辦理情形進行簡報、書面資料審查、實地驗證及意見交流，全面檢視地方動員整備成果，持續精進全民防衛動員工作。 《詳",
             "source": "ettoday",
             "url": "https://www.ettoday.net/news/20260722/3206010.htm"
           }
         ],
         "articles": [
           {
-            "title": "美伊何時停火？分析師揭「川普退縮」公式：最快這天改變立場",
-            "source": "setn",
-            "url": "https://www.setn.com/news/1876825",
-            "publishedAt": "2026-07-22T21:33:00Z"
+            "title": "高雄上半年失業率全國最低 市府：產業轉型、青年就業政策奏效",
+            "source": "ltn",
+            "url": "https://news.ltn.com.tw/news/politics/breakingnews/5514447",
+            "publishedAt": "2026-07-22T15:08:53Z"
           },
           {
             "title": "台東接受行政院全民防衛動員訪評 強化跨域整備提升城市韌性",
             "source": "ettoday",
             "url": "https://www.ettoday.net/news/20260722/3206010.htm",
-            "publishedAt": "2026-07-22T14:38:51.999949Z"
+            "publishedAt": "2026-07-22T15:04:28.874216Z"
           },
           {
             "title": "「不懂自由民主真諦」 陸委會開嗆國台辦：夏蟲不可語冰",
             "source": "ettoday",
             "url": "https://www.ettoday.net/news/20260722/3206014.htm",
-            "publishedAt": "2026-07-22T14:38:51.999942Z"
+            "publishedAt": "2026-07-22T15:04:28.874203Z"
           },
           {
             "title": "網傳配合台美貿易協定放寬38種農藥標準 行政院澄清：與事實不符",
             "source": "ettoday",
             "url": "https://www.ettoday.net/news/20260722/3206036.htm",
-            "publishedAt": "2026-07-22T14:38:51.999801Z"
+            "publishedAt": "2026-07-22T15:04:28.873929Z"
           },
           {
-            "title": "藍提案刪無人機預算 中市議員周永鴻點名這2人「請回答」",
+            "title": "李在明7/24出訪舊金山 將見黃仁勳等科技業領袖",
             "source": "ltn",
-            "url": "https://news.ltn.com.tw/news/politics/breakingnews/5514407",
-            "publishedAt": "2026-07-22T14:17:36Z"
+            "url": "https://news.ltn.com.tw/news/world/breakingnews/5514445",
+            "publishedAt": "2026-07-22T14:59:00Z"
           }
         ]
       },
@@ -200,7 +200,7 @@
           "教育",
           "食安"
         ],
-        "size": 66,
+        "size": 91,
         "sentiment": {
           "positive": 0.0,
           "neutral": 1.0,
@@ -208,46 +208,46 @@
         },
         "summarySentences": [
           {
-            "text": "新北市長侯友宜今（22日）宣布新北大巨蛋落腳樹林機五，新北市長參選人李四川表示，畫一顆蛋很快，孵一顆蛋很難，但一顆蛋會卡在哪裡，「我不用猜，因為我都走過」，如果他接棒侯友宜，會如期如質，一步一步蓋起來，且是只蓋一顆蛋，連同樹林、鶯歌、三峽、土城的交通跟產業一起做，讓溪南長出一座「…",
-            "source": "ettoday",
-            "url": "https://www.ettoday.net/news/20260722/3206015.htm"
+            "text": "高雄都會公園發現人骨警方積極比對失蹤人口釐清案情| 社會",
+            "source": "newtalk",
+            "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE03UE0wN3BTYUZRb2p5R2JHOTRzcVRNU1M4ZWVJVVF2YWFhRUtwTk9ZRTRJWUEtSTJuMFJrWVdpZ3I2cmVEU2FZZHNLYXR6a3lRaXVwMWxXLV93VEk?oc=5"
           },
           {
-            "text": "有台灣旅行團近日於俄羅斯伊爾庫茨克州（Irkutsk）發生車禍，由中國大陸駐伊爾庫茨克總領館協調當地醫療救援。對此，我國交通部觀光署表示，此案是由旅客透過私人管道自行聯絡陸方相關單位，5名受傷旅客已無大礙。 《詳全文...》",
-            "source": "ettoday",
-            "url": "https://www.ettoday.net/news/20260722/3206017.htm"
+            "text": "桃園市立桃園高中落實生命教育，推動永續校園理念，日前在人文藝術大樓前為陪伴師生多年的老榕樹舉辦別具意義的「老榕樹畢業典禮」，以「榕情蜜意，終有歸期」為主題，校友會、家長會代表及...…",
+            "source": "ltn",
+            "url": "https://news.ltn.com.tw/news/life/breakingnews/5514455"
           }
         ],
         "articles": [
           {
+            "title": "高雄都會公園發現人骨警方積極比對失蹤人口釐清案情| 社會",
+            "source": "newtalk",
+            "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE03UE0wN3BTYUZRb2p5R2JHOTRzcVRNU1M4ZWVJVVF2YWFhRUtwTk9ZRTRJWUEtSTJuMFJrWVdpZ3I2cmVEU2FZZHNLYXR6a3lRaXVwMWxXLV93VEk?oc=5",
+            "publishedAt": "2026-07-22T15:46:25Z"
+          },
+          {
+            "title": "桃園高中為老榕樹辦畢典 溫馨告別罹「樹癌」校園守護者",
+            "source": "ltn",
+            "url": "https://news.ltn.com.tw/news/life/breakingnews/5514455",
+            "publishedAt": "2026-07-22T15:29:04Z"
+          },
+          {
             "title": "新北大巨蛋落腳樹林 「孵蛋」過來人李四川：我接棒會如期蓋起來",
             "source": "ettoday",
             "url": "https://www.ettoday.net/news/20260722/3206015.htm",
-            "publishedAt": "2026-07-22T14:38:51.999935Z"
+            "publishedAt": "2026-07-22T15:04:28.874190Z"
           },
           {
             "title": "台團俄羅斯車禍被陸方救援 我觀光署：旅客以私人管道聯絡",
             "source": "ettoday",
             "url": "https://www.ettoday.net/news/20260722/3206017.htm",
-            "publishedAt": "2026-07-22T14:38:51.999928Z"
+            "publishedAt": "2026-07-22T15:04:28.874177Z"
           },
           {
             "title": "拋增加客運班次政見！基隆市府跟進 童子瑋：證明政見非口號",
             "source": "ettoday",
             "url": "https://www.ettoday.net/news/20260722/3206023.htm",
-            "publishedAt": "2026-07-22T14:38:51.999901Z"
-          },
-          {
-            "title": "竹市府清查校園營養午餐！問題米粉未流入 高虹安：一定最高標準",
-            "source": "ettoday",
-            "url": "https://www.ettoday.net/news/20260722/3206026.htm",
-            "publishedAt": "2026-07-22T14:38:51.999853Z"
-          },
-          {
-            "title": "網傳配合台美貿易協定放寬38種農藥標準 行政院澄清：與事實不符",
-            "source": "ettoday",
-            "url": "https://www.ettoday.net/news/20260722/3206036.htm",
-            "publishedAt": "2026-07-22T14:38:51.999801Z"
+            "publishedAt": "2026-07-22T15:04:28.874126Z"
           }
         ]
       },
@@ -262,7 +262,7 @@
           "日本",
           "歐洲"
         ],
-        "size": 142,
+        "size": 232,
         "sentiment": {
           "positive": 0.0,
           "neutral": 1.0,
@@ -270,46 +270,46 @@
         },
         "summarySentences": [
           {
-            "text": "可能影響美股的地緣政治消息，通紅海的曼德海峽（Bab el-Mandeb）有遭封鎖的風險，今（22）日國際油價出現上揚。焦點個股有，由台裔美國人創辦的美超微（Super Micro Computer）宣布AI伺服器訂單大增，有望拉高營收；財報則是能源公司GE Vernova，受惠",
-            "source": "setn",
-            "url": "https://www.setn.com/news/1876822"
+            "text": "惠特（6706）受惠於國際網通晶片大廠限料緩解，陸系光模組業者訂單回流並通過認證，近期量產爬升，加上美系雷射晶片業者洽談代工與設備出貨有斬獲，下半年光通訊產品出貨有望倍增，助益業績衝鋒。",
+            "source": "moneyudn",
+            "url": "https://money.udn.com/money/story/5710/9644788"
           },
           {
-            "text": "日本觀光廳公布4月至6月「訪日外國人消費動向調查」結果，第2季訪日旅客總消費額達2兆5096億日圓，較去年同期微增0.2%。儘管中國旅客消費金額大幅下滑近5成，但台灣、印尼、新加坡等地旅客消費明顯成長，彌補了中國旅客消費減少所造成的缺口。",
-            "source": "setn",
-            "url": "https://www.setn.com/news/1876740"
+            "text": "一位知情人士今天告訴路透社，烏克蘭已經同意向美國出口無人機，以參與五角大廈的「無人機優勢計畫」。 路透社報導，烏克蘭無人機在抵禦俄羅斯侵略的戰爭中取得成功，促使其他國家急需烏國無人機，...…",
+            "source": "ltn",
+            "url": "https://news.ltn.com.tw/news/world/breakingnews/5514416"
           }
         ],
         "articles": [
           {
-            "title": "快訊／明天台股恐回落？美股開盤4大指數下挫　費半跌破200點",
-            "source": "setn",
-            "url": "https://www.setn.com/news/1876822",
-            "publishedAt": "2026-07-22T21:43:00Z"
+            "title": "惠特光通訊出貨拚倍增",
+            "source": "moneyudn",
+            "url": "https://money.udn.com/money/story/5710/9644788",
+            "publishedAt": "2026-07-22T15:55:40Z"
           },
           {
-            "title": "赴日旅遊大洗牌！中客消費額慘遭腰斬　台人躍升全球第二",
-            "source": "setn",
-            "url": "https://www.setn.com/news/1876740",
-            "publishedAt": "2026-07-22T21:41:00Z"
+            "title": "路透：烏克蘭同意出口無人機 參與美國軍方測試",
+            "source": "ltn",
+            "url": "https://news.ltn.com.tw/news/world/breakingnews/5514416",
+            "publishedAt": "2026-07-22T15:32:23Z"
           },
           {
-            "title": "美伊何時停火？分析師揭「川普退縮」公式：最快這天改變立場",
-            "source": "setn",
-            "url": "https://www.setn.com/news/1876825",
-            "publishedAt": "2026-07-22T21:33:00Z"
+            "title": "黃仁勳：美企應使用中國開源AI模型 封禁恐適得其反",
+            "source": "ltn",
+            "url": "https://ec.ltn.com.tw/article/breakingnews/5514465",
+            "publishedAt": "2026-07-22T15:28:22Z"
           },
           {
-            "title": "台團俄羅斯車禍被陸方救援 我觀光署：旅客以私人管道聯絡",
-            "source": "ettoday",
-            "url": "https://www.ettoday.net/news/20260722/3206017.htm",
-            "publishedAt": "2026-07-22T14:38:51.999928Z"
+            "title": "美沙擬簽署核協議！以色列剉咧等 在野痛批納坦雅胡被邊緣化",
+            "source": "ltn",
+            "url": "https://news.ltn.com.tw/news/world/breakingnews/5514463",
+            "publishedAt": "2026-07-22T15:25:23Z"
           },
           {
-            "title": "不是C羅梅西！世界盃「漲粉王」揭曉 40歲門神翻980倍排第2",
-            "source": "ettoday",
-            "url": "https://sports.ettoday.net/news/3206024",
-            "publishedAt": "2026-07-22T14:38:51.999861Z"
+            "title": "大東電搶美國 AI 商機",
+            "source": "moneyudn",
+            "url": "https://money.udn.com/money/story/5710/9644725",
+            "publishedAt": "2026-07-22T15:15:25Z"
           }
         ]
       }

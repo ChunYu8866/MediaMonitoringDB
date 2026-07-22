@@ -21,6 +21,8 @@ export const SOURCE_META: Record<SourceId, SourceMeta> = {
   era: { id: 'era', name: '年代新聞', short: '年代', series: 5, news: true },
   nexttv: { id: 'nexttv', name: '壹電視', short: '壹電視', series: 6, news: true },
   pts: { id: 'pts', name: '公視新聞', short: '公視', series: 7, news: true },
+  ttv: { id: 'ttv', name: '台視新聞', short: '台視', series: 2, news: true },
+  cts: { id: 'cts', name: '華視新聞', short: '華視', series: 5, news: true },
   udn: { id: 'udn', name: 'UDN', short: 'UDN', series: 0, news: true },
   ltn: { id: 'ltn', name: '自由時報', short: '自由', series: 1, news: true },
   cna: { id: 'cna', name: '中央社', short: '中央社', series: 2, news: true },

@@ -7,6 +7,8 @@ export const NEWS_SOURCES = [
   { id: 'era', displayName: '年代新聞', domains: ['eracom.com.tw', 'www.eracom.com.tw'], aliases: ['年代新聞', '年代電視'] },
   { id: 'nexttv', displayName: '壹電視', domains: ['nexttv.com.tw', 'www.nexttv.com.tw'], aliases: ['壹電視', '壹新聞'], rssUrl: 'https://www.nexttv.com.tw/nRSS.xml' },
   { id: 'pts', displayName: '公視新聞', domains: ['news.pts.org.tw', 'pts.org.tw'], aliases: ['公視新聞網', '公視新聞網PNN', '公視新聞'], rssUrl: 'https://news.pts.org.tw/xml/newsfeed.xml' },
+  { id: 'ttv', displayName: '台視新聞', domains: ['news.ttv.com.tw', 'ttv.com.tw'], aliases: ['台視新聞網', '台視新聞', '台視'] },
+  { id: 'cts', displayName: '華視新聞', domains: ['news.cts.com.tw', 'cts.com.tw'], aliases: ['華視新聞網', '華視新聞', '華視'] },
   { id: 'udn', displayName: 'UDN', domains: ['udn.com', 'www.udn.com'], aliases: ['聯合新聞網', 'UDN'] },
   { id: 'ltn', displayName: '自由時報', domains: ['news.ltn.com.tw', 'ltn.com.tw'], aliases: ['自由時報', '自由電子報'], rssUrl: 'https://news.ltn.com.tw/rss/all.xml' },
   { id: 'cna', displayName: '中央社', domains: ['cna.com.tw', 'www.cna.com.tw'], aliases: ['中央社', '中央通訊社', '中央社 CNA'] },

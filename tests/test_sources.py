@@ -22,6 +22,8 @@ EXPECTED_SOURCE_IDS = (
     "era",
     "nexttv",
     "pts",
+    "ttv",
+    "cts",
     "udn",
     "ltn",
     "cna",
@@ -39,13 +41,32 @@ EXPECTED_SOURCE_IDS = (
 )
 
 
-def test_registry_contains_exactly_the_requested_22_news_sources():
+def test_registry_contains_exactly_the_requested_24_news_sources():
     sources = load_sources(Path("config/sources.yml"))
 
     assert SOURCE_IDS == EXPECTED_SOURCE_IDS
     assert tuple(source["id"] for source in sources) == EXPECTED_SOURCE_IDS
-    assert len({domain for source in sources for domain in source["domains"]}) >= 22
+    assert len({domain for source in sources for domain in source["domains"]}) >= 24
     assert not {"mirror", "currents", "bluesky"}.intersection(SOURCE_IDS)
+
+
+def test_worker_and_frontend_source_registries_stay_in_sync_with_the_yaml():
+    """三處來源清單（Python/Worker/前端）必須一致，避免加來源時漏改。"""
+    import re
+
+    worker_js = Path("worker/src/sources.js").read_text(encoding="utf-8")
+    worker_ids = tuple(re.findall(r"\{ id: '([a-z]+)'", worker_js))
+
+    web_ts = Path("web/src/lib/sources.ts").read_text(encoding="utf-8")
+    web_ids = tuple(re.findall(r"^  (\w+): \{ id: '\w+'", web_ts, flags=re.MULTILINE))
+
+    contracts_ts = Path("web/src/types/contracts.ts").read_text(encoding="utf-8")
+    contract_block = contracts_ts.split("export type SourceId =", 1)[1].split(";", 1)[0]
+    contract_ids = tuple(re.findall(r"'(\w+)'", contract_block))
+
+    assert worker_ids == SOURCE_IDS
+    assert web_ids == SOURCE_IDS
+    assert contract_ids == SOURCE_IDS
 
 
 def test_udn_properties_never_enable_direct_listing_crawl():
