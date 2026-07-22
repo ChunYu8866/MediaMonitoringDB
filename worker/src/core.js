@@ -1,4 +1,5 @@
 const RANGE_MS = { '1h': 3_600_000, '6h': 21_600_000, '24h': 86_400_000, '7d': 604_800_000 };
+const compactCjkSpaces = (value) => value.replace(/([\u3400-\u9fff])\s+(?=[\u3400-\u9fff])/g, '$1');
 
 const decodeXml = (value = '') =>
   value
@@ -133,7 +134,7 @@ export function parseTrendsRss(xml) {
         });
       const timestamp = Date.parse(extract(block, 'pubDate'));
       return {
-        title: extract(block, 'title'),
+        title: compactCjkSpaces(extract(block, 'title')),
         approximateTraffic: extract(block, 'ht:approx_traffic'),
         publishedAt: Number.isNaN(timestamp) ? '' : new Date(timestamp).toISOString(),
         news,

@@ -84,7 +84,7 @@ test('calculateMetrics returns zero heat for zero news volume', () => {
 
 test('parseTrendsRss reads Taiwan Trending Now RSS and preserves all related news', () => {
   const xml = `<rss xmlns:ht="https://trends.google.com/trending/rss"><channel><item>
-    <title>台灣颱風</title><ht:approx_traffic>20,000+</ht:approx_traffic>
+    <title>台灣 颱風</title><ht:approx_traffic>20,000+</ht:approx_traffic>
     <pubDate>Wed, 22 Jul 2026 08:00:00 GMT</pubDate>
     <ht:news_item><ht:news_item_title>颱風最新動態</ht:news_item_title>
     <ht:news_item_url>https://example.com/1</ht:news_item_url>

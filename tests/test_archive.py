@@ -60,6 +60,15 @@ def test_parse_google_trends_tw_rss():
     assert items[0]["news"][0]["url"] == "https://example.com/news/1"
 
 
+def test_google_trends_removes_spaces_inserted_between_chinese_characters():
+    raw = b'''<rss xmlns:ht="https://trends.google.com/trending/rss"><channel><item>
+      <title>&#31461;&#23376; &#36066;</title><ht:approx_traffic>200+</ht:approx_traffic>
+      <pubDate>Wed, 22 Jul 2026 08:00:00 GMT</pubDate>
+    </item></channel></rss>'''
+
+    assert parse_trends_feed(raw)[0]["title"] == "童子賢"
+
+
 def test_trends_related_news_is_preserved_even_outside_requested_publishers():
     items = [{"title": "熱門", "news": [
         {"title": "保留", "url": "https://news.tvbs.com.tw/politics/1"},

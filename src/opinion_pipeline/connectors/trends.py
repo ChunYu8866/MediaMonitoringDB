@@ -3,10 +3,12 @@ from __future__ import annotations
 
 from datetime import timezone
 from email.utils import parsedate_to_datetime
+import re
 from xml.etree import ElementTree
 
 
 _HT = "https://trends.google.com/trending/rss"
+_CJK_SPACE = re.compile(r"([\u3400-\u9fff])\s+(?=[\u3400-\u9fff])")
 
 
 def _text(node: ElementTree.Element, path: str) -> str:
@@ -19,7 +21,7 @@ def parse_trends_feed(raw: bytes) -> list[dict]:
     root = ElementTree.fromstring(raw)
     output: list[dict] = []
     for entry in root.findall("./channel/item"):
-        title = _text(entry, "title")
+        title = _CJK_SPACE.sub(r"\1", _text(entry, "title"))
         if not title:
             continue
         published_raw = _text(entry, "pubDate")
