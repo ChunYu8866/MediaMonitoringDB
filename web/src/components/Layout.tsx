@@ -18,6 +18,7 @@ interface NavItem {
 
 const NAV: NavItem[] = [
   { to: '/', label: '新聞搜尋', icon: '🔎', end: true },
+  { to: '/analysis', label: '進階分析', icon: '⚖️' },
   { to: '/overview', label: '資料總覽', icon: '📊' },
   { to: '/keywords', label: '關鍵字熱度', icon: '🔥' },
   { to: '/topics', label: '事件與主題', icon: '🗂️' },

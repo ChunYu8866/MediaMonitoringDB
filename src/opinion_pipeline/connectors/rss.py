@@ -4,7 +4,7 @@ from __future__ import annotations
 import html
 import re
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 import feedparser
 import requests
@@ -31,12 +31,18 @@ def _clean(text: str, limit: int = 140) -> str:
     return text
 
 
-def _parse_time(entry) -> datetime:
+def _parse_time(entry, now: datetime | None = None) -> datetime | None:
+    current = now or datetime.now(timezone.utc)
     for key in ("published_parsed", "updated_parsed"):
         tm = entry.get(key)
         if tm:
-            return datetime(*tm[:6], tzinfo=timezone.utc)
-    return datetime.now(timezone.utc)
+            published = datetime(*tm[:6], tzinfo=timezone.utc)
+            if published > current + timedelta(minutes=5):
+                corrected = published - timedelta(hours=8)
+                if corrected <= current + timedelta(minutes=5):
+                    published = corrected
+            return published if published <= current + timedelta(minutes=5) else None
+    return None
 
 
 def _fetch_bytes(url: str, timeout: int) -> bytes:
@@ -105,6 +111,9 @@ def fetch_source(source: dict, timeout: int, max_items: int) -> SourceResult:
         title = _clean(entry.get("title", ""), limit=200)
         if not link or not title:
             continue
+        published_at = _parse_time(entry)
+        if published_at is None:
+            continue
         items.append(
             NormalizedItem(
                 source=sid,
@@ -112,7 +121,7 @@ def fetch_source(source: dict, timeout: int, max_items: int) -> SourceResult:
                 title=title,
                 excerpt=_clean(entry.get("summary", ""), limit=140),
                 url=link,
-                published_at=_parse_time(entry),
+                published_at=published_at,
             )
         )
 

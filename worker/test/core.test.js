@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 
 import {
   calculateMetrics,
+  normalizePublishedAt,
+  matchesQuery,
   parseGoogleNewsRss,
   parseRss,
   parseTrendsRss,
@@ -49,6 +51,13 @@ test('validateQuery accepts 2 to 50 characters and known ranges', () => {
   assert.throws(() => validateQuery('台積電', '30d'), /INVALID_RANGE/);
 });
 
+test('matchesQuery supports AND, OR, NOT, minus exclusions, and quoted phrases', () => {
+  assert.equal(matchesQuery('台積電法說會展望成長', '台積電 AND "法說會"'), true);
+  assert.equal(matchesQuery('聯發科新品發表', '台積電 OR 聯發科'), true);
+  assert.equal(matchesQuery('台積電股價下跌', '台積電 NOT 股價'), false);
+  assert.equal(matchesQuery('台積電徵才消息', '台積電 -徵才'), false);
+});
+
 test('parseRss keeps only public metadata and canonicalizes URLs', () => {
   const xml = `<?xml version="1.0"?><rss><channel><item>
     <guid>story-1</guid><title><![CDATA[台積電法說會]]></title>
@@ -62,6 +71,16 @@ test('parseRss keeps only public metadata and canonicalizes URLs', () => {
   assert.equal(items[0].url, 'https://example.com/story');
   assert.equal(items[0].excerpt, '營運展望摘要');
   assert.equal('content' in items[0], false);
+});
+
+test('normalizes Taiwan local time mislabeled as GMT when it lands in the future', () => {
+  const now = Date.parse('2026-07-22T15:00:00Z');
+  assert.equal(normalizePublishedAt('Wed, 22 Jul 2026 21:43:00 GMT', now), '2026-07-22T13:43:00.000Z');
+});
+
+test('parseRss discards items without a valid publication time', () => {
+  const xml = '<rss><channel><item><guid>x</guid><title>無時間新聞</title><link>https://example.com/x</link></item></channel></rss>';
+  assert.deepEqual(parseRss(xml, 'cna'), []);
 });
 
 test('calculateMetrics uses 50/33/17 news-only heat weights', () => {

@@ -9,6 +9,7 @@ import type {
 } from '../types/contracts';
 import { SUPPORTED_SCHEMA_MAJOR } from '../types/contracts';
 import { fetchData } from './client';
+import { matchesAdvancedQuery } from '../lib/analysis';
 
 export interface HeatInput {
   volume: number;
@@ -124,11 +125,10 @@ export function buildStaticSearchData(
   range: SearchRange,
   now = Date.now(),
 ): SearchData {
-  const needle = query.trim().toLocaleLowerCase('zh-TW');
   const cutoff = now - RANGE_MS[range];
   const items = allItems
     .filter((item) => Date.parse(item.publishedAt) >= cutoff)
-    .filter((item) => `${item.title} ${item.excerpt}`.toLocaleLowerCase('zh-TW').includes(needle))
+    .filter((item) => matchesAdvancedQuery(`${item.title} ${item.excerpt}`, query.trim()))
     .sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt))
     .slice(0, 100);
   const sourceCounts = Object.fromEntries(

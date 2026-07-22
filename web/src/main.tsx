@@ -10,6 +10,7 @@ import { TopicsPage } from './pages/TopicsPage';
 import { EntitiesPage } from './pages/EntitiesPage';
 import { MethodPage } from './pages/MethodPage';
 import { SearchPage } from './pages/SearchPage';
+import { AdvancedAnalysisPage } from './pages/AdvancedAnalysisPage';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -18,6 +19,7 @@ createRoot(document.getElementById('root')!).render(
         <Routes>
           <Route element={<Layout />}>
             <Route index element={<SearchPage />} />
+            <Route path="analysis" element={<AdvancedAnalysisPage />} />
             <Route path="overview" element={<OverviewPage />} />
             <Route path="keywords" element={<KeywordsPage />} />
             <Route path="topics" element={<TopicsPage />} />

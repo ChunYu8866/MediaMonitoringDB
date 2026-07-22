@@ -49,6 +49,16 @@ def test_public_item_never_contains_full_content_field():
     assert len(public["excerpt"]) <= 141
 
 
+def test_rss_time_parser_does_not_invent_the_current_time():
+    assert rss._parse_time({}) is None
+
+
+def test_rss_time_parser_corrects_plausible_taiwan_time_mislabeled_as_utc():
+    entry = {"published_parsed": (2026, 7, 22, 21, 43, 0, 0, 0, 0)}
+    now = datetime(2026, 7, 22, 15, 0, tzinfo=timezone.utc)
+    assert rss._parse_time(entry, now) == datetime(2026, 7, 22, 13, 43, tzinfo=timezone.utc)
+
+
 def test_parse_google_trends_tw_rss():
     raw = Path("tests/fixtures/google_trends_tw.xml").read_bytes()
 

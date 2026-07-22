@@ -1,5 +1,18 @@
 const RANGE_MS = { '1h': 3_600_000, '6h': 21_600_000, '24h': 86_400_000, '7d': 604_800_000 };
 const compactCjkSpaces = (value) => value.replace(/([\u3400-\u9fff])\s+(?=[\u3400-\u9fff])/g, '$1');
+const TAIWAN_OFFSET_MS = 8 * 60 * 60 * 1_000;
+const FUTURE_TOLERANCE_MS = 5 * 60 * 1_000;
+
+export function normalizePublishedAt(rawDate, now = Date.now()) {
+  let timestamp = Date.parse(rawDate);
+  if (Number.isNaN(timestamp)) return null;
+  if (timestamp > now + FUTURE_TOLERANCE_MS) {
+    const corrected = timestamp - TAIWAN_OFFSET_MS;
+    if (corrected <= now + FUTURE_TOLERANCE_MS) timestamp = corrected;
+  }
+  if (timestamp > now + FUTURE_TOLERANCE_MS) return null;
+  return new Date(timestamp).toISOString();
+}
 
 const decodeXml = (value = '') =>
   value
@@ -61,6 +74,33 @@ export function validateQuery(rawQuery, rawRange = '24h') {
   return { query, range };
 }
 
+export function matchesQuery(text, rawQuery) {
+  const haystack = String(text || '').toLocaleLowerCase('zh-TW');
+  const groups = String(rawQuery || '').split(/\s+OR\s+/i);
+  return groups.some((group) => {
+    const positives = [];
+    const negatives = [];
+    let negateNext = false;
+    for (const match of group.matchAll(/"([^"]+)"|(\S+)/g)) {
+      let token = (match[1] || match[2] || '').trim();
+      if (!token || /^AND$/i.test(token)) continue;
+      if (/^NOT$/i.test(token)) {
+        negateNext = true;
+        continue;
+      }
+      let negative = negateNext;
+      negateNext = false;
+      if (token.startsWith('-')) {
+        negative = true;
+        token = token.slice(1);
+      }
+      if (!token) continue;
+      (negative ? negatives : positives).push(token.toLocaleLowerCase('zh-TW'));
+    }
+    return positives.every((term) => haystack.includes(term)) && negatives.every((term) => !haystack.includes(term));
+  });
+}
+
 export function parseRss(xml, source) {
   return entryBlocks(xml)
     .slice(0, 20)
@@ -68,14 +108,14 @@ export function parseRss(xml, source) {
       const title = extract(block, 'title');
       const url = canonicalUrl(linkOf(block));
       const rawDate = extract(block, 'pubDate') || extract(block, 'published') || extract(block, 'updated');
-      const timestamp = Date.parse(rawDate);
-      if (!title || !url) return null;
+      const publishedAt = normalizePublishedAt(rawDate);
+      if (!title || !url || !publishedAt) return null;
       return {
         id: `${source}-${extract(block, 'guid') || extract(block, 'id') || index}`,
         source,
         title: title.slice(0, 200),
         excerpt: (extract(block, 'description') || extract(block, 'summary')).slice(0, 140),
-        publishedAt: Number.isNaN(timestamp) ? new Date().toISOString() : new Date(timestamp).toISOString(),
+        publishedAt,
         url,
         sentiment: null,
       };
@@ -103,14 +143,14 @@ export function parseGoogleNewsRss(xml, sources) {
       const title = extract(block, 'title');
       const url = canonicalUrl(linkOf(block));
       const rawDate = extract(block, 'pubDate') || extract(block, 'published') || extract(block, 'updated');
-      const timestamp = Date.parse(rawDate);
-      if (!source || !title || !url) return null;
+      const publishedAt = normalizePublishedAt(rawDate);
+      if (!source || !title || !url || !publishedAt) return null;
       return {
         id: `google-news-${source.id}-${extract(block, 'guid') || index}`,
         source: source.id,
         title: title.slice(0, 200),
         excerpt: extract(block, 'description').slice(0, 140),
-        publishedAt: Number.isNaN(timestamp) ? new Date().toISOString() : new Date(timestamp).toISOString(),
+        publishedAt,
         url,
         sentiment: null,
       };
@@ -163,10 +203,9 @@ export function calculateMetrics(items, range, now = Date.now(), enabledSourceCo
 
 export function filterAndDedupe(items, query, range, now = Date.now()) {
   const cutoff = now - RANGE_MS[range];
-  const needle = query.toLocaleLowerCase('zh-TW');
   const selected = items
     .filter((item) => Date.parse(item.publishedAt) >= cutoff)
-    .filter((item) => `${item.title} ${item.excerpt || ''}`.toLocaleLowerCase('zh-TW').includes(needle))
+    .filter((item) => matchesQuery(`${item.title} ${item.excerpt || ''}`, query))
     .sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt));
   const seen = new Set();
   return selected.filter((item) => {
