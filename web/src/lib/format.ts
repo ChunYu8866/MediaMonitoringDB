@@ -52,6 +52,7 @@ export function fmtRelative(iso: string | null, now: number = Date.now()): strin
   const t = new Date(iso).getTime();
   if (Number.isNaN(t)) return '—';
   const diff = Math.round((now - t) / 1000);
+  if (diff < -300) return '來源時間異常';
   if (diff < 0) return '剛剛';
   if (diff < 60) return `${diff} 秒前`;
   const min = Math.floor(diff / 60);
