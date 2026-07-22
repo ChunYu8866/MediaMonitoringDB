@@ -658,45 +658,6 @@ table.data th.num {
   margin: 26px 0 12px;
 }
 
-/* ── Footer ─────────────────────────────────────────────────────────────── */
-
-.footer {
-  margin-top: 40px;
-  padding-top: 20px;
-  border-top: 1px solid var(--border);
-}
-.footer__row {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-.footer__brand {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 700;
-  font-size: 14px;
-}
-.footer__desc {
-  margin: 8px 0 0;
-  color: var(--text-secondary);
-  font-size: 13px;
-  max-width: 62ch;
-}
-.footer__links {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  font-size: 13.5px;
-  white-space: nowrap;
-}
-.footer__note {
-  margin: 16px 0 0;
-  color: var(--text-muted);
-  font-size: 12px;
-}
-
 .muted {
   color: var(--text-muted);
 }

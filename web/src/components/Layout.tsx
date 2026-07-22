@@ -7,9 +7,7 @@ import { useTheme } from '../lib/theme';
 import { Badge } from './ui';
 
 export const BRAND = '媒體輿情監測';
-export const BRAND_FULL = '台灣媒體輿情監測';
 export const REPO_URL = 'https://github.com/ChunYu8866/MediaMonitoringDB';
-export const SITE_URL = 'https://chunyu8866.github.io/MediaMonitoringDB/';
 
 interface NavItem {
   to: string;
@@ -50,35 +48,6 @@ function GlobalStatus() {
       </Badge>
       <span className="hide-sm">更新 {fmtRelative(data.lastFastAt)}</span>
     </div>
-  );
-}
-
-function Footer() {
-  return (
-    <footer className="footer">
-      <div className="footer__row">
-        <div>
-          <div className="footer__brand">
-            <span className="appbar__logo" style={{ width: 24, height: 24, fontSize: 13 }}>
-              監
-            </span>
-            {BRAND_FULL}
-          </div>
-          <p className="footer__desc">
-            個人／研究型 MVP。整合中央社、ETtoday、鏡傳媒、TVBS、自由時報等新聞 RSS，
-            提供關鍵字搜尋、新聞熱度與台灣 Google Trends RSS 摘要。
-          </p>
-        </div>
-        <nav className="footer__links" aria-label="外部連結">
-          <a href={REPO_URL} target="_blank" rel="noreferrer noopener">GitHub 原始碼 ↗</a>
-          <a href={SITE_URL} target="_blank" rel="noreferrer noopener">網站首頁 ↗</a>
-        </nav>
-      </div>
-      <p className="footer__note">
-        指標僅供研究參考，不代表台灣整體民意；「共現」不代表支持、反對或因果。更新採 best effort，不宣稱固定間隔 SLA。
-        請以頁面標示的資料時間、來源狀態與 stale 提示判讀。
-      </p>
-    </footer>
   );
 }
 
@@ -139,7 +108,6 @@ export function Layout() {
 
         <main className="content">
           <Outlet />
-          <Footer />
         </main>
       </div>
     </div>
