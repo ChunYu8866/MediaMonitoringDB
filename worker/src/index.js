@@ -179,7 +179,7 @@ async function handleTrendNews(request, env, url) {
   const query = String(url.searchParams.get('q') || '').trim();
   if (query.length < 1 || query.length > 100) return json(request, env, { error: 'INVALID_QUERY' }, 400);
   try {
-    const items = parseGoogleNewsMetadata(await fetchText(googleNewsUrl(query), 1, 4_000), 10);
+    const items = parseGoogleNewsMetadata(await fetchText(googleNewsUrl(query), 2, 8_000), 10);
     return json(request, env, envelope({ query, source: 'google-news-rss', items }));
   } catch {
     return json(request, env, { error: 'TREND_NEWS_UNAVAILABLE' }, 503);

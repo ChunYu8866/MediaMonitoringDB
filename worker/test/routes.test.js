@@ -110,3 +110,20 @@ test('trend-news accepts a one-character term supplied by Google Trends', async 
     globalThis.fetch = originalFetch;
   }
 });
+
+test('trend-news retries a transient Google News failure once', async () => {
+  const originalFetch = globalThis.fetch;
+  let attempts = 0;
+  globalThis.fetch = async () => {
+    attempts += 1;
+    if (attempts === 1) throw new Error('temporary');
+    return new Response('<rss><channel></channel></rss>');
+  };
+  try {
+    const response = await worker.fetch(new Request('https://worker.example/api/trend-news?q=熱門'), {});
+    assert.equal(response.status, 200);
+    assert.equal(attempts, 2);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
