@@ -54,6 +54,7 @@ test('24h search merges Google News results with the low-frequency Pages snapsho
     const body = await response.json();
 
     assert.equal(response.status, 200);
+    assert.equal(response.headers.get('Cache-Control'), 'no-store');
     assert.equal(body.data.sources.length, 22);
     assert.deepEqual(new Set(body.data.items.map((item) => item.source)), new Set(['setn', 'ebc']));
   } finally {
@@ -75,6 +76,36 @@ test('trends endpoint preserves related news from publishers outside the 22-sour
     const body = await response.json();
     assert.equal(body.data.items[0].news.length, 1);
     assert.equal(body.data.items[0].news[0].source, 'External Finance');
+    assert.equal(response.headers.get('Cache-Control'), 'public, max-age=60');
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test('trend-news returns current Google News metadata for a valid trend term', async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => new Response(`<rss><channel><item><guid>g1</guid>
+    <title>熱門人物最新消息</title><link>https://news.google.com/rss/articles/g1</link>
+    <pubDate>Wed, 22 Jul 2026 12:00:00 GMT</pubDate>
+    <source url="https://external.example">外部媒體</source></item></channel></rss>`);
+  try {
+    const response = await worker.fetch(new Request('https://worker.example/api/trend-news?q=熱門人物'), {});
+    const body = await response.json();
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get('Cache-Control'), 'no-store');
+    assert.equal(body.data.query, '熱門人物');
+    assert.equal(body.data.items[0].source, '外部媒體');
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test('trend-news accepts a one-character term supplied by Google Trends', async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => new Response('<rss><channel></channel></rss>');
+  try {
+    const response = await worker.fetch(new Request('https://worker.example/api/trend-news?q=X'), {});
+    assert.equal(response.status, 200);
   } finally {
     globalThis.fetch = originalFetch;
   }

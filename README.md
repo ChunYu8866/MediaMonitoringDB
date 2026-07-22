@@ -8,6 +8,8 @@
 - 新聞熱度：`100 × (0.50V + 0.33A + 0.17D)`。
 - 台灣 Google Trends RSS：熱門字、約略搜尋量、發布時間與相關新聞。
 - 個別來源失敗時顯示 `partial`；Worker 離線時改讀 GitHub Pages 最後快照並標示 `stale`。
+- 搜尋結果不使用共用快取，搜尋後每 30 秒自動刷新；Google Trends 每 2 分鐘檢查，Worker 最多快取 60 秒。
+- Trends RSS 未附新聞時，點選熱門詞會由 Google News RSS 即時補充；補充來源不納入 22 家媒體熱度。
 
 來源固定為 22 家指定媒體。官方 RSS 可用時優先使用；沒有可用 RSS 時由 Google News RSS 補充，TVBS、東森、三立、年代、商業週刊、新頭殼與 NOWNEWS 另有遵守 robots.txt 的低頻官網 metadata 擷取。來源狀態會隨每次更新顯示，不會把失敗來源偽裝成成功。
 
@@ -15,7 +17,7 @@
 
 ```text
 瀏覽器（GitHub Pages）
-  ├─ Cloudflare Worker：/api/search、/api/trends、/api/health
+  ├─ Cloudflare Worker：/api/search、/api/trends、/api/trend-news、/api/health
   └─ public/data：Worker 失敗時的最後成功快照
 
 GitHub Actions（每 15 分鐘 best effort）

@@ -2,6 +2,7 @@ import {
   calculateMetrics,
   filterAndDedupe,
   parseGoogleNewsRss,
+  parseGoogleNewsMetadata,
   parseRss,
   parseTrendsRss,
   timelineFor,
@@ -147,7 +148,7 @@ async function handleSearch(request, env, url) {
     sources: runs.map(({ items: _items, ...source }) => source),
     items,
   };
-  return json(request, env, envelope(data), 200, 120);
+  return json(request, env, envelope(data));
 }
 
 async function handleTrends(request, env) {
@@ -158,7 +159,7 @@ async function handleTrends(request, env) {
       env,
       envelope({ geo: 'TW', status: 'ok', stale: false, source: 'google-trends-rss', sourceUrl: TRENDS_URL, items }),
       200,
-      600,
+      60,
     );
   } catch {
     const base = env.ARCHIVE_BASE_URL || 'https://chunyu8866.github.io/MediaMonitoringDB';
@@ -174,12 +175,23 @@ async function handleTrends(request, env) {
   }
 }
 
+async function handleTrendNews(request, env, url) {
+  const query = String(url.searchParams.get('q') || '').trim();
+  if (query.length < 1 || query.length > 100) return json(request, env, { error: 'INVALID_QUERY' }, 400);
+  try {
+    const items = parseGoogleNewsMetadata(await fetchText(googleNewsUrl(query), 1, 4_000), 10);
+    return json(request, env, envelope({ query, source: 'google-news-rss', items }));
+  } catch {
+    return json(request, env, { error: 'TREND_NEWS_UNAVAILABLE' }, 503);
+  }
+}
+
 export default {
   async fetch(request, env, ctx) {
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: corsHeaders(request, env) });
     if (!['GET', 'HEAD'].includes(request.method)) return json(request, env, { error: 'METHOD_NOT_ALLOWED' }, 405);
     const url = new URL(request.url);
-    const cacheable = request.method === 'GET' && ['/api/search', '/api/trends'].includes(url.pathname);
+    const cacheable = request.method === 'GET' && url.pathname === '/api/trends';
     const origin = request.headers.get('Origin') || '';
     const localRequest = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
     const cache = cacheable && !localRequest ? globalThis.caches?.default : null;
@@ -190,6 +202,7 @@ export default {
     let response;
     if (url.pathname === '/api/search') response = await handleSearch(request, env, url);
     else if (url.pathname === '/api/trends') response = await handleTrends(request, env);
+    else if (url.pathname === '/api/trend-news') response = await handleTrendNews(request, env, url);
     if (response) {
       if (cache && response.ok) ctx?.waitUntil(cache.put(request, response.clone()));
       return response;

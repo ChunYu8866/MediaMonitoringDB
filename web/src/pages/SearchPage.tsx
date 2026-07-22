@@ -1,11 +1,12 @@
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import type { EChartsOption } from 'echarts';
-import { fetchTrends, searchNews } from '../api/search';
+import { fetchTrendNews, fetchTrends, searchNews } from '../api/search';
 import { Chart } from '../components/Chart';
 import { Badge, Banner, Card, EmptyState, LoadingState, SourceTag, StatTile } from '../components/ui';
 import { GRID, catAxis, tooltip, valAxis } from '../lib/charts';
 import { fmtDateTime, fmtNum, fmtTime } from '../lib/format';
 import { useChartTokens } from '../lib/theme';
+import { nextRefreshSeconds, REFRESH_INTERVALS } from '../lib/refresh';
 import type { Envelope, SearchData, SearchRange, TrendItem, TrendsData } from '../types/contracts';
 
 const RANGES: { value: SearchRange; label: string }[] = [
@@ -24,13 +25,36 @@ export function SearchPage() {
   const [trends, setTrends] = useState<Envelope<TrendsData> | null>(null);
   const [trendsError, setTrendsError] = useState<string | null>(null);
   const [selectedTrend, setSelectedTrend] = useState<TrendItem | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const [trendNewsLoading, setTrendNewsLoading] = useState(false);
+  const [trendNewsFallback, setTrendNewsFallback] = useState(false);
+  const [lastUpdatedAt, setLastUpdatedAt] = useState<number | null>(null);
+  const [countdown, setCountdown] = useState(30);
   const tokens = useChartTokens();
 
-  useEffect(() => {
-    fetchTrends().then(setTrends).catch((error: Error) => setTrendsError(error.message));
+  const loadTrends = useCallback(async () => {
+    try {
+      setTrends(await fetchTrends());
+      setTrendsError(null);
+    } catch (error) {
+      setTrendsError((error as Error).message);
+    }
   }, []);
 
-  async function runSearch(term = query, trend: TrendItem | null = null) {
+  useEffect(() => {
+    void loadTrends();
+    const refresh = () => {
+      if (document.visibilityState === 'visible') void loadTrends();
+    };
+    const timer = window.setInterval(refresh, REFRESH_INTERVALS.trends);
+    document.addEventListener('visibilitychange', refresh);
+    return () => {
+      window.clearInterval(timer);
+      document.removeEventListener('visibilitychange', refresh);
+    };
+  }, [loadTrends]);
+
+  const runSearch = useCallback(async (term: string, trend: TrendItem | null = null, background = false) => {
     const normalized = term.trim();
     if (normalized.length < 2 || normalized.length > 50) {
       setSearchError('請輸入 2 至 50 個字元的關鍵字。');
@@ -38,21 +62,64 @@ export function SearchPage() {
     }
     setQuery(normalized);
     setSelectedTrend(trend);
-    setSearching(true);
+    if (background) setRefreshing(true);
+    else setSearching(true);
     setSearchError(null);
     try {
       setResult(await searchNews(normalized, range));
+      setLastUpdatedAt(Date.now());
     } catch (error) {
-      setResult(null);
+      if (!background) setResult(null);
       setSearchError((error as Error).message);
     } finally {
-      setSearching(false);
+      if (background) setRefreshing(false);
+      else setSearching(false);
     }
-  }
+  }, [range]);
+
+  useEffect(() => {
+    if (!result) return undefined;
+    const refresh = () => {
+      if (document.visibilityState === 'visible' && !searching && !refreshing) {
+        void runSearch(result.data.query, selectedTrend, true);
+      }
+    };
+    const timer = window.setInterval(refresh, REFRESH_INTERVALS.search);
+    document.addEventListener('visibilitychange', refresh);
+    return () => {
+      window.clearInterval(timer);
+      document.removeEventListener('visibilitychange', refresh);
+    };
+  }, [refreshing, result, runSearch, searching, selectedTrend]);
+
+  useEffect(() => {
+    if (!lastUpdatedAt) return undefined;
+    const tick = () => setCountdown(nextRefreshSeconds(lastUpdatedAt));
+    tick();
+    const timer = window.setInterval(tick, 1_000);
+    return () => window.clearInterval(timer);
+  }, [lastUpdatedAt]);
 
   function submit(event: FormEvent) {
     event.preventDefault();
-    void runSearch();
+    void runSearch(query);
+  }
+
+  async function selectTrend(item: TrendItem) {
+    setSelectedTrend(item);
+    setTrendNewsFallback(false);
+    void runSearch(item.title, item);
+    if (item.news.length > 0) return;
+    setTrendNewsLoading(true);
+    try {
+      const news = await fetchTrendNews(item.title);
+      setSelectedTrend((current) => current?.title === item.title ? { ...current, news } : current);
+      setTrendNewsFallback(true);
+    } catch (error) {
+      setSearchError(`相關新聞暫時無法載入：${(error as Error).message}`);
+    } finally {
+      setTrendNewsLoading(false);
+    }
   }
 
   const timelineOption = useMemo<EChartsOption>(() => ({
@@ -118,7 +185,7 @@ export function SearchPage() {
           <div>
             <h2 id="trends-title">台灣 Google 熱門搜尋</h2>
             <p>
-              官方 Trending Now RSS 摘要，非完整 Google Trends 圖表；Google 約平均每 10 分鐘更新。
+              官方 Trending Now RSS 本次提供 {trends?.data.items.length ?? 0} 筆，非完整 Google Trends 圖表；本站每 2 分鐘檢查更新。
               {trends && <> <a href={trends.data.sourceUrl} target="_blank" rel="noreferrer noopener">查看資料源 ↗</a></>}
             </p>
           </div>
@@ -131,9 +198,9 @@ export function SearchPage() {
         ) : (
           <div className="trend-chips">
             {trends.data.items.slice(0, 12).map((item) => (
-              <button key={`${item.title}-${item.publishedAt}`} type="button" onClick={() => void runSearch(item.title, item)}>
+              <button key={`${item.title}-${item.publishedAt}`} type="button" onClick={() => void selectTrend(item)}>
                 <strong>{item.title}</strong>
-                <span>{item.approximateTraffic || '未提供搜尋量'}</span>
+                <span>{item.approximateTraffic || '未提供搜尋量'} · {item.news.length ? `${item.news.length} 則新聞` : '點擊載入新聞'}</span>
               </button>
             ))}
           </div>
@@ -150,8 +217,10 @@ export function SearchPage() {
             </div>
             {trends && <a href={trends.data.sourceUrl} target="_blank" rel="noreferrer noopener">開啟 Google Trends RSS ↗</a>}
           </div>
-          <Card title="Google Trends 相關新聞" hint="由 Google Trends RSS 提供；不納入下方 22 家媒體熱度統計">
-            {selectedTrend.news.length === 0 ? (
+          <Card title="Google Trends 相關新聞" hint={trendNewsFallback ? 'Trends 未附新聞，已由 Google News 即時補充；不納入下方 22 家媒體熱度統計' : '由 Google Trends RSS 提供；不納入下方 22 家媒體熱度統計'}>
+            {trendNewsLoading ? (
+              <LoadingState label="正在即時搜尋相關新聞…" />
+            ) : selectedTrend.news.length === 0 ? (
               <EmptyState title="Google Trends 未附相關新聞" desc="仍可查看下方 22 家媒體的關鍵字搜尋結果。" />
             ) : (
               <div className="trend-news-list">
@@ -178,6 +247,9 @@ export function SearchPage() {
             <Badge variant={result.data.stale ? 'warning' : result.data.status === 'partial' ? 'serious' : 'good'} dot>
               {result.data.stale ? '最後快照' : result.data.status === 'partial' ? '部分來源異常' : '即時來源'}
             </Badge>
+            <button className="btn" type="button" disabled={refreshing} onClick={() => void runSearch(result.data.query, selectedTrend, true)}>
+              {refreshing ? '更新中…' : `立即更新（${countdown} 秒）`}
+            </button>
           </div>
           {result.data.stale && (
             <Banner variant="warning">目前顯示最後成功快照，不代表此刻完整新聞結果。</Banner>

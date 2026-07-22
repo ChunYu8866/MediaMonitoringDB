@@ -284,6 +284,7 @@ export interface TrendNewsItem {
   title: string;
   source: string;
   url: string;
+  publishedAt?: string;
 }
 
 export interface TrendItem {
@@ -300,4 +301,10 @@ export interface TrendsData {
   source: 'google-trends-rss';
   sourceUrl: string;
   items: TrendItem[];
+}
+
+export interface TrendNewsData {
+  query: string;
+  source: 'google-news-rss';
+  items: TrendNewsItem[];
 }

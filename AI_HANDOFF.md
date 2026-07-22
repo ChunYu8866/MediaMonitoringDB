@@ -26,6 +26,7 @@ GitHub Pages（React + TypeScript + Vite）
    │
    ├─ GET /api/search?q=...&range=24h
    ├─ GET /api/trends
+   ├─ GET /api/trend-news?q=...
    └─ GET /api/health
    │
 Cloudflare Worker Free
@@ -67,10 +68,11 @@ UDN 與經濟日報不得直接擷取官網；所有來源都不得繞過 robots
 
 規則：
 
-- 快取 10 分鐘，不宣稱即時 SLA。
+- Worker 最多快取 60 秒，前端每 2 分鐘檢查；不宣稱即時 SLA。
 - 顯示熱門詞、約略搜尋量與開始時間。
 - 標示「資料來源：Google Trends」並連回原始頁。
 - 點選熱搜詞後直接執行新聞搜尋。
+- RSS 未附新聞時，由 `/api/trend-news` 查 Google News RSS 補充，且不納入 22 家媒體熱度。
 - 任意 query 若未出現在目前 RSS，不顯示或推估 Google 搜尋量。
 - Google Trends 與新聞熱度是不同資料，不得混成單一指標。
 - 失敗時顯示 last-good 靜態資料並標示 stale。
@@ -100,6 +102,10 @@ Worker 會合併即時 RSS／API 結果與 Pages 固定位置的 `news-archive.j
 
 回傳固定 envelope；`data` 內含 `geo`、`status`、`sourceUrl`、`stale` 與趨勢 items；不公開第三方新聞圖片。
 
+### `GET /api/trend-news`
+
+只在 Trends RSS 沒有附帶新聞時，以熱門詞查詢 Google News RSS。回傳標題、來源、發布時間與連結，不納入 22 家媒體熱度。
+
 ### `GET /api/health`
 
 只回傳版本、部署時間與來源狀態摘要，不回傳 secret 或完整內部錯誤。
@@ -110,7 +116,7 @@ Worker 會合併即時 RSS／API 結果與 Pages 固定位置的 `news-archive.j
 - 只允許 `GET`、`HEAD`、`OPTIONS`。
 - 上游 URL 固定寫在白名單，使用者不得提供 URL。
 - 單一上游逾時 5 秒；每來源最多 20 筆，總數最多 100 筆。
-- 相同 query 快取 120 秒，Trends 快取 10 分鐘。
+- 搜尋 query 不做共用快取；前端每 30 秒刷新。Trends 最多快取 60 秒。
 - timeout、5xx 最多重試 2 次；429 優先遵守 `Retry-After`。
 - Worker 超過免費額度時不得自動付費，前端改用 Pages last-good 快照。
 - API key、OAuth token、cookie、模型權重與完整新聞本文不得進入 Git、Pages 或 log。
