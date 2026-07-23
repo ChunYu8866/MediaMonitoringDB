@@ -42,6 +42,46 @@ function workerDataUrl(name: string): string | null {
   return apiBase ? `${apiBase}/api/data?name=${encodeURIComponent(name)}` : null;
 }
 
+export interface ManualRefreshResponse {
+  status: 'accepted';
+  retryAfterSeconds: number;
+}
+
+export async function requestManualRefresh(): Promise<ManualRefreshResponse> {
+  const apiBase = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
+  if (!apiBase) throw new DataFetchError('refresh', '尚未設定 Cloudflare Worker 網址，無法手動更新');
+
+  let response: Response;
+  try {
+    response = await fetch(`${apiBase}/api/refresh`, {
+      method: 'POST',
+      headers: { Accept: 'application/json' },
+    });
+  } catch (error) {
+    throw new DataFetchError('refresh', `手動更新連線失敗：${(error as Error).message}`);
+  }
+
+  let body: unknown = null;
+  try {
+    body = await response.json();
+  } catch {
+    // Keep a stable error below when the Worker does not return JSON.
+  }
+  const payload = body && typeof body === 'object' ? body as Record<string, unknown> : {};
+  if (!response.ok) {
+    const retryAfter = typeof payload.retryAfterSeconds === 'number' ? payload.retryAfterSeconds : null;
+    const suffix = retryAfter ? `，請 ${retryAfter} 秒後再試` : '';
+    throw new DataFetchError('refresh', `手動更新失敗（HTTP ${response.status}）${suffix}`);
+  }
+  if (payload.status !== 'accepted' || !Number.isInteger(payload.retryAfterSeconds)) {
+    throw new DataFetchError('refresh', '手動更新回應格式不正確');
+  }
+  return {
+    status: 'accepted',
+    retryAfterSeconds: payload.retryAfterSeconds as number,
+  };
+}
+
 /** 由 Worker KV 提供的即時快照檔名；news-archive（7 天）與 trends 仍走 Pages/各自端點。 */
 const WORKER_FILES = new Set(['meta', 'keywords', 'sources', 'recent', 'entities', 'topics']);
 

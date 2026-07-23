@@ -4,6 +4,7 @@ import { fetchData } from './client';
 
 /** 靜態 JSON 的自動刷新間隔；快照由 GitHub Actions 產生，過短只是浪費請求。 */
 export const DATA_REFRESH_MS = 90_000;
+export const DATA_REFRESH_EVENT = 'media-monitoring:refresh';
 
 export interface AsyncState<T> {
   loading: boolean;
@@ -54,6 +55,8 @@ export function useData<T>(name: string, refreshMs: number = DATA_REFRESH_MS): A
     };
 
     load(false);
+    const onManualRefresh = () => load(true);
+    window.addEventListener(DATA_REFRESH_EVENT, onManualRefresh);
     const timer = refreshMs > 0
       ? setInterval(() => {
           if (document.visibilityState === 'visible') load(true);
@@ -62,6 +65,7 @@ export function useData<T>(name: string, refreshMs: number = DATA_REFRESH_MS): A
     return () => {
       cancelled = true;
       if (timer) clearInterval(timer);
+      window.removeEventListener(DATA_REFRESH_EVENT, onManualRefresh);
     };
   }, [name, nonce, refreshMs]);
 

@@ -16,6 +16,7 @@ const SNAPSHOT_SCHEMA = '2.1.0';
 const SNAPSHOT_KEY = 'snapshot';
 const DAY_MS = 86_400_000;
 const FUTURE_TOLERANCE_MS = 5 * 60 * 1000;
+const REFRESH_COOLDOWN_MS = 5 * 60 * 1000;
 // 7 天完整 archive 不由 Worker 提供（CPU/KV 成本），由 Pages 靜態檔與 /api/search 負責。
 const DATA_FILES = new Set(['meta', 'keywords', 'sources', 'recent', 'entities', 'topics']);
 const googleNewsUrl = (query) => {
@@ -35,10 +36,16 @@ const corsHeaders = (request, env) => {
   const isLocal = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
   return {
     'Access-Control-Allow-Origin': origin === allowed || isLocal ? origin : allowed,
-    'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS',
+    'Access-Control-Allow-Methods': 'GET, HEAD, POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
     Vary: 'Origin',
   };
+};
+
+const isAllowedOrigin = (request, env) => {
+  const origin = request.headers.get('Origin') || '';
+  const allowed = env.ALLOWED_ORIGIN || 'https://chunyu8866.github.io';
+  return origin === allowed || /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
 };
 
 const json = (request, env, body, status = 200, cacheSeconds = 0) =>
@@ -320,6 +327,33 @@ async function handleData(request, env, url) {
   return json(request, env, { error: 'SNAPSHOT_UNAVAILABLE' }, 503);
 }
 
+async function handleRefresh(request, env, ctx) {
+  if (!isAllowedOrigin(request, env)) return json(request, env, { error: 'ORIGIN_NOT_ALLOWED' }, 403);
+  if (!env.SNAPSHOT) return json(request, env, { error: 'SNAPSHOT_NOT_CONFIGURED' }, 503);
+  if (!env.GITHUB_TOKEN) return json(request, env, { error: 'GITHUB_DISPATCH_NOT_CONFIGURED' }, 503);
+
+  const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+  const cooldownKey = `manual-refresh:${ip}`;
+  const now = Date.now();
+  const previous = Number(await env.SNAPSHOT.get(cooldownKey));
+  const remainingMs = Number.isFinite(previous) ? previous + REFRESH_COOLDOWN_MS - now : 0;
+  if (remainingMs > 0) {
+    const retryAfterSeconds = Math.ceil(remainingMs / 1000);
+    const response = json(request, env, { error: 'REFRESH_COOLDOWN', retryAfterSeconds }, 429);
+    response.headers.set('Retry-After', String(retryAfterSeconds));
+    return response;
+  }
+
+  const dispatch = await triggerGitHubActions(env);
+  if (!dispatch.ok) return json(request, env, { error: 'GITHUB_DISPATCH_FAILED' }, 503);
+
+  await env.SNAPSHOT.put(cooldownKey, String(now), { expirationTtl: 600 });
+  const snapshotJob = buildSnapshot(env).catch(() => {});
+  if (ctx?.waitUntil) ctx.waitUntil(snapshotJob);
+  else await snapshotJob;
+  return json(request, env, { status: 'accepted', retryAfterSeconds: REFRESH_COOLDOWN_MS / 1000 }, 202);
+}
+
 const GITHUB_REPO = 'ChunYu8866/MediaMonitoringDB';
 const GITHUB_WORKFLOW = 'deploy-web.yml';
 
@@ -332,9 +366,9 @@ const GITHUB_WORKFLOW = 'deploy-web.yml';
  * 未設定時直接跳過，不影響快照本身的產生。
  */
 async function triggerGitHubActions(env) {
-  if (!env.GITHUB_TOKEN) return;
+  if (!env.GITHUB_TOKEN) return { ok: false, reason: 'NOT_CONFIGURED' };
   try {
-    await fetch(`https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/${GITHUB_WORKFLOW}/dispatches`, {
+    const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/${GITHUB_WORKFLOW}/dispatches`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${env.GITHUB_TOKEN}`,
@@ -345,8 +379,9 @@ async function triggerGitHubActions(env) {
       },
       body: JSON.stringify({ ref: 'main' }),
     });
+    return response.ok ? { ok: true } : { ok: false, reason: `HTTP_${response.status}` };
   } catch {
-    // best effort：觸發失敗不影響 Worker 自身快照。
+    return { ok: false, reason: 'NETWORK_ERROR' };
   }
 }
 
@@ -358,9 +393,11 @@ export default {
 
   async fetch(request, env, ctx) {
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: corsHeaders(request, env) });
-    if (!['GET', 'HEAD'].includes(request.method)) return json(request, env, { error: 'METHOD_NOT_ALLOWED' }, 405);
     const url = new URL(request.url);
-    const cacheable = request.method === 'GET' && ['/api/trends', '/api/data'].includes(url.pathname);
+    if (request.method === 'POST' && url.pathname === '/api/refresh') return handleRefresh(request, env, ctx);
+    if (!['GET', 'HEAD'].includes(request.method)) return json(request, env, { error: 'METHOD_NOT_ALLOWED' }, 405);
+    // KV snapshots are refreshed manually; bypass the edge cache for data so the next read sees it.
+    const cacheable = request.method === 'GET' && url.pathname === '/api/trends';
     const origin = request.headers.get('Origin') || '';
     const localRequest = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
     const cache = cacheable && !localRequest ? globalThis.caches?.default : null;

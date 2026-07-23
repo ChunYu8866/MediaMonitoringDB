@@ -73,6 +73,19 @@ npm run deploy
 
 部署後將 Worker 網址填入 `web/.env.local`。公開部署可在 GitHub Actions 建置步驟透過 repository variable 注入。系統不需要付費新聞 API Secret；免費服務都有額度與 CPU／請求限制，程式不會自動升級付費方案。
 
+### UI 手動更新
+
+頁首的「立即更新」按鈕會呼叫 Worker 的 `POST /api/refresh`。Worker 將 GitHub Token 留在伺服器端，觸發 `deploy-web.yml`，並在背景重建 KV 快照。端點只接受設定的 Pages Origin，且每個用戶端 IP 五分鐘內只能觸發一次。
+
+部署 Worker 前，請先將可觸發 GitHub Actions 的 Token 設為 Worker Secret：
+
+```powershell
+Set-Location worker
+npx wrangler secret put GITHUB_TOKEN
+```
+
+Token 必須具備觸發該 repository workflow 的權限；同時將 `web/.env.local` 與 `deploy-web.yml` 使用的 GitHub repository variable `VITE_API_BASE_URL` 設為已部署的 Worker 網址。
+
 ## GitHub Pages
 
 1. Repository `Settings → Pages → Source` 選擇 **GitHub Actions**。
