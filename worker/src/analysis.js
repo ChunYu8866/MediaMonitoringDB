@@ -8,13 +8,23 @@ const TREND_BUCKETS = 24;
 const CJK_RUN = /[㐀-鿿]+/g;
 
 const clamp01 = (value) => Math.min(1, Math.max(0, value));
-const casefold = (value) => String(value || '').toLocaleLowerCase('zh-TW');
+// 中文不受大小寫影響，只需折疊 ASCII；用 toLowerCase 取代 locale-aware 版本以大幅降低 CPU。
+const casefold = (value) => String(value || '').toLowerCase();
 const searchTextOf = (item) => `${item.title || ''} ${item.excerpt || ''}`;
+// 每筆項目的折疊後文字只計算一次（WeakMap 快取，不污染項目本體）。
+const _foldCache = new WeakMap();
+function foldOf(item) {
+  let value = _foldCache.get(item);
+  if (value === undefined) {
+    value = casefold(searchTextOf(item));
+    _foldCache.set(item, value);
+  }
+  return value;
+}
 
-function matches(text, anyOf, exclude) {
-  const haystack = casefold(text);
-  if (exclude.some((term) => term && haystack.includes(casefold(term)))) return false;
-  return anyOf.some((term) => term && haystack.includes(casefold(term)));
+function matchesFolded(haystack, anyOfFolded, excludeFolded) {
+  if (excludeFolded.some((term) => term && haystack.includes(term))) return false;
+  return anyOfFolded.some((term) => term && haystack.includes(term));
 }
 
 function entropyDiversity(shareValues, enabledSourceCount) {
@@ -124,7 +134,9 @@ export function buildKeywords(items, now = Date.now(), enabledSourceCount = 24, 
 
   const bucketMs = KEYWORD_WINDOW_MS / TREND_BUCKETS;
   const computed = definitions.map((definition) => {
-    const matched = recent.filter((item) => matches(searchTextOf(item), definition.anyOf, definition.exclude));
+    const anyOf = definition.anyOf.map(casefold);
+    const exclude = definition.exclude.map(casefold);
+    const matched = recent.filter((item) => matchesFolded(foldOf(item), anyOf, exclude));
     const sourceCounts = {};
     for (const item of matched) sourceCounts[item.source] = (sourceCounts[item.source] || 0) + 1;
     const total = matched.length;
@@ -199,9 +211,10 @@ const isTickerNoise = (item) => TICKER_NOISE.some((marker) => searchTextOf(item)
 export function buildTopics(items) {
   const topics = [];
   for (const [id, label, terms] of TOPIC_DEFINITIONS) {
+    const folded = terms.map(casefold);
     const matched = items.filter((item) => {
-      const haystack = casefold(searchTextOf(item));
-      return terms.some((term) => haystack.includes(casefold(term)));
+      const haystack = foldOf(item);
+      return folded.some((term) => haystack.includes(term));
     });
     if (!matched.length) continue;
     const clean = matched.filter((item) => !isTickerNoise(item));
@@ -235,17 +248,13 @@ const MIN_EDGE_WEIGHT = 2;
 const MAX_NODES = 30;
 
 export function buildEntities(items, lexicon = ORG_LEXICON) {
+  const folded = lexicon.map((entry) => ({ name: entry.name, terms: [entry.name, ...entry.aliases].map(casefold) }));
   const mentions = new Map();
   const pairDocs = new Map();
   for (const item of items) {
-    const haystack = casefold(searchTextOf(item));
-    const present = [
-      ...new Set(
-        lexicon
-          .filter((entry) => [entry.name, ...entry.aliases].some((term) => haystack.includes(casefold(term))))
-          .map((entry) => entry.name),
-      ),
-    ].sort();
+    const haystack = foldOf(item);
+    const present = folded.filter((entry) => entry.terms.some((term) => haystack.includes(term))).map((entry) => entry.name);
+    present.sort();
     for (const name of present) mentions.set(name, (mentions.get(name) || 0) + 1);
     for (let i = 0; i < present.length; i += 1) {
       for (let j = i + 1; j < present.length; j += 1) {

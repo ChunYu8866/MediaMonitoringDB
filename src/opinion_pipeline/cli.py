@@ -205,9 +205,12 @@ def run(
         output_dir / "news-archive.json",
         envelope({"status": archive_status, "stale": stale, "items": [item_to_public(entry) for entry in items]}, generated_at),
     )
+    # recent.json 供前端「近期內容」與 Worker cron 補齊非 RSS 來源；取近 24 小時、上限 800 筆。
+    day_cut = now - timedelta(hours=24)
+    recent_items = [entry for entry in items if entry.published_at >= day_cut][:800]
     write_json(
         output_dir / "recent.json",
-        envelope({"items": [item_to_public(entry) for entry in items[:100]]}, generated_at),
+        envelope({"items": [item_to_public(entry) for entry in recent_items]}, generated_at),
     )
     topics = build_topics(items)
     write_json(

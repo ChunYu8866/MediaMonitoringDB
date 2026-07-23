@@ -16,7 +16,8 @@ const SNAPSHOT_SCHEMA = '2.1.0';
 const SNAPSHOT_KEY = 'snapshot';
 const DAY_MS = 86_400_000;
 const FUTURE_TOLERANCE_MS = 5 * 60 * 1000;
-const DATA_FILES = new Set(['meta', 'keywords', 'sources', 'recent', 'entities', 'topics', 'news-archive']);
+// 7 天完整 archive 不由 Worker 提供（CPU/KV 成本），由 Pages 靜態檔與 /api/search 負責。
+const DATA_FILES = new Set(['meta', 'keywords', 'sources', 'recent', 'entities', 'topics']);
 const googleNewsUrl = (query) => {
   const url = new URL('https://news.google.com/rss/search');
   url.searchParams.set('q', query);
@@ -80,6 +81,19 @@ async function archiveItems(env) {
   const base = env.ARCHIVE_BASE_URL || 'https://chunyu8866.github.io/MediaMonitoringDB';
   try {
     const response = await fetch(`${base.replace(/\/$/, '')}/data/news-archive.json`);
+    if (!response.ok) return [];
+    const body = await response.json();
+    return Array.isArray(body?.data?.items) ? body.data.items : [];
+  } catch {
+    return [];
+  }
+}
+
+/** 取 Pages recent.json（Actions 產出的近 24 小時清單）補齊 Worker 未即時抓取的 14 家來源。 */
+async function pagesRecentItems(env) {
+  const base = env.ARCHIVE_BASE_URL || 'https://chunyu8866.github.io/MediaMonitoringDB';
+  try {
+    const response = await fetch(`${base.replace(/\/$/, '')}/data/recent.json`);
     if (!response.ok) return [];
     const body = await response.json();
     return Array.isArray(body?.data?.items) ? body.data.items : [];
@@ -219,19 +233,21 @@ async function buildSnapshot(env) {
     NEWS_SOURCES.map(async (source) => ({ source, ...(await fetchSourceItems(source)) })),
   );
   const liveItems = runs.flatMap((run) => run.items);
-  // 合併來源（依序去重時較新者優先）：
-  //  1. Worker 本次即時抓取（最新，以官方 RSS 為主）
-  //  2. 上一份 KV 快照（Worker 的 7 天滾動庫）
-  //  3. GitHub Pages 靜態 archive（Actions 從未被限流的 IP 補齊 24 家，≤15 分鐘）
-  // 第 3 項讓 Google News 對 Worker 限流時，缺 RSS 的來源仍有近況資料。
-  const restored = previous?.files?.['news-archive']?.data?.items ?? [];
-  const pagesArchive = await archiveItems(env);
-  const cutoff = now - 7 * DAY_MS;
-  const merged = dedupeSnapshot([...liveItems, ...restored, ...pagesArchive])
+  // 只處理近 24 小時、上限 800 筆的工作集，控制在免費層 10ms CPU 內。
+  //  1. Worker 本次即時抓取的官方 RSS（≤5 分鐘）
+  //  2. 上一份 KV 快照的 recent（Worker 自身近況）
+  //  3. GitHub Pages recent.json（Actions 以未被限流 IP 補齊 24 家，≤15 分鐘）
+  // 7 天完整 archive 不進 KV；搜尋的 7 天範圍仍由 /api/search + Pages 提供。
+  const previousRecent = previous?.files?.recent?.data?.items ?? [];
+  const pagesRecent = await pagesRecentItems(env);
+  const cutoff = now - DAY_MS;
+  const future = now + FUTURE_TOLERANCE_MS;
+  const merged = dedupeSnapshot([...liveItems, ...previousRecent, ...pagesRecent])
     .filter((item) => {
       const t = Date.parse(item.publishedAt);
-      return t >= cutoff && t <= now + FUTURE_TOLERANCE_MS;
+      return t >= cutoff && t <= future;
     })
+    .slice(0, 800)
     .map((item) => ({
       id: item.id,
       source: item.source,
@@ -242,7 +258,7 @@ async function buildSnapshot(env) {
       sentiment: item.sentiment ?? null,
     }));
 
-  const recent24 = merged.filter((item) => Date.parse(item.publishedAt) >= now - DAY_MS);
+  const recent24 = merged;
   const recent24Count = (id) => recent24.filter((item) => item.source === id).length;
   const liveOrRecent = runs.filter((run) => run.ok || recent24Count(run.source.id) > 0).length;
   const status = liveOrRecent === runs.length ? 'ok' : liveOrRecent ? 'partial' : 'stale';
@@ -273,8 +289,7 @@ async function buildSnapshot(env) {
   });
 
   const files = {
-    'news-archive': snapshotEnvelope({ status, stale, items: merged }, generatedAt),
-    recent: snapshotEnvelope({ items: merged.slice(0, 100) }, generatedAt),
+    recent: snapshotEnvelope({ items: merged.slice(0, 120) }, generatedAt),
     keywords: snapshotEnvelope({ stale, keywords }, generatedAt),
     entities: snapshotEnvelope({ stale, experimental: true, ...entities }, generatedAt),
     topics: snapshotEnvelope({ stale, experimental: true, topics }, generatedAt),

@@ -42,8 +42,8 @@ function workerDataUrl(name: string): string | null {
   return apiBase ? `${apiBase}/api/data?name=${encodeURIComponent(name)}` : null;
 }
 
-/** 由 Worker 提供的即時快照檔名；其餘（如 trends）仍走各自路徑。 */
-const WORKER_FILES = new Set(['meta', 'keywords', 'sources', 'recent', 'entities', 'topics', 'news-archive']);
+/** 由 Worker KV 提供的即時快照檔名；news-archive（7 天）與 trends 仍走 Pages/各自端點。 */
+const WORKER_FILES = new Set(['meta', 'keywords', 'sources', 'recent', 'entities', 'topics']);
 
 function validateEnvelope<T>(name: string, json: unknown): Envelope<T> {
   const env = json as Partial<Envelope<T>>;
