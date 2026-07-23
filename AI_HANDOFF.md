@@ -43,7 +43,7 @@ Cloudflare Worker Free
    └─ Google Trends TW RSS
    │
 GitHub Actions
-   ├─ 每 15 分鐘以 best effort 更新 7 天新聞 metadata archive
+   ├─ 每 5 分鐘以 best effort 更新 7 天新聞 metadata archive
    ├─ 官網公開列表每個來源最多每 6 小時擷取一次
    ├─ search／trends last-good 靜態 JSON
    ├─ 較重的離線 NLP
@@ -183,7 +183,7 @@ NewsHeat = 100 × (0.50V + 0.33A + 0.17D)
 - 來源白名單固定 24 家；官方 RSS 優先、Google News RSS 補足，低頻官網擷取只取標題、短摘要、時間與原文連結。
 - `topics.json` 每次由真實新聞快照依可檢查關鍵詞規則重建；摘要片段與代表內容保留該筆新聞 URL，不使用範例連結。
 - 前端在未設定 Worker URL 時會讀取 `news-archive.json`／`trends.json` 並標示 stale。
-- GitHub Actions 已改為每 15 分鐘 best-effort 更新、測試、建置與部署。
+- GitHub Actions 已改為每 5 分鐘 best-effort 更新（public repo 分鐘數無限量，排程觸發跳過重複測試）；push 觸發完整測試、建置與部署。
 - Cloudflare Worker 與 GitHub Pages 已部署；後續修改必須同時驗證 Worker API、Pages 建置與公開 JSON。
 
 ## 11. 實作順序

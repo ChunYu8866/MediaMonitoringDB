@@ -12,8 +12,11 @@ on:
       - 'requirements.txt'
       - '.github/workflows/deploy-web.yml'
   workflow_dispatch:
+  # public repo 的 Actions 分鐘數無限量；排程觸發已跳過重複測試，build 約 1 分鐘，
+  # 故採 GitHub 允許的最小排程間隔 5 分鐘，讓 14 家無官方 RSS 來源的 recent.json
+  # 也能跟上 Worker Cron 的更新節奏（best effort，GitHub 不保證準點）。
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '*/5 * * * *'
 
 permissions:
   contents: read

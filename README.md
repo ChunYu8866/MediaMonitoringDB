@@ -31,7 +31,7 @@ Cloudflare Worker（免費層）
   ├─ /api/search、/api/trends、/api/health
   └─ 分析邏輯（analysis.js）與 config 由 config/*.yml 於部署前產生（gen-config），與 Python 端同一套規則
 
-GitHub Actions（每 15 分鐘 best effort，作為備援；排程觸發跳過重複測試以縮短延遲）
+GitHub Actions（每 5 分鐘 best effort，作為備援；排程觸發跳過重複測試以縮短延遲）
   ├─ Python 管線 → public/data/*.json（Worker 離線時的 last-good）
   ├─ Google News RSS 補充 → 官方 RSS 不可用的來源每次執行都有新資料
   └─ 官網 metadata 管線 → 每個來源最多每 6 小時一次
@@ -77,7 +77,7 @@ npm run deploy
 
 1. Repository `Settings → Pages → Source` 選擇 **GitHub Actions**。
 2. 推送至 `main`，或手動執行 `Update news snapshot and deploy Pages`。
-3. 排程每 15 分鐘嘗試更新一次；GitHub 不保證準點執行，故 UI 會顯示實際資料時間。
+3. 排程每 5 分鐘嘗試更新一次；GitHub 不保證準點執行，故 UI 會顯示實際資料時間。
 
 正式站點：<https://chunyu8866.github.io/MediaMonitoringDB/>
 
