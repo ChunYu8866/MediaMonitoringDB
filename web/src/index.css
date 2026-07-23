@@ -327,6 +327,13 @@ h4 {
   font-size: 12.5px;
   color: var(--text-muted);
 }
+.card__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
 
 .grid {
   display: grid;
@@ -670,6 +677,88 @@ table.data th.num {
   color: var(--text-secondary);
 }
 
+.recent-list {
+  display: grid;
+  gap: 0;
+}
+.recent-item,
+.recent-preview-item {
+  display: block;
+  min-width: 0;
+  padding: 16px 0;
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+}
+.recent-item:last-child,
+.recent-preview-item:last-child {
+  border-bottom: 0;
+}
+.recent-item:hover,
+.recent-preview-item:hover {
+  text-decoration: none;
+}
+.recent-item h2 {
+  margin: 7px 0 5px;
+  font-size: clamp(15px, 2vw, 18px);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.recent-item p,
+.recent-preview-item__excerpt {
+  margin: 0;
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
+.recent-item__meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.recent-preview-item {
+  padding: 9px 0;
+}
+.recent-preview-item__title {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.recent-preview-item__excerpt {
+  margin-top: 2px;
+}
+.page-kicker {
+  margin-bottom: 4px;
+  color: var(--accent-ink);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .08em;
+}
+.page-footnote {
+  margin: 14px 0 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.topic-article {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr) max-content;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 4px 0;
+}
+.topic-article__title {
+  min-width: 0;
+  font-size: 13.5px;
+  font-weight: 550;
+  overflow-wrap: anywhere;
+}
+.topic-article__time {
+  white-space: nowrap;
+}
+
 /* ── Mobile nav ─────────────────────────────────────────────────────────── */
 
 .mobile-nav {
@@ -867,4 +956,13 @@ table.data th.num {
   .section-row { flex-direction: column; }
   .analysis-topic-row { grid-template-columns: 28px 1fr; }
   .analysis-topic-row input:last-child { grid-column: 2; }
+  .card__head { align-items: flex-start; }
+  .card__actions { justify-content: flex-start; }
+  .topic-article {
+    grid-template-columns: minmax(0, 1fr) max-content;
+    gap: 4px 8px;
+  }
+  .topic-article .src-tag { grid-column: 1 / -1; }
+  .topic-article__title { grid-column: 1; }
+  .topic-article__time { grid-column: 2; grid-row: 2; }
 }

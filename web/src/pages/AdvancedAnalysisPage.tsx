@@ -152,7 +152,7 @@ export function AdvancedAnalysisPage() {
         <p>比較最多三個新聞主題；支援 AND、OR、NOT、-排除詞與「雙引號精準詞」。</p>
       </div>
 
-      <Card title="比較主題" hint="只分析指定 22 家新聞媒體">
+      <Card title="比較主題" hint="只分析指定新聞監測來源">
         <form className="analysis-form" onSubmit={submit}>
           {topics.map((topic, index) => (
             <div className="analysis-topic-row" key={index}>
