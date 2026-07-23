@@ -29,18 +29,21 @@ test('non-read methods are rejected', async () => {
 
 test('24h search merges Google News results with the low-frequency Pages snapshot', async () => {
   const originalFetch = globalThis.fetch;
+  // 相對「現在」取時間，避免硬編日期隨系統時鐘推進而跌出 24 小時窗口。
+  const recentPubDate = new Date(Date.now() - 60 * 60 * 1000).toUTCString();
+  const archivedPublishedAt = new Date(Date.now() - 90 * 60 * 1000).toISOString();
   globalThis.fetch = async (input) => {
     const url = String(input);
     if (url.includes('news.google.com/rss/search')) {
       return new Response(`<rss><channel><item><guid>g1</guid><title>台積電三立快訊</title>
         <link>https://news.google.com/rss/articles/g1</link>
-        <pubDate>Wed, 22 Jul 2026 12:00:00 GMT</pubDate>
+        <pubDate>${recentPubDate}</pubDate>
         <source url="https://www.setn.com">三立新聞網</source></item></channel></rss>`);
     }
     if (url.endsWith('/data/news-archive.json')) {
       return Response.json({ data: { items: [{
         id: 'archive-ebc-1', source: 'ebc', title: '台積電東森追蹤', excerpt: '',
-        publishedAt: '2026-07-22T11:00:00.000Z', url: 'https://news.ebc.net.tw/news/1', sentiment: null,
+        publishedAt: archivedPublishedAt, url: 'https://news.ebc.net.tw/news/1', sentiment: null,
       }] } });
     }
     return new Response('<rss><channel></channel></rss>');
