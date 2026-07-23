@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
-import { useData } from '../api/useData';
+import { DATA_REFRESH_EVENT, useData } from '../api/useData';
+import { requestManualRefresh } from '../api/client';
 import type { Meta } from '../types/contracts';
 import { GLOBAL_STATUS_LABEL } from '../lib/sources';
 import { fmtRelative } from '../lib/format';
@@ -52,6 +54,43 @@ function GlobalStatus() {
   );
 }
 
+function ManualRefreshButton() {
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState('');
+
+  async function refresh() {
+    if (busy) return;
+    setBusy(true);
+    setMessage('');
+    try {
+      await requestManualRefresh();
+      setMessage('已送出更新，資料會在背景同步');
+      window.setTimeout(() => window.dispatchEvent(new Event(DATA_REFRESH_EVENT)), 5_000);
+    } catch (error) {
+      setMessage((error as Error).message || '更新失敗，請稍後再試');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="appbar__refresh">
+      <button
+        className="refresh-btn"
+        type="button"
+        onClick={refresh}
+        disabled={busy}
+        aria-label="手動更新 Cloudflare 快照與 GitHub Pages"
+        title="手動更新 Cloudflare 快照與 GitHub Pages"
+      >
+        <span aria-hidden="true">↻</span>
+        {busy ? '更新中…' : '立即更新'}
+      </button>
+      {message && <span className="refresh-status" role="status">{message}</span>}
+    </div>
+  );
+}
+
 export function Layout() {
   return (
     <div className="app">
@@ -62,6 +101,7 @@ export function Layout() {
         </div>
         <div className="appbar__spacer" />
         <GlobalStatus />
+        <ManualRefreshButton />
         <a
           className="iconbtn appbar__repo"
           href={REPO_URL}

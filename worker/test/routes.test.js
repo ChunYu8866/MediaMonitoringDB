@@ -27,6 +27,94 @@ test('non-read methods are rejected', async () => {
   assert.equal(response.status, 405);
 });
 
+test('manual refresh schedules a Cloudflare snapshot and dispatches GitHub Actions', async () => {
+  const originalFetch = globalThis.fetch;
+  const calls = [];
+  globalThis.fetch = async (input, init) => {
+    const url = String(input);
+    calls.push({ url, init });
+    if (url.includes('api.github.com')) return new Response(null, { status: 204 });
+    return new Response(`<rss><channel><item><guid>manual-${calls.length}</guid>
+      <title>Manual refresh item</title><link>https://news.example/story</link>
+      <pubDate>${new Date().toUTCString()}</pubDate></item></channel></rss>`);
+  };
+
+  const env = { SNAPSHOT: memoryKv(), GITHUB_TOKEN: 'test-token' };
+  const pending = [];
+  try {
+    const response = await worker.fetch(
+      new Request('https://worker.example/api/refresh', {
+        method: 'POST',
+        headers: {
+          Origin: 'https://chunyu8866.github.io',
+          'CF-Connecting-IP': '203.0.113.10',
+        },
+      }),
+      env,
+      { waitUntil: (promise) => pending.push(promise) },
+    );
+
+    assert.equal(response.status, 202);
+    assert.equal(response.headers.get('Access-Control-Allow-Origin'), 'https://chunyu8866.github.io');
+    assert.match(response.headers.get('Access-Control-Allow-Methods'), /POST/);
+    assert.deepEqual(await response.json(), { status: 'accepted', retryAfterSeconds: 300 });
+    assert.ok(calls.some(({ url }) => url.includes('api.github.com')));
+
+    await Promise.all(pending);
+    assert.ok(await env.SNAPSHOT.get('snapshot'));
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test('manual refresh enforces origin and five-minute cooldown', async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (input) => {
+    const url = String(input);
+    if (url.includes('api.github.com')) return new Response(null, { status: 204 });
+    return new Response('<rss><channel></channel></rss>');
+  };
+
+  const env = { SNAPSHOT: memoryKv(), GITHUB_TOKEN: 'test-token' };
+  const request = (origin, ip) => new Request('https://worker.example/api/refresh', {
+    method: 'POST',
+    headers: { Origin: origin, 'CF-Connecting-IP': ip },
+  });
+  const pending = [];
+  try {
+    const forbidden = await worker.fetch(request('https://evil.example', '203.0.113.11'), env, { waitUntil: () => {} });
+    assert.equal(forbidden.status, 403);
+
+    const first = await worker.fetch(request('https://chunyu8866.github.io', '203.0.113.11'), env, {
+      waitUntil: (promise) => pending.push(promise),
+    });
+    assert.equal(first.status, 202);
+
+    const second = await worker.fetch(request('https://chunyu8866.github.io', '203.0.113.11'), env, {
+      waitUntil: () => {},
+    });
+    assert.equal(second.status, 429);
+    assert.equal(second.headers.get('Retry-After'), '300');
+  } finally {
+    await Promise.all(pending);
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test('manual refresh reports missing GitHub configuration instead of claiming success', async () => {
+  const response = await worker.fetch(
+    new Request('https://worker.example/api/refresh', {
+      method: 'POST',
+      headers: { Origin: 'https://chunyu8866.github.io', 'CF-Connecting-IP': '203.0.113.12' },
+    }),
+    { SNAPSHOT: memoryKv() },
+    { waitUntil: () => {} },
+  );
+
+  assert.equal(response.status, 503);
+  assert.deepEqual(await response.json(), { error: 'GITHUB_DISPATCH_NOT_CONFIGURED' });
+});
+
 test('24h search merges Google News results with the low-frequency Pages snapshot', async () => {
   const originalFetch = globalThis.fetch;
   // 相對「現在」取時間，避免硬編日期隨系統時鐘推進而跌出 24 小時窗口。
