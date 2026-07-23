@@ -2,8 +2,6 @@ import {
   calculateMetrics,
   dedupeSnapshot,
   filterAndDedupe,
-  googleNewsSiteUrl,
-  parseGoogleNewsForSource,
   parseGoogleNewsRss,
   parseRss,
   parseTrendsRss,
@@ -194,28 +192,17 @@ async function readSnapshot(env) {
 
 const snapshotEnvelope = (data, generatedAt) => ({ schemaVersion: SNAPSHOT_SCHEMA, generatedAt, data });
 
-async function fetchSourceItems(source, now) {
-  if (source.rssUrl) {
-    try {
-      const items = parseRss(await fetchText(source.rssUrl), source.id);
-      if (items.length) return { items, accessMode: 'official-rss', ok: true, errorCode: null };
-    } catch {
-      // 官方 RSS 失敗時改用 Google News 補充。
-    }
-  }
-  const domain = (source.domains || [])[0];
-  if (!domain) return { items: [], accessMode: 'official-rss', ok: false, errorCode: 'NO_DOMAIN' };
+// Cron 只即時抓官方 RSS（10 家），把 subrequest 控制在 Worker 免費層 50 上限內。
+// 無官方 RSS 的來源交給合併的 Pages archive（Actions 以未被限流的 IP 補齊），
+// 這些來源標記 viaPages，狀態依合併庫是否有近況決定，避免 Google News 對 Worker 限流。
+async function fetchSourceItems(source) {
+  if (!source.rssUrl) return { items: [], accessMode: 'google-news', ok: false, errorCode: null, viaPages: true };
   try {
-    const items = parseGoogleNewsForSource(await fetchText(googleNewsSiteUrl(domain), 2, 4_000), source, now);
-    if (items.length) return { items, accessMode: 'google-news', ok: true, errorCode: null };
-    return { items: [], accessMode: 'google-news', ok: false, errorCode: 'NO_VALID_ITEMS' };
+    const items = parseRss(await fetchText(source.rssUrl), source.id);
+    if (items.length) return { items, accessMode: 'official-rss', ok: true, errorCode: null, viaPages: false };
+    return { items: [], accessMode: 'official-rss', ok: false, errorCode: 'NO_VALID_ITEMS', viaPages: false };
   } catch (error) {
-    return {
-      items: [],
-      accessMode: source.rssUrl ? 'official-rss' : 'google-news',
-      ok: false,
-      errorCode: error.message || 'FETCH_ERROR',
-    };
+    return { items: [], accessMode: 'official-rss', ok: false, errorCode: error.message || 'FETCH_ERROR', viaPages: false };
   }
 }
 
@@ -229,7 +216,7 @@ async function buildSnapshot(env) {
   );
 
   const runs = await Promise.all(
-    NEWS_SOURCES.map(async (source) => ({ source, ...(await fetchSourceItems(source, now)) })),
+    NEWS_SOURCES.map(async (source) => ({ source, ...(await fetchSourceItems(source)) })),
   );
   const liveItems = runs.flatMap((run) => run.items);
   // 合併來源（依序去重時較新者優先）：
@@ -266,17 +253,19 @@ async function buildSnapshot(env) {
   const topics = buildTopics(merged);
   const sources = runs.map((run) => {
     const itemCount = merged.filter((item) => item.source === run.source.id).length;
-    // ok＝Worker 本次抓到；stale＝本次沒抓到但合併庫（Pages/上一份）仍有近況；error＝完全沒有資料
-    const sourceStatus = run.ok ? 'ok' : recent24Count(run.source.id) > 0 ? 'stale' : 'error';
+    const hasRecent = recent24Count(run.source.id) > 0;
+    // ok＝Worker 即時抓到官方 RSS，或該來源由 Pages archive（Actions 補齊）有近況；
+    // stale＝官方 RSS 本次失敗但合併庫仍有近況；error＝完全沒有資料。
+    const sourceStatus = run.ok || (run.viaPages && hasRecent) ? 'ok' : hasRecent ? 'stale' : 'error';
     return {
       id: run.source.id,
       displayName: run.source.displayName,
       status: sourceStatus,
       lastAttemptAt: generatedAt,
-      lastSuccessAt: run.ok ? generatedAt : previousSources.get(run.source.id)?.lastSuccessAt ?? null,
+      lastSuccessAt: sourceStatus === 'ok' ? generatedAt : previousSources.get(run.source.id)?.lastSuccessAt ?? null,
       lastCrawlAt: null,
       accessMode: run.accessMode,
-      errorCode: run.ok ? null : run.errorCode,
+      errorCode: sourceStatus === 'ok' ? null : run.errorCode,
       stale: sourceStatus !== 'ok',
       itemCount,
       dropped: {},
