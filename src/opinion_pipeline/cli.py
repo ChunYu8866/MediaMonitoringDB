@@ -57,6 +57,15 @@ def prepare_trends_items(items: list[dict]) -> list[dict]:
     return items
 
 
+# 自動產生的個股行情播報樣板，對主題摘要無資訊價值，優先略過。
+_TICKER_NOISE = ("盤中速報", "盤後速報", "近5分K", "三大法人買賣超", "融資融券增減")
+
+
+def _is_ticker_noise(item) -> bool:
+    text = item.search_text
+    return any(marker in text for marker in _TICKER_NOISE)
+
+
 def build_topics(items: list) -> list[dict]:
     """Build transparent keyword groups from real archive metadata only."""
     topics = []
@@ -64,8 +73,10 @@ def build_topics(items: list) -> list[dict]:
         matched = [item for item in items if any(term.casefold() in item.search_text.casefold() for term in terms)]
         if not matched:
             continue
+        # 摘要與代表內容偏好非樣板新聞；全是樣板時才退回原順序。
+        preferred = [item for item in matched if not _is_ticker_noise(item)] or matched
         summaries = []
-        for item in matched:
+        for item in preferred:
             text = item.excerpt.strip() or item.title.strip()
             if text:
                 summaries.append({"text": text, "source": item.source, "url": item.url})
@@ -86,7 +97,7 @@ def build_topics(items: list) -> list[dict]:
                         "url": item.url,
                         "publishedAt": item.published_at.astimezone(timezone.utc).isoformat().replace("+00:00", "Z"),
                     }
-                    for item in matched[:5]
+                    for item in preferred[:5]
                 ],
             }
         )

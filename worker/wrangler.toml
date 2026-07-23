@@ -5,3 +5,13 @@ compatibility_date = "2026-07-22"
 [vars]
 ALLOWED_ORIGIN = "https://chunyu8866.github.io"
 ARCHIVE_BASE_URL = "https://chunyu8866.github.io/MediaMonitoringDB"
+
+# 每 5 分鐘由 Worker 自行抓取 24 家來源並重算快照，寫入 KV，讓儀表板新鮮度脫離 GitHub cron
+[triggers]
+crons = ["*/5 * * * *"]
+
+# 單一鍵 "snapshot" 儲存整份快照（archive/recent/keywords/entities/sources/meta）
+# 一次執行只寫一個鍵，288 次/日，遠低於免費層 1000 寫入/日限制
+[[kv_namespaces]]
+binding = "SNAPSHOT"
+id = "7b3cce6f054f4918bf5a27dc5386a322"

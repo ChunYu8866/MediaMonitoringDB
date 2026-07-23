@@ -10,6 +10,7 @@ import type {
 import { SUPPORTED_SCHEMA_MAJOR } from '../types/contracts';
 import { fetchData } from './client';
 import { matchesAdvancedQuery } from '../lib/analysis';
+import { NEWS_SOURCE_IDS, sourceName } from '../lib/sources';
 
 export interface HeatInput {
   volume: number;
@@ -94,30 +95,7 @@ const RANGE_MS: Record<SearchRange, number> = {
   '7d': 7 * 24 * 60 * 60 * 1000,
 };
 
-const SOURCE_NAMES: Record<string, string> = {
-  tvbs: 'TVBS',
-  ebc: '東森新聞',
-  setn: '三立新聞',
-  ftv: '民視新聞',
-  cti: '中天新聞',
-  era: '年代新聞',
-  nexttv: '壹電視',
-  pts: '公視新聞',
-  udn: 'UDN',
-  ltn: '自由時報',
-  cna: '中央社',
-  moneyudn: '經濟日報',
-  ctee: '工商時報',
-  anue: '鉅亨網',
-  wealth: '財訊',
-  businessweekly: '商業週刊',
-  thenewslens: '關鍵評論網',
-  reporter: '報導者',
-  newtalk: '新頭殼',
-  nownews: 'NOWNEWS',
-  nextapple: '壹蘋新聞網',
-  ettoday: 'ETtoday',
-};
+const SOURCE_COUNT = NEWS_SOURCE_IDS.length;
 
 export function buildStaticSearchData(
   allItems: SearchArticle[],
@@ -142,11 +120,11 @@ export function buildStaticSearchData(
   const recent = items.filter((item) => Date.parse(item.publishedAt) >= midpoint).length;
   const previous = items.length - recent;
   const input = {
-    volume: clamp01(items.length / 22),
+    volume: clamp01(items.length / SOURCE_COUNT),
     acceleration: items.length === 0
       ? 0
       : clamp01(0.5 + (recent - previous) / (2 * Math.max(1, recent, previous))),
-    diversity: clamp01(sourceCount / 22),
+    diversity: clamp01(sourceCount / SOURCE_COUNT),
   };
   const bucketCount = range === '1h' ? 6 : range === '6h' ? 12 : range === '24h' ? 24 : 28;
   const bucketMs = RANGE_MS[range] / bucketCount;
@@ -167,10 +145,10 @@ export function buildStaticSearchData(
     metrics: { ...input, heat: calculateNewsHeat(input), mentions: items.length, sourceCount },
     timeline,
     sourceCounts,
-    sources: Object.entries(SOURCE_NAMES).map(([id, displayName]) => ({
-      id: id as SearchArticle['source'],
-      displayName,
-      status: 'stale',
+    sources: NEWS_SOURCE_IDS.map((id) => ({
+      id,
+      displayName: sourceName(id),
+      status: 'stale' as const,
       itemCount: sourceCounts[id as keyof typeof sourceCounts] ?? 0,
       errorCode: 'STATIC_SNAPSHOT',
     })),

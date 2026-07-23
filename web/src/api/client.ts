@@ -29,36 +29,23 @@ function majorOf(version: string): number {
   return Number.isNaN(n) ? -1 : n;
 }
 
-/** 以 Vite base 為基準組出資料檔的完整路徑。 */
-function dataUrl(name: string): string {
+/** 以 Vite base 為基準組出 Pages 靜態資料檔的完整路徑（備援用）。 */
+function pagesUrl(name: string): string {
   const base = import.meta.env.BASE_URL || '/';
   const sep = base.endsWith('/') ? '' : '/';
   return `${base}${sep}data/${name}.json`;
 }
 
-/**
- * 抓取單一資料檔並驗證外殼與 schema 主版本。
- * 失敗時丟出可辨識的錯誤，交由頁面呈現對應狀態。
- */
-export async function fetchData<T>(name: string): Promise<Envelope<T>> {
-  const url = dataUrl(name);
-  let res: Response;
-  try {
-    res = await fetch(url, { cache: 'no-cache' });
-  } catch (err) {
-    throw new DataFetchError(name, `無法連線取得 ${name}.json：${(err as Error).message}`);
-  }
-  if (!res.ok) {
-    throw new DataFetchError(name, `讀取 ${name}.json 失敗（HTTP ${res.status}）`);
-  }
+/** Worker /api/data 端點（由 Cron 每 5 分鐘更新的即時快照）。未設定 API base 時為空。 */
+function workerDataUrl(name: string): string | null {
+  const apiBase = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
+  return apiBase ? `${apiBase}/api/data?name=${encodeURIComponent(name)}` : null;
+}
 
-  let json: unknown;
-  try {
-    json = await res.json();
-  } catch {
-    throw new DataFetchError(name, `${name}.json 內容不是有效 JSON`);
-  }
+/** 由 Worker 提供的即時快照檔名；其餘（如 trends）仍走各自路徑。 */
+const WORKER_FILES = new Set(['meta', 'keywords', 'sources', 'recent', 'entities', 'topics', 'news-archive']);
 
+function validateEnvelope<T>(name: string, json: unknown): Envelope<T> {
   const env = json as Partial<Envelope<T>>;
   if (
     !env ||
@@ -66,10 +53,45 @@ export async function fetchData<T>(name: string): Promise<Envelope<T>> {
     typeof env.generatedAt !== 'string' ||
     env.data === undefined
   ) {
-    throw new DataFetchError(name, `${name}.json 缺少必要外層欄位`);
+    throw new DataFetchError(name, `${name} 資料缺少必要外層欄位`);
   }
   if (majorOf(env.schemaVersion) !== SUPPORTED_SCHEMA_MAJOR) {
     throw new SchemaVersionError(name, env.schemaVersion);
   }
   return env as Envelope<T>;
+}
+
+async function fetchEnvelope<T>(name: string, url: string, cache: RequestCache): Promise<Envelope<T>> {
+  let res: Response;
+  try {
+    res = await fetch(url, { cache });
+  } catch (err) {
+    throw new DataFetchError(name, `無法連線取得 ${name}：${(err as Error).message}`);
+  }
+  if (!res.ok) throw new DataFetchError(name, `讀取 ${name} 失敗（HTTP ${res.status}）`);
+  let json: unknown;
+  try {
+    json = await res.json();
+  } catch {
+    throw new DataFetchError(name, `${name} 內容不是有效 JSON`);
+  }
+  return validateEnvelope<T>(name, json);
+}
+
+/**
+ * 抓取單一資料檔並驗證外殼與 schema 主版本。
+ * 若設定了 Worker API base，優先讀 Worker 的即時快照（每 5 分鐘更新）；
+ * Worker 尚未產生快照或連線失敗時，改讀 GitHub Pages 靜態檔（last-good）。
+ */
+export async function fetchData<T>(name: string): Promise<Envelope<T>> {
+  const workerUrl = WORKER_FILES.has(name) ? workerDataUrl(name) : null;
+  if (workerUrl) {
+    try {
+      return await fetchEnvelope<T>(name, workerUrl, 'no-store');
+    } catch (err) {
+      if (err instanceof SchemaVersionError) throw err;
+      // Worker 無快照或離線 → 退回 Pages 靜態檔。
+    }
+  }
+  return fetchEnvelope<T>(name, pagesUrl(name), 'no-cache');
 }

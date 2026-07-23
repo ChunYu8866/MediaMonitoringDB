@@ -123,6 +123,58 @@ export function parseRss(xml, source) {
     .filter(Boolean);
 }
 
+export function googleNewsSiteUrl(domain) {
+  const url = new URL('https://news.google.com/rss/search');
+  url.searchParams.set('q', `site:${domain} when:1d`);
+  url.searchParams.set('hl', 'zh-TW');
+  url.searchParams.set('gl', 'TW');
+  url.searchParams.set('ceid', 'TW:zh-Hant');
+  return url.toString();
+}
+
+/** 解析單一媒體的 Google News `site:網域` feed；移除「 - 媒體名」尾綴，全部歸屬該來源。 */
+export function parseGoogleNewsForSource(xml, source, now = Date.now()) {
+  const names = new Set([source.displayName, ...(source.aliases || [])].map((value) => value.replace(/\s+/g, '')));
+  return entryBlocks(xml)
+    .slice(0, 40)
+    .map((block, index) => {
+      let title = extract(block, 'title');
+      const cut = title.lastIndexOf(' - ');
+      if (cut > 0 && names.has(title.slice(cut + 3).replace(/\s+/g, ''))) title = title.slice(0, cut);
+      const url = canonicalUrl(linkOf(block));
+      const rawDate = extract(block, 'pubDate') || extract(block, 'published') || extract(block, 'updated');
+      const publishedAt = normalizePublishedAt(rawDate, now);
+      if (!title || !url || !publishedAt) return null;
+      return {
+        id: `gnews-${source.id}-${extract(block, 'guid') || extract(block, 'id') || index}`,
+        source: source.id,
+        title: title.slice(0, 200),
+        excerpt: '',
+        publishedAt,
+        url,
+        sentiment: null,
+      };
+    })
+    .filter(Boolean);
+}
+
+/** 兩層去重：canonical URL，再依（來源, 壓空白標題）；標題層偏好非 Google News 轉址的原文。 */
+export function dedupeSnapshot(items) {
+  const byUrl = new Map();
+  for (const item of [...items].sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt))) {
+    const key = canonicalUrl(item.url);
+    if (key && !byUrl.has(key)) byUrl.set(key, item);
+  }
+  const isOriginal = (item) => !item.url.includes('news.google.com');
+  const byTitle = new Map();
+  for (const item of byUrl.values()) {
+    const key = `${item.source}:${item.title.replace(/\s+/g, '').toLocaleLowerCase('zh-TW')}`;
+    const kept = byTitle.get(key);
+    if (!kept || (isOriginal(item) && !isOriginal(kept))) byTitle.set(key, item);
+  }
+  return [...byTitle.values()].sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt));
+}
+
 export function parseGoogleNewsRss(xml, sources) {
   return entryBlocks(xml)
     .slice(0, 100)

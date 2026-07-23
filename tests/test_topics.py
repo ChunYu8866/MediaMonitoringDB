@@ -34,6 +34,16 @@ def test_topics_use_real_archive_text_and_urls_for_traceable_sentences():
     assert "sample" not in topics[0]["articles"][0]["url"]
 
 
+def test_topics_deprioritize_stock_ticker_boilerplate_in_summaries():
+    noise = article("anue", "盤中速報 台積電急拉", "近5分K漲跌速、三大法人買賣超、融資融券增減。", "https://news.cnyes.com/news/id/1")
+    real = article("cna", "台積電法說會展望樂觀", "台積電看好下半年產業需求。", "https://www.cna.com.tw/news/2")
+
+    topics = cli.build_topics([noise, real])
+
+    assert topics[0]["summarySentences"][0]["url"] == "https://www.cna.com.tw/news/2"
+    assert topics[0]["articles"][0]["url"] == "https://www.cna.com.tw/news/2"
+
+
 def test_topics_fall_back_to_exact_source_title_when_excerpt_is_empty():
     title = "颱風海上警報最新動態"
     url = "https://www.ettoday.net/news/20260722/1234567.htm"

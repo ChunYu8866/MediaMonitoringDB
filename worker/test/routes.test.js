@@ -62,6 +62,56 @@ test('24h search merges Google News results with the low-frequency Pages snapsho
   }
 });
 
+function memoryKv() {
+  const store = new Map();
+  return { get: async (key) => store.get(key) ?? null, put: async (key, value) => void store.set(key, value), _store: store };
+}
+
+test('scheduled build writes a snapshot that /api/data serves per file', async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (input) => {
+    const url = String(input);
+    if (url.includes('news.google.com/rss/search')) {
+      const domain = new URL(url).searchParams.get('q').match(/site:(\S+)/)[1];
+      return new Response(`<rss><channel><item><guid>g-${domain}</guid>
+        <title>台積電擴廠與經濟部會談 - 中央社</title>
+        <link>https://news.google.com/rss/articles/${domain}</link>
+        <pubDate>${new Date().toUTCString()}</pubDate></item></channel></rss>`);
+    }
+    // 官方 RSS 來源
+    return new Response(`<rss><channel><item><guid>rss-1</guid>
+      <title>台積電法說會登場</title><link>https://news.pts.org.tw/article/1</link>
+      <pubDate>${new Date().toUTCString()}</pubDate></item></channel></rss>`);
+  };
+  const env = { SNAPSHOT: memoryKv() };
+  try {
+    const pending = [];
+    const ctx = { waitUntil: (promise) => pending.push(promise) };
+    await worker.scheduled({}, env, ctx);
+    await Promise.all(pending);
+
+    const meta = await (await worker.fetch(new Request('https://worker.example/api/data?name=meta'), env)).json();
+    assert.equal(meta.schemaVersion, '2.1.0');
+    assert.ok(['ok', 'partial'].includes(meta.data.status));
+
+    const sources = await (await worker.fetch(new Request('https://worker.example/api/data?name=sources'), env)).json();
+    assert.equal(sources.data.sources.length, 24);
+
+    const keywords = await (await worker.fetch(new Request('https://worker.example/api/data?name=keywords'), env)).json();
+    assert.ok(keywords.data.keywords.some((k) => k.term === '台積電' && k.mentions24h > 0));
+
+    const bad = await worker.fetch(new Request('https://worker.example/api/data?name=secrets'), env);
+    assert.equal(bad.status, 404);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test('api/data returns 503 before the first snapshot exists', async () => {
+  const response = await worker.fetch(new Request('https://worker.example/api/data?name=keywords'), { SNAPSHOT: memoryKv() });
+  assert.equal(response.status, 503);
+});
+
 test('trends endpoint preserves related news from publishers outside the 22-source registry', async () => {
   const originalFetch = globalThis.fetch;
   globalThis.fetch = async () => new Response(`<rss xmlns:ht="https://trends.google.com/trending/rss"><channel><item>

@@ -17,13 +17,22 @@
 
 ## 架構
 
-```text
-瀏覽器（GitHub Pages）
-  ├─ Cloudflare Worker：/api/search、/api/trends、/api/health
-  └─ public/data：Worker 失敗時的最後成功快照
+資料新鮮度主要靠 Cloudflare Worker 的 Cron Trigger（每 5 分鐘），GitHub Actions 則負責 CI、前端部署與離線備援快照。
 
-GitHub Actions（每 15 分鐘 best effort；排程觸發跳過重複測試以縮短延遲）
-  ├─ Python 管線 → news-archive / recent / keywords / entities / topics / sources / trends
+```text
+瀏覽器（GitHub Pages 前端）
+  ├─ 儀表板資料：先讀 Worker /api/data?name=…（每 5 分鐘更新），失敗改讀 Pages public/data
+  ├─ 新聞搜尋：Worker /api/search（即時），失敗改讀 Pages news-archive
+  └─ Google Trends：Worker /api/trends（快取 60 秒），失敗改讀 Pages trends
+
+Cloudflare Worker（免費層）
+  ├─ Cron */5：抓 24 家來源 → 與上一份快照合併成 7 天滾動庫 → 重算 keywords/entities/topics/sources/meta → 寫入 KV（單一鍵）
+  ├─ /api/data：從 KV 取儀表板各檔（新鮮度 ≤5 分鐘）
+  ├─ /api/search、/api/trends、/api/health
+  └─ 分析邏輯（analysis.js）與 config 由 config/*.yml 於部署前產生（gen-config），與 Python 端同一套規則
+
+GitHub Actions（每 15 分鐘 best effort，作為備援；排程觸發跳過重複測試以縮短延遲）
+  ├─ Python 管線 → public/data/*.json（Worker 離線時的 last-good）
   ├─ Google News RSS 補充 → 官方 RSS 不可用的來源每次執行都有新資料
   └─ 官網 metadata 管線 → 每個來源最多每 6 小時一次
 ```

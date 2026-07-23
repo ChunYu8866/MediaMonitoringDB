@@ -1,15 +1,24 @@
 import {
   calculateMetrics,
+  dedupeSnapshot,
   filterAndDedupe,
+  googleNewsSiteUrl,
+  parseGoogleNewsForSource,
   parseGoogleNewsRss,
   parseRss,
   parseTrendsRss,
   timelineFor,
   validateQuery,
 } from './core.js';
+import { buildEntities, buildKeywords, buildTopics } from './analysis.js';
 import { NEWS_SOURCES } from './sources.js';
 
 const TRENDS_URL = 'https://trends.google.com/trending/rss?geo=TW&hl=zh-TW';
+const SNAPSHOT_SCHEMA = '2.1.0';
+const SNAPSHOT_KEY = 'snapshot';
+const DAY_MS = 86_400_000;
+const FUTURE_TOLERANCE_MS = 5 * 60 * 1000;
+const DATA_FILES = new Set(['meta', 'keywords', 'sources', 'recent', 'entities', 'topics', 'news-archive']);
 const googleNewsUrl = (query) => {
   const url = new URL('https://news.google.com/rss/search');
   url.searchParams.set('q', query);
@@ -174,12 +183,137 @@ async function handleTrends(request, env) {
   }
 }
 
+async function readSnapshot(env) {
+  try {
+    const raw = await env.SNAPSHOT?.get(SNAPSHOT_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+const snapshotEnvelope = (data, generatedAt) => ({ schemaVersion: SNAPSHOT_SCHEMA, generatedAt, data });
+
+async function fetchSourceItems(source, now) {
+  if (source.rssUrl) {
+    try {
+      const items = parseRss(await fetchText(source.rssUrl), source.id);
+      if (items.length) return { items, accessMode: 'official-rss', ok: true, errorCode: null };
+    } catch {
+      // 官方 RSS 失敗時改用 Google News 補充。
+    }
+  }
+  const domain = (source.domains || [])[0];
+  if (!domain) return { items: [], accessMode: 'official-rss', ok: false, errorCode: 'NO_DOMAIN' };
+  try {
+    const items = parseGoogleNewsForSource(await fetchText(googleNewsSiteUrl(domain), 2, 4_000), source, now);
+    if (items.length) return { items, accessMode: 'google-news', ok: true, errorCode: null };
+    return { items: [], accessMode: 'google-news', ok: false, errorCode: 'NO_VALID_ITEMS' };
+  } catch (error) {
+    return {
+      items: [],
+      accessMode: source.rssUrl ? 'official-rss' : 'google-news',
+      ok: false,
+      errorCode: error.message || 'FETCH_ERROR',
+    };
+  }
+}
+
+/** 每 5 分鐘由 Cron 觸發：抓 24 家來源、與上一份快照合併成 7 天滾動庫、重算儀表板並寫入 KV。 */
+async function buildSnapshot(env) {
+  const now = Date.now();
+  const generatedAt = new Date(now).toISOString();
+  const previous = await readSnapshot(env);
+  const previousSources = new Map(
+    (previous?.files?.sources?.data?.sources ?? []).map((source) => [source.id, source]),
+  );
+
+  const runs = await Promise.all(
+    NEWS_SOURCES.map(async (source) => ({ source, ...(await fetchSourceItems(source, now)) })),
+  );
+  const liveItems = runs.flatMap((run) => run.items);
+  const restored = previous?.files?.['news-archive']?.data?.items ?? [];
+  const cutoff = now - 7 * DAY_MS;
+  const merged = dedupeSnapshot([...liveItems, ...restored])
+    .filter((item) => {
+      const t = Date.parse(item.publishedAt);
+      return t >= cutoff && t <= now + FUTURE_TOLERANCE_MS;
+    })
+    .map((item) => ({
+      id: item.id,
+      source: item.source,
+      title: item.title,
+      excerpt: item.excerpt || '',
+      publishedAt: item.publishedAt,
+      url: item.url,
+      sentiment: item.sentiment ?? null,
+    }));
+
+  const okCount = runs.filter((run) => run.ok).length;
+  const status = okCount === runs.length ? 'ok' : okCount ? 'partial' : 'stale';
+  const stale = liveItems.length === 0 && restored.length > 0;
+  const recent24 = merged.filter((item) => Date.parse(item.publishedAt) >= now - DAY_MS);
+
+  const keywords = buildKeywords(merged, now, NEWS_SOURCES.length);
+  const entities = buildEntities(recent24);
+  const topics = buildTopics(merged);
+  const sources = runs.map((run) => ({
+    id: run.source.id,
+    displayName: run.source.displayName,
+    status: run.ok ? 'ok' : 'error',
+    lastAttemptAt: generatedAt,
+    lastSuccessAt: run.ok ? generatedAt : previousSources.get(run.source.id)?.lastSuccessAt ?? null,
+    lastCrawlAt: null,
+    accessMode: run.accessMode,
+    errorCode: run.errorCode,
+    stale: !run.ok,
+    itemCount: merged.filter((item) => item.source === run.source.id).length,
+    dropped: {},
+  }));
+
+  const files = {
+    'news-archive': snapshotEnvelope({ status, stale, items: merged }, generatedAt),
+    recent: snapshotEnvelope({ items: merged.slice(0, 100) }, generatedAt),
+    keywords: snapshotEnvelope({ stale, keywords }, generatedAt),
+    entities: snapshotEnvelope({ stale, experimental: true, ...entities }, generatedAt),
+    topics: snapshotEnvelope({ stale, experimental: true, topics }, generatedAt),
+    sources: snapshotEnvelope({ sources }, generatedAt),
+    meta: snapshotEnvelope(
+      {
+        status,
+        lastFastAt: liveItems.length ? generatedAt : previous?.files?.meta?.data?.lastFastAt ?? null,
+        lastDeepAt: topics.length ? generatedAt : null,
+        methodVersion: 'news-heat-v3-24-sources-worker',
+        scheduleDaysUntilPause: null,
+        coverage: { keywordWindowHours: 24, trendBucketMinutes: 60, archiveDays: 7 },
+        stateRestoreFailed: false,
+      },
+      generatedAt,
+    ),
+  };
+  await env.SNAPSHOT.put(SNAPSHOT_KEY, JSON.stringify({ generatedAt, files }));
+  return files;
+}
+
+async function handleData(request, env, url) {
+  const name = url.searchParams.get('name') || '';
+  if (!DATA_FILES.has(name)) return json(request, env, { error: 'NOT_FOUND' }, 404);
+  const snapshot = await readSnapshot(env);
+  const file = snapshot?.files?.[name];
+  if (file) return json(request, env, file, 200, 30);
+  return json(request, env, { error: 'SNAPSHOT_UNAVAILABLE' }, 503);
+}
+
 export default {
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(buildSnapshot(env).catch(() => {}));
+  },
+
   async fetch(request, env, ctx) {
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: corsHeaders(request, env) });
     if (!['GET', 'HEAD'].includes(request.method)) return json(request, env, { error: 'METHOD_NOT_ALLOWED' }, 405);
     const url = new URL(request.url);
-    const cacheable = request.method === 'GET' && url.pathname === '/api/trends';
+    const cacheable = request.method === 'GET' && ['/api/trends', '/api/data'].includes(url.pathname);
     const origin = request.headers.get('Origin') || '';
     const localRequest = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
     const cache = cacheable && !localRequest ? globalThis.caches?.default : null;
@@ -190,6 +324,7 @@ export default {
     let response;
     if (url.pathname === '/api/search') response = await handleSearch(request, env, url);
     else if (url.pathname === '/api/trends') response = await handleTrends(request, env);
+    else if (url.pathname === '/api/data') response = await handleData(request, env, url);
     if (response) {
       if (cache && response.ok) ctx?.waitUntil(cache.put(request, response.clone()));
       return response;

@@ -73,8 +73,21 @@ def extract_auto_terms(
             return True
         return any(gram in vocab or vocab in gram for vocab in watch_vocab)
 
+    def dominated_by_blocked(gram: str) -> bool:
+        """若某個「更長且被封鎖」的詞涵蓋了本詞 ≥80% 的文件，本詞只是它的碎片（如「目標」←「目標價」）。"""
+        threshold = 0.8 * doc_count[gram]
+        for cand, count in doc_count.items():
+            if len(cand) > len(gram) and gram in cand and count >= threshold and blocked(cand):
+                return True
+        return False
+
     def eligible(gram: str) -> bool:
-        return doc_count[gram] >= min_docs and len(gram_sources[gram]) >= min_sources and not blocked(gram)
+        return (
+            doc_count[gram] >= min_docs
+            and len(gram_sources[gram]) >= min_sources
+            and not blocked(gram)
+            and not dominated_by_blocked(gram)
+        )
 
     def promote(gram: str) -> str:
         """碎片升級：若存在文件數相近（≥80%）、僅多一個字的父字串，改用完整詞（例如「巨蛋」→「大巨蛋」）。"""
