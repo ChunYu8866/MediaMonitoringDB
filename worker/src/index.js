@@ -320,9 +320,40 @@ async function handleData(request, env, url) {
   return json(request, env, { error: 'SNAPSHOT_UNAVAILABLE' }, 503);
 }
 
+const GITHUB_REPO = 'ChunYu8866/MediaMonitoringDB';
+const GITHUB_WORKFLOW = 'deploy-web.yml';
+
+/**
+ * 主動踢動 GitHub Actions，取代不可靠的 GitHub 內建 schedule 觸發
+ * （public repo 的 schedule 事件常被系統依負載大量合併跳過，實測間隔可達數小時，
+ * 與宣告的 cron 值無關）。Worker 自身的 Cron Trigger 穩定每 5 分鐘觸發一次，
+ * 藉此把「觸發時機」的可靠性轉嫁給 Cloudflare。需要 env.GITHUB_TOKEN
+ * （repo+workflow scope 的 PAT，經 `wrangler secret put` 存入，不進 git）；
+ * 未設定時直接跳過，不影響快照本身的產生。
+ */
+async function triggerGitHubActions(env) {
+  if (!env.GITHUB_TOKEN) return;
+  try {
+    await fetch(`https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/${GITHUB_WORKFLOW}/dispatches`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${env.GITHUB_TOKEN}`,
+        Accept: 'application/vnd.github+json',
+        'Content-Type': 'application/json',
+        'User-Agent': 'MediaMonitoringDemo-Worker/1.0',
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+      body: JSON.stringify({ ref: 'main' }),
+    });
+  } catch {
+    // best effort：觸發失敗不影響 Worker 自身快照。
+  }
+}
+
 export default {
   async scheduled(event, env, ctx) {
     ctx.waitUntil(buildSnapshot(env).catch(() => {}));
+    ctx.waitUntil(triggerGitHubActions(env));
   },
 
   async fetch(request, env, ctx) {

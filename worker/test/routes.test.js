@@ -110,6 +110,58 @@ test('scheduled build writes a snapshot that /api/data serves per file', async (
   }
 });
 
+test('scheduled dispatches GitHub Actions when a token is configured', async () => {
+  const originalFetch = globalThis.fetch;
+  const calls = [];
+  globalThis.fetch = async (input, init) => {
+    const url = String(input);
+    calls.push({ url, init });
+    if (url.includes('news.google.com/rss/search') || url.includes('api.github.com')) {
+      return new Response(url.includes('api.github.com') ? '' : '<rss><channel></channel></rss>', {
+        status: url.includes('api.github.com') ? 204 : 200,
+      });
+    }
+    return new Response('<rss><channel></channel></rss>');
+  };
+  const env = { SNAPSHOT: memoryKv(), GITHUB_TOKEN: 'test-token' };
+  try {
+    const pending = [];
+    await worker.scheduled({}, env, { waitUntil: (p) => pending.push(p) });
+    await Promise.all(pending);
+
+    const dispatch = calls.find((c) => c.url.includes('api.github.com'));
+    assert.ok(dispatch, 'expected a call to the GitHub Actions dispatch endpoint');
+    assert.equal(
+      dispatch.url,
+      'https://api.github.com/repos/ChunYu8866/MediaMonitoringDB/actions/workflows/deploy-web.yml/dispatches',
+    );
+    assert.equal(dispatch.init.method, 'POST');
+    assert.equal(dispatch.init.headers.Authorization, 'Bearer test-token');
+    assert.deepEqual(JSON.parse(dispatch.init.body), { ref: 'main' });
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test('scheduled skips the GitHub dispatch call when no token is configured', async () => {
+  const originalFetch = globalThis.fetch;
+  const calls = [];
+  globalThis.fetch = async (input) => {
+    calls.push(String(input));
+    return new Response('<rss><channel></channel></rss>');
+  };
+  const env = { SNAPSHOT: memoryKv() };
+  try {
+    const pending = [];
+    await worker.scheduled({}, env, { waitUntil: (p) => pending.push(p) });
+    await Promise.all(pending);
+
+    assert.ok(!calls.some((url) => url.includes('api.github.com')));
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
 test('api/data returns 503 before the first snapshot exists', async () => {
   const response = await worker.fetch(new Request('https://worker.example/api/data?name=keywords'), { SNAPSHOT: memoryKv() });
   assert.equal(response.status, 503);
