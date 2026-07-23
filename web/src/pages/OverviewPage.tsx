@@ -19,6 +19,7 @@ import { useChartTokens } from '../lib/theme';
 import { GRID, catAxis, sparkline, tooltip, valAxis } from '../lib/charts';
 import { fmtCompact, fmtNum, fmtRelative, fmtTime } from '../lib/format';
 import { sourceShort, sourceColorValue } from '../lib/sources';
+import { displayExcerpt, getRecentItems } from '../lib/recent';
 import type { SourceId } from '../types/contracts';
 
 export function OverviewPage() {
@@ -39,6 +40,7 @@ export function OverviewPage() {
 
   const totalMentions = keywords.reduce((a, k) => a + k.mentions24h, 0);
   const hottest = keywords[0];
+  const recentItems = getRecentItems(recent.data?.items ?? [], 7);
 
   // 熱度趨勢（前 5 詞多線）；依所選時間範圍取尾段
   const sliceTail = <T,>(arr: T[]) => arr.slice(-rangePoints);
@@ -246,14 +248,20 @@ export function OverviewPage() {
         <Card
           title="近期內容"
           hint="點擊開啟原文"
-          right={<Freshness at={recent.envelope?.generatedAt ?? null} />}
+          right={
+            <span className="card__actions">
+              <Freshness at={recent.envelope?.generatedAt ?? null} />
+              <Link to="/recent" className="small">查看全部 →</Link>
+            </span>
+          }
         >
           {recent.loading ? (
             <LoadingState />
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              {(recent.data?.items ?? []).slice(0, 7).map((it) => (
+              {recentItems.map((it) => (
                 <a
+                  className="recent-preview-item"
                   key={it.id}
                   href={it.url}
                   target="_blank"
@@ -270,8 +278,10 @@ export function OverviewPage() {
                     <SourceTag id={it.source} />
                     <span className="small muted">· {fmtRelative(it.publishedAt)}</span>
                   </div>
-                  <div style={{ fontWeight: 600, fontSize: 14 }}>{it.title}</div>
-                  <div className="small muted" style={{ marginTop: 2 }}>{it.excerpt}</div>
+                  <div className="recent-preview-item__title">{it.title}</div>
+                  <div className={`small muted recent-preview-item__excerpt${it.excerpt.trim() ? '' : ' recent-item__excerpt--missing'}`}>
+                    {displayExcerpt(it.excerpt)}
+                  </div>
                 </a>
               ))}
             </div>

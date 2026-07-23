@@ -1,6 +1,6 @@
 {
   "schemaVersion": "2.1.0",
-  "generatedAt": "2026-07-23T05:12:55.973970Z",
+  "generatedAt": "2026-07-23T14:56:36.232516Z",
   "data": {
     "stale": false,
     "experimental": true,
@@ -9,306 +9,346 @@
         "id": "org-1",
         "name": "國民黨",
         "type": "ORG",
-        "mentions": 82
+        "mentions": 81
       },
       {
         "id": "org-2",
-        "name": "台積電",
+        "name": "行政院",
         "type": "ORG",
-        "mentions": 49
+        "mentions": 61
       },
       {
         "id": "org-3",
-        "name": "民進黨",
+        "name": "台積電",
         "type": "ORG",
-        "mentions": 44
+        "mentions": 53
       },
       {
         "id": "org-4",
-        "name": "行政院",
+        "name": "民進黨",
         "type": "ORG",
-        "mentions": 43
+        "mentions": 46
       },
       {
         "id": "org-5",
         "name": "立法院",
         "type": "ORG",
-        "mentions": 37
+        "mentions": 40
       },
       {
         "id": "org-6",
         "name": "輝達",
         "type": "ORG",
-        "mentions": 30
+        "mentions": 33
       },
       {
         "id": "org-7",
         "name": "中央氣象署",
         "type": "ORG",
-        "mentions": 28
+        "mentions": 30
       },
       {
         "id": "org-8",
-        "name": "三星",
+        "name": "高鐵",
         "type": "ORG",
-        "mentions": 19
+        "mentions": 30
       },
       {
         "id": "org-9",
-        "name": "國防部",
+        "name": "食藥署",
         "type": "ORG",
-        "mentions": 17
+        "mentions": 27
       },
       {
         "id": "org-10",
-        "name": "經濟部",
+        "name": "Google",
         "type": "ORG",
-        "mentions": 17
+        "mentions": 26
       },
       {
         "id": "org-11",
-        "name": "緯創",
+        "name": "衛福部",
         "type": "ORG",
-        "mentions": 17
+        "mentions": 25
       },
       {
         "id": "org-12",
-        "name": "衛福部",
+        "name": "緯創",
+        "type": "ORG",
+        "mentions": 24
+      },
+      {
+        "id": "org-13",
+        "name": "監察院",
+        "type": "ORG",
+        "mentions": 20
+      },
+      {
+        "id": "org-14",
+        "name": "國防部",
+        "type": "ORG",
+        "mentions": 18
+      },
+      {
+        "id": "org-15",
+        "name": "外交部",
         "type": "ORG",
         "mentions": 16
       },
       {
-        "id": "org-13",
-        "name": "Google",
+        "id": "org-16",
+        "name": "特斯拉",
+        "type": "ORG",
+        "mentions": 16
+      },
+      {
+        "id": "org-17",
+        "name": "經濟部",
         "type": "ORG",
         "mentions": 15
       },
       {
-        "id": "org-14",
-        "name": "監察院",
+        "id": "org-18",
+        "name": "台鐵",
         "type": "ORG",
         "mentions": 14
       },
       {
-        "id": "org-15",
-        "name": "食藥署",
-        "type": "ORG",
-        "mentions": 12
-      },
-      {
-        "id": "org-16",
-        "name": "公平會",
-        "type": "ORG",
-        "mentions": 11
-      },
-      {
-        "id": "org-17",
-        "name": "民眾黨",
-        "type": "ORG",
-        "mentions": 11
-      },
-      {
-        "id": "org-18",
-        "name": "外交部",
-        "type": "ORG",
-        "mentions": 10
-      },
-      {
         "id": "org-19",
-        "name": "蘋果",
+        "name": "陸委會",
         "type": "ORG",
-        "mentions": 10
+        "mentions": 14
       },
       {
         "id": "org-20",
-        "name": "特斯拉",
+        "name": "台中市政府",
         "type": "ORG",
-        "mentions": 8
+        "mentions": 13
       },
       {
         "id": "org-21",
-        "name": "財政部",
+        "name": "蘋果",
         "type": "ORG",
-        "mentions": 8
+        "mentions": 13
       },
       {
         "id": "org-22",
-        "name": "鴻海",
+        "name": "交通部",
         "type": "ORG",
-        "mentions": 8
+        "mentions": 11
       },
       {
         "id": "org-23",
-        "name": "Meta",
+        "name": "文化部",
         "type": "ORG",
-        "mentions": 7
+        "mentions": 11
       },
       {
         "id": "org-24",
-        "name": "OpenAI",
+        "name": "金管會",
         "type": "ORG",
-        "mentions": 7
+        "mentions": 11
       },
       {
         "id": "org-25",
-        "name": "聯電",
+        "name": "三星",
         "type": "ORG",
-        "mentions": 7
+        "mentions": 10
       },
       {
         "id": "org-26",
-        "name": "中央銀行",
+        "name": "民眾黨",
         "type": "ORG",
-        "mentions": 6
+        "mentions": 10
       },
       {
         "id": "org-27",
-        "name": "台北市政府",
+        "name": "總統府",
         "type": "ORG",
-        "mentions": 6
+        "mentions": 9
       },
       {
         "id": "org-28",
-        "name": "台灣大哥大",
+        "name": "聯電",
         "type": "ORG",
-        "mentions": 6
+        "mentions": 9
       },
       {
         "id": "org-29",
-        "name": "英特爾",
+        "name": "財政部",
         "type": "ORG",
-        "mentions": 6
+        "mentions": 9
       },
       {
         "id": "org-30",
-        "name": "高鐵",
+        "name": "NCC",
         "type": "ORG",
-        "mentions": 6
+        "mentions": 8
       }
     ],
     "edges": [
       {
         "source": "org-1",
-        "target": "org-5",
+        "target": "org-4",
         "weight": 21
       },
       {
         "source": "org-1",
-        "target": "org-3",
-        "weight": 20
+        "target": "org-2",
+        "weight": 19
+      },
+      {
+        "source": "org-2",
+        "target": "org-8",
+        "weight": 17
       },
       {
         "source": "org-1",
-        "target": "org-4",
-        "weight": 18
+        "target": "org-5",
+        "weight": 16
       },
       {
         "source": "org-5",
-        "target": "org-4",
+        "target": "org-2",
         "weight": 13
       },
       {
-        "source": "org-3",
-        "target": "org-5",
+        "source": "org-11",
+        "target": "org-9",
+        "weight": 12
+      },
+      {
+        "source": "org-20",
+        "target": "org-11",
         "weight": 8
       },
       {
-        "source": "org-3",
-        "target": "org-4",
+        "source": "org-20",
+        "target": "org-9",
         "weight": 6
       },
       {
-        "source": "org-14",
+        "source": "org-13",
         "target": "org-5",
+        "weight": 6
+      },
+      {
+        "source": "org-22",
+        "target": "org-2",
+        "weight": 6
+      },
+      {
+        "source": "org-4",
+        "target": "org-5",
+        "weight": 6
+      },
+      {
+        "source": "org-4",
+        "target": "org-2",
+        "weight": 6
+      },
+      {
+        "source": "org-5",
+        "target": "org-27",
+        "weight": 5
+      },
+      {
+        "source": "org-22",
+        "target": "org-8",
+        "weight": 5
+      },
+      {
+        "source": "org-2",
+        "target": "org-11",
         "weight": 5
       },
       {
         "source": "org-12",
-        "target": "org-15",
-        "weight": 5
-      },
-      {
-        "source": "org-1",
-        "target": "org-10",
-        "weight": 5
-      },
-      {
-        "source": "org-10",
-        "target": "org-4",
-        "weight": 5
-      },
-      {
-        "source": "org-4",
-        "target": "org-30",
-        "weight": 4
-      },
-      {
-        "source": "org-17",
-        "target": "org-14",
-        "weight": 4
-      },
-      {
-        "source": "org-13",
-        "target": "org-8",
-        "weight": 4
-      },
-      {
-        "source": "org-11",
         "target": "org-6",
-        "weight": 4
+        "weight": 5
       },
       {
-        "source": "org-5",
-        "target": "org-10",
-        "weight": 4
-      },
-      {
-        "source": "org-1",
-        "target": "org-9",
-        "weight": 4
-      },
-      {
-        "source": "org-4",
+        "source": "org-3",
         "target": "org-12",
-        "weight": 3
+        "weight": 4
       },
       {
         "source": "org-1",
         "target": "org-17",
-        "weight": 3
-      },
-      {
-        "source": "org-13",
-        "target": "org-23",
-        "weight": 3
+        "weight": 4
       },
       {
         "source": "org-17",
-        "target": "org-3",
-        "weight": 2
+        "target": "org-2",
+        "weight": 4
       },
       {
-        "source": "org-17",
+        "source": "org-26",
         "target": "org-5",
-        "weight": 2
+        "weight": 4
+      },
+      {
+        "source": "org-26",
+        "target": "org-13",
+        "weight": 4
       },
       {
         "source": "org-3",
-        "target": "org-14",
-        "weight": 2
-      },
-      {
-        "source": "org-2",
         "target": "org-6",
-        "weight": 2
+        "weight": 3
       },
       {
         "source": "org-13",
-        "target": "org-6",
+        "target": "org-27",
+        "weight": 3
+      },
+      {
+        "source": "org-18",
+        "target": "org-8",
+        "weight": 3
+      },
+      {
+        "source": "org-5",
+        "target": "org-9",
+        "weight": 3
+      },
+      {
+        "source": "org-5",
+        "target": "org-17",
+        "weight": 3
+      },
+      {
+        "source": "org-1",
+        "target": "org-27",
+        "weight": 3
+      },
+      {
+        "source": "org-1",
+        "target": "org-9",
+        "weight": 3
+      },
+      {
+        "source": "org-10",
+        "target": "org-25",
+        "weight": 3
+      },
+      {
+        "source": "org-20",
+        "target": "org-4",
         "weight": 2
       },
       {
         "source": "org-2",
+        "target": "org-9",
+        "weight": 2
+      },
+      {
+        "source": "org-14",
+        "target": "org-19",
+        "weight": 2
+      },
+      {
+        "source": "org-5",
         "target": "org-11",
         "weight": 2
       },
@@ -318,38 +358,38 @@
         "weight": 2
       },
       {
-        "source": "org-5",
-        "target": "org-21",
+        "source": "org-27",
+        "target": "org-2",
         "weight": 2
       },
       {
-        "source": "org-5",
-        "target": "org-12",
+        "source": "org-14",
+        "target": "org-13",
         "weight": 2
       },
       {
         "source": "org-1",
-        "target": "org-12",
+        "target": "org-29",
         "weight": 2
       },
       {
-        "source": "org-2",
-        "target": "org-22",
+        "source": "org-26",
+        "target": "org-4",
         "weight": 2
       },
       {
-        "source": "org-8",
-        "target": "org-19",
+        "source": "org-4",
+        "target": "org-13",
         "weight": 2
       },
       {
-        "source": "org-27",
-        "target": "org-3",
+        "source": "org-10",
+        "target": "org-6",
         "weight": 2
       },
       {
-        "source": "org-9",
-        "target": "org-3",
+        "source": "org-25",
+        "target": "org-21",
         "weight": 2
       }
     ]

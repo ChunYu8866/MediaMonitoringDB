@@ -68,17 +68,18 @@ function TopicCard({ topic }: { topic: Topic }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {topic.articles.map((a, i) => (
             <a
+              className="topic-article"
               key={i}
               href={a.url}
               target="_blank"
               rel="noreferrer noopener"
-              style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'inherit', textDecoration: 'none' }}
+              style={{ color: 'inherit', textDecoration: 'none' }}
             >
               <SourceTag id={a.source} />
-              <span style={{ fontSize: 13.5, fontWeight: 550, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              <span className="topic-article__title">
                 {a.title}
               </span>
-              <span className="small muted" style={{ flex: 'none', marginLeft: 'auto' }}>{fmtRelative(a.publishedAt)}</span>
+              <span className="small muted topic-article__time">{fmtRelative(a.publishedAt)}</span>
             </a>
           ))}
         </div>

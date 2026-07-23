@@ -1,6 +1,6 @@
 {
   "schemaVersion": "2.1.0",
-  "generatedAt": "2026-07-23T05:12:55.973970Z",
+  "generatedAt": "2026-07-23T14:56:36.232516Z",
   "data": {
     "geo": "TW",
     "status": "ok",
@@ -9,192 +9,166 @@
     "sourceUrl": "https://trends.google.com/trending/rss?geo=TW&hl=zh-TW",
     "items": [
       {
-        "title": "唐绮阳",
+        "title": "華為",
         "approximateTraffic": "100+",
-        "publishedAt": "2026-07-23T05:00:00Z",
+        "publishedAt": "2026-07-23T14:40:00Z",
         "news": [
           {
-            "title": "水逆即將結束！「3星座」告別破財 連本帶利賺回來",
-            "source": "Yahoo股市",
-            "url": "https://tw.stock.yahoo.com/news/%E6%B0%B4%E9%80%86%E5%8D%B3%E5%B0%87%E7%B5%90%E6%9D%9F-3%E6%98%9F%E5%BA%A7-%E5%91%8A%E5%88%A5%E7%A0%B4%E8%B2%A1-%E9%80%A3%E6%9C%AC%E5%B8%B6%E5%88%A9%E8%B3%BA%E5%9B%9E%E4%BE%86-025700831.html"
+            "title": "Despite losing out on Google services, Americans want Huawei to make a return stateside",
+            "source": "PhoneArena",
+            "url": "https://www.phonearena.com/news/americans-want-huawei-to-return-despite-lack-of-google-services_id182080"
           },
           {
-            "title": "水逆結束、下周土逆接棒…唐綺陽曝「重大轉折點」：方向變清晰",
-            "source": "UDN",
-            "url": "https://udn.com/news/story/7268/9643729"
+            "title": "Huawei Hosts 1st APAC Intelligent Internet Forum & Executive Night",
+            "source": "PR Newswire",
+            "url": "https://www.prnewswire.com/apac/news-releases/huawei-hosts-1st-apac-intelligent-internet-forum--executive-night-302833249.html"
           },
           {
-            "title": "V星座｜唐綺陽 水逆快結束，土星要逆行，重要轉折點容易兩難，保持理性思考勿衝動",
-            "source": "Vogue Taiwan",
-            "url": "https://www.vogue.com.tw/article/v%E6%98%9F%E5%BA%A7-%E5%94%90%E7%B6%BA%E9%99%BD-%E6%98%9F%E5%BA%A7%E5%91%A8%E9%81%8B-0720"
+            "title": "WAIC Observation: Huawei Enters Embodied AI With CloudRobo Platform, Can It Repeat the SERES Miracle of Smart Car Success?",
+            "source": "Pandaily",
+            "url": "https://pandaily.com/huawei-cloudrobo-embodied-ai-platform-jul2026"
           }
         ]
       },
       {
-        "title": "柯南",
-        "approximateTraffic": "100+",
-        "publishedAt": "2026-07-23T04:50:00Z",
+        "title": "關稅",
+        "approximateTraffic": "200+",
+        "publishedAt": "2026-07-23T14:40:00Z",
         "news": [
           {
-            "title": "《名偵探柯南》劇場版後日談《逃脫！疾風的高速追逐》7 月 30 日台北開幕！全台四城巡迴展開",
-            "source": "SouNova 少女星",
-            "url": "https://sounova.com/anime/conan-escape-2026-taiwan"
-          },
-          {
-            "title": "《跑 Online》x《名偵探柯南》合作登場 用柯南角色征服童話賽道",
-            "source": "PChome Online 新聞",
-            "url": "https://news.pchome.com.tw/game/gamer/20260722/index-78470679885802203104.html"
-          },
-          {
-            "title": "『跑Online』 7月22日更新預告：《名偵探柯南》聯名合作第1彈 / 新頻道地圖《基德就是你！》 / 新活動/ 個人刮刮樂《名偵探柯南》第1彈",
-            "source": "Mobile01",
-            "url": "https://www.mobile01.com/topicdetail.php?f=283&t=7281661"
-          }
-        ]
-      },
-      {
-        "title": "國民年金",
-        "approximateTraffic": "1000+",
-        "publishedAt": "2026-07-23T04:30:00Z",
-        "news": [
-          {
-            "title": "沒繳國保勞保也有退休金！符合資格滿65歲「每月領8000元到死亡」， 入帳時間方式一次看",
-            "source": "風傳媒",
-            "url": "https://www.storm.mg/lifestyle/11150051"
-          },
-          {
-            "title": "發錢了！一早入帳4.2萬「5年內沒申請充公」 月底還有13筆錢連發",
+            "title": "川普藥品關稅2年緩衝 受惠台廠7強",
             "source": "Yahoo新聞",
-            "url": "https://tw.news.yahoo.com/%E7%99%BC%E9%8C%A2%E4%BA%86-%E6%97%A9%E5%85%A5%E5%B8%B34-2%E8%90%AC-5%E5%B9%B4%E5%85%A7%E6%B2%92%E7%94%B3%E8%AB%8B%E5%85%85%E5%85%AC-%E6%9C%88%E5%BA%95%E9%82%84%E6%9C%8913%E7%AD%86%E9%8C%A2%E9%80%A3%E7%99%BC-225000300.html"
+            "url": "https://tw.news.yahoo.com/%E5%B7%9D%E6%99%AE%E8%97%A5%E5%93%81%E9%97%9C%E7%A8%852%E5%B9%B4%E7%B7%A9%E8%A1%9D-%E5%8F%97%E6%83%A0%E5%8F%B0%E5%BB%A07%E5%BC%B7-140500946.html"
           },
           {
-            "title": "老農津貼2026申請教學｜資格、金額、排富與一萬元修法進度一次看",
-            "source": "經理人",
-            "url": "https://www.managertoday.com.tw/articles/view/72573"
-          }
-        ]
-      },
-      {
-        "title": "風暴",
-        "approximateTraffic": "2000+",
-        "publishedAt": "2026-07-23T04:10:00Z",
-        "news": []
-      },
-      {
-        "title": "中國公開賽",
-        "approximateTraffic": "100+",
-        "publishedAt": "2026-07-23T04:10:00Z",
-        "news": [
-          {
-            "title": "中國羽賽／直落二拍下世界第5！林俊易勇闖8強",
-            "source": "UDN",
-            "url": "https://udn.com/news/story/7003/9646000"
-          },
-          {
-            "title": "中國賽》周天成直落二解決奈良岡功大 8強要對決球王石宇奇",
-            "source": "自由體育",
-            "url": "https://sports.ltn.com.tw/news/breakingnews/5514931"
-          },
-          {
-            "title": "中國羽球公開賽 周天成開紅盤",
-            "source": "Rti 中央廣播電臺",
-            "url": "https://www.rti.org.tw/news?uid=3&pid=221489"
-          }
-        ]
-      },
-      {
-        "title": "陳建仁",
-        "approximateTraffic": "100+",
-        "publishedAt": "2026-07-23T04:10:00Z",
-        "news": [
-          {
-            "title": "苯駢芘多喝水代謝？台大教授：無人體證據",
-            "source": "Yahoo新聞",
-            "url": "https://tw.news.yahoo.com/%E8%8B%AF%E9%A7%A2%E8%8A%98%E5%A4%9A%E5%96%9D%E6%B0%B4%E4%BB%A3%E8%AC%9D-%E5%8F%B0%E5%A4%A7%E6%95%99%E6%8E%88-%E7%84%A1%E4%BA%BA%E9%AB%94%E8%AD%89%E6%93%9A-034300294.html"
-          },
-          {
-            "title": "陳建仁稱多喝水可排苯駢芘 台大教授打臉「無人體證據」",
-            "source": "Yahoo新聞",
-            "url": "https://tw.news.yahoo.com/%E9%99%B3%E5%BB%BA%E4%BB%81%E7%A8%B1%E5%A4%9A%E5%96%9D%E6%B0%B4%E5%8F%AF%E6%8E%92%E8%8B%AF%E9%A7%A2%E8%8A%98-%E5%8F%B0%E5%A4%A7%E6%95%99%E6%8E%88%E6%89%93%E8%87%89-%E7%84%A1%E4%BA%BA%E9%AB%94%E8%AD%89%E6%93%9A-035327066.html"
-          },
-          {
-            "title": "【重磅快評】喝水可排所有致癌物？陳建仁顛覆所有防癌宣導",
-            "source": "UDN",
-            "url": "https://udn.com/news/story/7266/9643926"
-          }
-        ]
-      },
-      {
-        "title": "聯茂",
-        "approximateTraffic": "100+",
-        "publishedAt": "2026-07-23T04:10:00Z",
-        "news": [
-          {
-            "title": "期貨商論壇／聯茂期 坐擁題材",
-            "source": "UDN",
-            "url": "https://udn.com/news/story/7255/9644793"
-          },
-          {
-            "title": "領先大盤鴻海、聯茂收復月線- 日報",
+            "title": "川普祭學名藥高關稅保瑞、易威、藥華藥美國製造占地利- 日報",
             "source": "工商時報",
-            "url": "https://www.ctee.com.tw/news/20260722700296-439901"
+            "url": "https://www.ctee.com.tw/news/20260723700096-439901"
           },
           {
-            "title": "聯茂CCL漲價效益發酵，泰國新產能年底開出",
-            "source": "台視全球資訊網",
-            "url": "https://www.ttv.com.tw/finance/view/072026211032BE62323C828F4F49AC5533C3538E8187D47B/587"
+            "title": "後年起學名藥輸美課100%關稅 藥師公會籲落實「國藥國造」｜20260722 公視晚間新聞",
+            "source": "公視新聞網PNN",
+            "url": "https://news.pts.org.tw/video/20662"
           }
         ]
       },
       {
-        "title": "籃籃",
-        "approximateTraffic": "200+",
-        "publishedAt": "2026-07-23T04:00:00Z",
+        "title": "油",
+        "approximateTraffic": "2000+",
+        "publishedAt": "2026-07-23T14:20:00Z",
         "news": [
           {
-            "title": "籃籃9年前徵選影片被挖出！笑虧「這是誰」竟遭網友開嗆：不會自己查喔酸民",
-            "source": "Yahoo運動",
-            "url": "https://tw.sports.yahoo.com/news/%E7%B1%83%E7%B1%839%E5%B9%B4%E5%89%8D%E5%BE%B5%E9%81%B8%E5%BD%B1%E7%89%87%E8%A2%AB%E6%8C%96%E5%87%BA-%E7%AC%91%E8%99%A7-%E9%80%99%E6%98%AF%E8%AA%B0-%E7%AB%9F%E9%81%AD%E7%B6%B2%E5%8F%8B%E9%96%8B%E5%97%86-%E4%B8%8D%E6%9C%83%E8%87%AA%E5%B7%B1%E6%9F%A5%E5%96%94%E9%85%B8%E6%B0%91-033700059.html"
-          },
-          {
-            "title": "籃籃「9年前徵選片」被出土：這是誰？　酸民超派開噴",
-            "source": "ETtoday新聞雲",
-            "url": "https://www.ettoday.net/news/20260723/3206105.htm"
-          },
-          {
-            "title": "籃籃見9年前舊片裝傻「這是誰」 竟被誤當酸民！她高EQ回應",
-            "source": "壹蘋新聞網",
-            "url": "https://news.nextapple.com/entertainment/20260723/F84D83F50F73CD4317E529F92AC52150"
+            "title": "傅崐萁喊上街頭！怒批賴政府「毒害台灣」",
+            "source": "PChome Online 股市",
+            "url": "https://pchome.megatime.com.tw/news/cat1/20260717/78426675499397207001.html"
           }
         ]
       },
       {
-        "title": "鏡週刊",
+        "title": "spacex",
+        "approximateTraffic": "500+",
+        "publishedAt": "2026-07-23T14:20:00Z",
+        "news": [
+          {
+            "title": "Bets against SpaceX grow to 32% of float as Elon Musk warns short sellers won't survive",
+            "source": "CNBC",
+            "url": "https://www.cnbc.com/2026/07/21/bets-against-spacex-grow-to-32percent-of-float-as-elon-musk-warns-short-sellers-wont-survive.html"
+          },
+          {
+            "title": "SpaceX Stock Hits All-Time Low of $115",
+            "source": "Yahoo",
+            "url": "https://malaysia.news.yahoo.com/spacex-stock-hits-time-low-190644254.html"
+          },
+          {
+            "title": "Short sellers notch $15.5 billion profit as SpaceX shares slide",
+            "source": "93.3 The Drive",
+            "url": "https://www.933thedrive.com/2026/07/23/short-sellers-notch-15-5-billion-profit-as-spacex-shares-slide/"
+          }
+        ]
+      },
+      {
+        "title": "臺北市長",
         "approximateTraffic": "200+",
-        "publishedAt": "2026-07-23T04:00:00Z",
+        "publishedAt": "2026-07-23T14:10:00Z",
         "news": []
       },
       {
-        "title": "塔台",
-        "approximateTraffic": "100+",
-        "publishedAt": "2026-07-23T03:50:00Z",
+        "title": "臺灣海峽",
+        "approximateTraffic": "200+",
+        "publishedAt": "2026-07-23T14:10:00Z",
         "news": [
           {
-            "title": "「有小朋友沒坐好！」華航機長回報塔台拒降落 網讚：有職業道德",
+            "title": "中國大陸連兩天在台灣海峽部分海域「實彈射擊」航港局初判無影響",
+            "source": "Yahoo新聞",
+            "url": "https://tw.news.yahoo.com/%E4%B8%AD%E5%9C%8B%E5%A4%A7%E9%99%B8%E9%80%A3%E5%85%A9%E5%A4%A9%E5%9C%A8%E5%8F%B0%E7%81%A3%E6%B5%B7%E5%B3%BD%E9%83%A8%E5%88%86%E6%B5%B7%E5%9F%9F%E3%80%8C%E5%AF%A6%E5%BD%88%E5%B0%84%E6%93%8A%E3%80%8D%E8%88%AA%E6%B8%AF%E5%B1%80%E5%88%9D%E5%88%A4%E7%84%A1%E5%BD%B1%E9%9F%BF-041052421.html"
+          },
+          {
+            "title": "中國突宣布在台海實彈射擊 今明兩日禁止進入演習海域",
+            "source": "公視新聞網PNN",
+            "url": "https://news.pts.org.tw/article/818965"
+          },
+          {
+            "title": "譴責解放軍實彈射擊 外交部：破壞區域穩定",
             "source": "UDN",
-            "url": "https://udn.com/news/story/7266/9645485"
-          },
-          {
-            "title": "班機降落中「孩童未就座」 機師冷靜通報塔台「先盤旋」",
-            "source": "華視新聞網",
-            "url": "https://news.cts.com.tw/cts/life/202607/202607233058759.html"
-          },
-          {
-            "title": "「小孩沒坐好」華航機師取消降落空中盤旋一圈！塔台對話曝- 生活",
-            "source": "中時新聞網",
-            "url": "https://www.chinatimes.com/realtimenews/20260723000993-260405"
+            "url": "https://udn.com/news/story/10930/9647091"
           }
         ]
+      },
+      {
+        "title": "普發一萬 2026",
+        "approximateTraffic": "1000+",
+        "publishedAt": "2026-07-23T13:50:00Z",
+        "news": [
+          {
+            "title": "證交稅豐收「2026普發現金」有望？立委喊勢在必行 財政部長回應了",
+            "source": "Yahoo新聞",
+            "url": "https://tw.news.yahoo.com/%E8%AD%89%E4%BA%A4%E7%A8%85%E8%B1%90%E6%94%B6-2026%E6%99%AE%E7%99%BC%E7%8F%BE%E9%87%91-%E6%9C%89%E6%9C%9B-%E7%AB%8B%E5%A7%94%E5%96%8A%E5%8B%A2%E5%9C%A8%E5%BF%85%E8%A1%8C-%E8%B2%A1%E6%94%BF%E9%83%A8%E9%95%B7%E5%9B%9E%E6%87%89%E4%BA%86-214000516.html"
+          },
+          {
+            "title": "今年還會普發1萬？證交稅衝破3336億，立委喊普發現金， 財政部最新回應",
+            "source": "風傳媒",
+            "url": "https://www.storm.mg/lifestyle/11150945"
+          },
+          {
+            "title": "證交稅估破6千億！立委敲碗再普發現金　財長曝3大考量未答應",
+            "source": "ETtoday財經雲",
+            "url": "https://finance.ettoday.net/news/3205740"
+          }
+        ]
+      },
+      {
+        "title": "陳重銘",
+        "approximateTraffic": "500+",
+        "publishedAt": "2026-07-23T13:30:00Z",
+        "news": []
+      },
+      {
+        "title": "jolie",
+        "approximateTraffic": "200+",
+        "publishedAt": "2026-07-23T13:30:00Z",
+        "news": [
+          {
+            "title": "Angelina Jolie ‘Just Wants Everyone to Heal’ as Youngest Daughter Seeks to Drop ‘Pitt’ from Last Name",
+            "source": "People.com",
+            "url": "https://people.com/angelina-jolie-just-wants-everyone-to-heal-as-youngest-daughter-seeks-to-drop-pitt-from-last-name-exclusive-source-12024430"
+          },
+          {
+            "title": "Angelina Jolie and Brad Pitt's daughter moves to drop actor's last name",
+            "source": "Yahoo",
+            "url": "https://www.yahoo.com/entertainment/celebrity/articles/angelina-jolie-brad-pitts-daughter-125223368.html"
+          },
+          {
+            "title": "Brad Pitt's children are dropping their dad's surname - here's why I did the same",
+            "source": "BBC",
+            "url": "https://www.bbc.com/news/articles/cx2ln9l60g5o"
+          }
+        ]
+      },
+      {
+        "title": "陳仕朋",
+        "approximateTraffic": "200+",
+        "publishedAt": "2026-07-23T13:30:00Z",
+        "news": []
       }
     ]
   }
