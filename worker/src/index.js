@@ -232,9 +232,15 @@ async function buildSnapshot(env) {
     NEWS_SOURCES.map(async (source) => ({ source, ...(await fetchSourceItems(source, now)) })),
   );
   const liveItems = runs.flatMap((run) => run.items);
+  // 合併來源（依序去重時較新者優先）：
+  //  1. Worker 本次即時抓取（最新，以官方 RSS 為主）
+  //  2. 上一份 KV 快照（Worker 的 7 天滾動庫）
+  //  3. GitHub Pages 靜態 archive（Actions 從未被限流的 IP 補齊 24 家，≤15 分鐘）
+  // 第 3 項讓 Google News 對 Worker 限流時，缺 RSS 的來源仍有近況資料。
   const restored = previous?.files?.['news-archive']?.data?.items ?? [];
+  const pagesArchive = await archiveItems(env);
   const cutoff = now - 7 * DAY_MS;
-  const merged = dedupeSnapshot([...liveItems, ...restored])
+  const merged = dedupeSnapshot([...liveItems, ...restored, ...pagesArchive])
     .filter((item) => {
       const t = Date.parse(item.publishedAt);
       return t >= cutoff && t <= now + FUTURE_TOLERANCE_MS;
@@ -249,27 +255,33 @@ async function buildSnapshot(env) {
       sentiment: item.sentiment ?? null,
     }));
 
-  const okCount = runs.filter((run) => run.ok).length;
-  const status = okCount === runs.length ? 'ok' : okCount ? 'partial' : 'stale';
-  const stale = liveItems.length === 0 && restored.length > 0;
   const recent24 = merged.filter((item) => Date.parse(item.publishedAt) >= now - DAY_MS);
+  const recent24Count = (id) => recent24.filter((item) => item.source === id).length;
+  const liveOrRecent = runs.filter((run) => run.ok || recent24Count(run.source.id) > 0).length;
+  const status = liveOrRecent === runs.length ? 'ok' : liveOrRecent ? 'partial' : 'stale';
+  const stale = liveItems.length === 0 && merged.length > 0;
 
   const keywords = buildKeywords(merged, now, NEWS_SOURCES.length);
   const entities = buildEntities(recent24);
   const topics = buildTopics(merged);
-  const sources = runs.map((run) => ({
-    id: run.source.id,
-    displayName: run.source.displayName,
-    status: run.ok ? 'ok' : 'error',
-    lastAttemptAt: generatedAt,
-    lastSuccessAt: run.ok ? generatedAt : previousSources.get(run.source.id)?.lastSuccessAt ?? null,
-    lastCrawlAt: null,
-    accessMode: run.accessMode,
-    errorCode: run.errorCode,
-    stale: !run.ok,
-    itemCount: merged.filter((item) => item.source === run.source.id).length,
-    dropped: {},
-  }));
+  const sources = runs.map((run) => {
+    const itemCount = merged.filter((item) => item.source === run.source.id).length;
+    // ok＝Worker 本次抓到；stale＝本次沒抓到但合併庫（Pages/上一份）仍有近況；error＝完全沒有資料
+    const sourceStatus = run.ok ? 'ok' : recent24Count(run.source.id) > 0 ? 'stale' : 'error';
+    return {
+      id: run.source.id,
+      displayName: run.source.displayName,
+      status: sourceStatus,
+      lastAttemptAt: generatedAt,
+      lastSuccessAt: run.ok ? generatedAt : previousSources.get(run.source.id)?.lastSuccessAt ?? null,
+      lastCrawlAt: null,
+      accessMode: run.accessMode,
+      errorCode: run.ok ? null : run.errorCode,
+      stale: sourceStatus !== 'ok',
+      itemCount,
+      dropped: {},
+    };
+  });
 
   const files = {
     'news-archive': snapshotEnvelope({ status, stale, items: merged }, generatedAt),
