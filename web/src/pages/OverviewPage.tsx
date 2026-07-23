@@ -19,7 +19,7 @@ import { useChartTokens } from '../lib/theme';
 import { GRID, catAxis, sparkline, tooltip, valAxis } from '../lib/charts';
 import { fmtCompact, fmtNum, fmtRelative, fmtTime } from '../lib/format';
 import { sourceShort, sourceColorValue } from '../lib/sources';
-import { getRecentItems } from '../lib/recent';
+import { displayExcerpt, getRecentItems } from '../lib/recent';
 import type { SourceId } from '../types/contracts';
 
 export function OverviewPage() {
@@ -279,7 +279,9 @@ export function OverviewPage() {
                     <span className="small muted">· {fmtRelative(it.publishedAt)}</span>
                   </div>
                   <div className="recent-preview-item__title">{it.title}</div>
-                  <div className="small muted recent-preview-item__excerpt">{it.excerpt}</div>
+                  <div className={`small muted recent-preview-item__excerpt${it.excerpt.trim() ? '' : ' recent-item__excerpt--missing'}`}>
+                    {displayExcerpt(it.excerpt)}
+                  </div>
                 </a>
               ))}
             </div>

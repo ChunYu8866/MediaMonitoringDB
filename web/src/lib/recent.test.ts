@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { RecentItem } from '../types/contracts';
-import { getRecentItems } from './recent';
+import { displayExcerpt, getRecentItems } from './recent';
 
 const item = (id: string, publishedAt: string, title = id): RecentItem => ({
   id,
@@ -26,5 +26,16 @@ describe('getRecentItems', () => {
     const items = [item('invalid', 'not-a-date'), item('valid', '2026-07-23T10:00:00.000Z')];
 
     expect(getRecentItems(items).map((article) => article.id)).toEqual(['valid', 'invalid']);
+  });
+});
+
+describe('displayExcerpt', () => {
+  it('explains when a source did not provide an RSS summary', () => {
+    expect(displayExcerpt('')).toBe('此來源未提供 RSS 摘要，請查看原文。');
+    expect(displayExcerpt('   ')).toBe('此來源未提供 RSS 摘要，請查看原文。');
+  });
+
+  it('preserves a provided summary', () => {
+    expect(displayExcerpt('  來源摘要  ')).toBe('來源摘要');
   });
 });

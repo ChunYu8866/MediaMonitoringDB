@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useData } from '../api/useData';
 import { Card, EmptyState, ErrorState, Freshness, LoadingState, SourceTag } from '../components/ui';
 import { fmtRelative } from '../lib/format';
-import { getRecentItems } from '../lib/recent';
+import { displayExcerpt, getRecentItems } from '../lib/recent';
 import type { RecentData } from '../types/contracts';
 
 export function RecentPage() {
@@ -44,7 +44,9 @@ export function RecentPage() {
                   <span className="small muted">{fmtRelative(item.publishedAt)}</span>
                 </div>
                 <h2>{item.title}</h2>
-                <p>{item.excerpt}</p>
+                <p className={!item.excerpt.trim() ? 'recent-item__excerpt--missing' : undefined}>
+                  {displayExcerpt(item.excerpt)}
+                </p>
               </a>
             ))}
           </div>

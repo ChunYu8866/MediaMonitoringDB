@@ -710,6 +710,10 @@ table.data th.num {
   color: var(--text-secondary);
   overflow-wrap: anywhere;
 }
+.recent-item__excerpt--missing {
+  font-style: italic;
+  color: var(--text-muted);
+}
 .recent-item__meta {
   display: flex;
   align-items: center;

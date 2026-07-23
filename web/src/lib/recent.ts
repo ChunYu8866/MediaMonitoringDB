@@ -1,5 +1,12 @@
 import type { RecentItem } from '../types/contracts';
 
+const MISSING_EXCERPT = '此來源未提供 RSS 摘要，請查看原文。';
+
+export function displayExcerpt(excerpt: string): string {
+  const value = excerpt.trim();
+  return value || MISSING_EXCERPT;
+}
+
 /** Returns recent content in display order while keeping malformed dates at the end. */
 export function getRecentItems(items: RecentItem[], limit = 24): RecentItem[] {
   return [...items]
